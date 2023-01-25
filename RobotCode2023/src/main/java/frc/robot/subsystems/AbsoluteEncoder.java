@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.RobotController;
 
 public class AbsoluteEncoder extends AnalogInput {
     private double angleOffset;
@@ -32,7 +33,7 @@ public class AbsoluteEncoder extends AnalogInput {
      * @return current angle in radians
      */
     public double getAngle() {
-        double angle = (getVoltage() - 0.2) * (2 * Math.PI) / 4.6;
+        double angle = (getVoltage()) * (2 * Math.PI) / RobotController.getVoltage5V();
         if (reversed)
             angle *= -1;
         return normalizeAngle(angle - angleOffset);

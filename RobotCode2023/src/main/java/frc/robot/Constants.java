@@ -78,12 +78,12 @@ public final class Constants {
     public static final double kSteerEncoderDistancePerPulse =
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
         (2 * Math.PI) / (double) kSteerEncoderCPR;
-
+    // FIXME Change the encoders to correct ports
     public static final int FL_ENCODER = 0;
     public static final int FR_ENCODER = 2;
     public static final int BL_ENCODER = 1;
     public static final int BR_ENCODER = 3;
-
+    // FIXME Change the offsets to current encoder values
     public final static double FL_ENC_OFFSET = 0; // 183
     public final static double FR_ENC_OFFSET = 0; // 179
     public final static double BL_ENC_OFFSET = 0; // 221
@@ -113,6 +113,7 @@ public final class Constants {
   
   public static final class Electrical {
     // Swerve Motor Controller CAN ID's
+    // FIXME Change to correct CAN ID's and give the encoders CAN ID's
     public static final int FL_DRIVE = 6;
     public static final int FR_DRIVE = 13;
     public static final int BL_DRIVE = 5;
