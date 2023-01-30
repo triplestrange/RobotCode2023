@@ -123,6 +123,12 @@ public final class Constants {
     public static final int BL_STEER = 4;
     public static final int BR_STEER = 15;
 
+    public static final int SHOULDER = 0;
+    public static final int ELBOW = 1;
+    public static final int WRIST = 2;
+    public static final int FINGER = 3;
+
+    public static final int ROLLERS = 99;
   }
 
   public static class JoystickButtons {
