@@ -64,13 +64,17 @@ public class Arm extends SubsystemBase {
   public void setShoulder(double pos) {
     shoulderPID.setReference(pos, ControlType.kPosition);
   }
-
-  public void setElbow(double pos) {
-    elbowPID.setReference(pos, ControlType.kPosition);
+  
+  /*
+   * Sets angle between metacarpals and radius
+   * Angle 0 = metacarpals is on top of radius
+   */
+  public void setWrist(double angle) {
+    wristPID.setReference(angle, ControlType.kPosition);
   }
 
-  public void setWrist(double pos) {
-    wristPID.setReference(pos, ControlType.kPosition);
+  public double getWrist() {
+    return wristJoint.get();
   }
 
   public void initializePID(SparkMaxPIDController controller) {
@@ -84,6 +88,30 @@ public class Arm extends SubsystemBase {
     controller.setI(kI);
     controller.setD(kD);
     controller.setOutputRange(kMinOutput, kMaxOutput);
+  }
+
+  /*
+   * PARAMETERS
+   *  width: horizontal distance between shoulder pivot point and where wrist pivot point should be
+   *  height: vertical distance between shoulder pivot point and where wrist pivot point should be
+   * 
+   * c = (a^2 + b^2 - 2abcosC)^(1/2)
+   * a^2 + b^2 - c^2 = 2abcosC
+   * sinA/a = sinB/b = sinC/c
+   */
+  public void setArm(double width, double height) {
+    double a = 38;
+    double b = Math.hypot(width, height);
+    double c = 34;
+
+    double angle1 = Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2))/(2 * a * b));
+    setElbow(angle1);
+
+    // figure out how to calculate shoulder angle
+    double angle2 = Math.asin((Math.sin(angle1)/c) * a);
+    setShoulder(angle2);
+
+
   }
 
   @Override
