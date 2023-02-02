@@ -104,6 +104,8 @@ public class SwerveModule {
     m_driveMotor.setIdleMode(IdleMode.kBrake);
     m_turningMotor.setIdleMode(IdleMode.kBrake);
 
+    m_turningMotor.setInverted(true);
+
     m_driveMotor.burnFlash();
     m_turningMotor.burnFlash();
   }
@@ -160,7 +162,7 @@ public class SwerveModule {
 
   public void resetEncoders() {
     m_driveEncoder.setPosition(0);
-    m_turningEncoder.setPosition(-m_absoluteEncoder.getAngle());
+    m_turningEncoder.setPosition(m_absoluteEncoder.getAngle());
   }
 
   /**

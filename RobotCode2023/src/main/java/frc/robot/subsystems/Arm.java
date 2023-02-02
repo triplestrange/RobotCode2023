@@ -56,7 +56,11 @@ public class Arm extends SubsystemBase {
     elbowJoint.burnFlash();
     wristJoint.burnFlash();
   }
-
+  public void moveArm(double motorPowerShoulder, double motorPowerElbow, double motorPowerWrist)  {
+    shoulderJoint.set(motorPowerShoulder);
+    elbowJoint.set(motorPowerElbow);
+    wristJoint.set(motorPowerWrist);
+  }
   public void setShoulder(double pos) {
     shoulderPID.setReference(pos, ControlType.kPosition);
   }
