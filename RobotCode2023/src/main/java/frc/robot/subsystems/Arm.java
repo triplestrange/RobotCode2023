@@ -5,12 +5,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Electrical;
 
@@ -61,10 +60,24 @@ public class Arm extends SubsystemBase {
     elbowJoint.set(motorPowerElbow);
     wristJoint.set(motorPowerWrist);
   }
-  public void setShoulder(double pos) {
-    shoulderPID.setReference(pos, ControlType.kPosition);
+   public void setShoulder(double angle) {
+    shoulderPID.setReference(angle, ControlType.kPosition);
+   }
+    public double getShoulder() {
+    return shoulderJoint.get();
   }
   
+  /*
+   * Sets angle between humerus and radius according to shoulder joint angle
+   * Angle 0 = radius is on top of humerus
+   */
+  public void setElbow(double angle) {
+    elbowPID.setReference(angle, ControlType.kPosition);
+  }
+
+  public double getElbow() {
+    return elbowJoint.get();
+  }
   /*
    * Sets angle between metacarpals and radius
    * Angle 0 = metacarpals is on top of radius
@@ -113,6 +126,7 @@ public class Arm extends SubsystemBase {
 
 
   }
+
 
   @Override
   public void periodic() {
