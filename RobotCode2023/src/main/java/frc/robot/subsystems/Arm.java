@@ -113,17 +113,23 @@ public class Arm extends SubsystemBase {
    * sinA/a = sinB/b = sinC/c
    */
   public void setArm(double width, double height) {
+  // math checked with CAD
+  // Proof: https://imgur.com/3QSfHY5
     double a = 38;
-    double b = Math.hypot(width, height);
-    double c = 34;
+    double b = 34;
+    double c = Math.hypot(width, height);
 
     double angle1 = Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2))/(2 * a * b));
-    setElbow(angle1);
-
+    
     // figure out how to calculate shoulder angle
-    double angle2 = Math.asin((Math.sin(angle1)/c) * a);
-    setShoulder(angle2);
+    double angle2 = Math.asin((Math.sin(angle1)/c) * b);
+    
+// from horizontal
+    double shoulderAngle = Math.atan2(height,width) + angle2;
+    setShoulder(shoulderAngle);
 
+    double elbowAngle = angle1+shoulderAngle - Math.PI;
+    setElbow(elbowAngle);
 
   }
 

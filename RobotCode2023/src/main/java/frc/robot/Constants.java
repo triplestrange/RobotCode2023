@@ -39,6 +39,7 @@ public final class Constants {
     public static final int BR_OFFSET = 0;
 
     public static final double kMaxSpeedMetersPerSecond = 4.42;
+    public static final double climbMaxSpeedMetersPerSecond = 0.5;
 
     public static final boolean kGyroReversed = true;
 

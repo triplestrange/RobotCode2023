@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.SwerveDrive;
 
@@ -81,9 +82,9 @@ public class RobotContainer {
         () -> m_robotDrive.autoAlignCone(),m_robotDrive));
     JoystickButtons.dB.whileTrue(new RunCommand(
         () -> m_robotDrive.autoAlignCone(),m_robotDrive));
-    JoystickButtons.dY.onTrue(new InstantCommand(
-        () -> m_robotDrive.zeroHeading()
-    ));
+    JoystickButtons.dlWing.onTrue(new InstantCommand(
+        () -> m_robotDrive.zeroHeading(), m_robotDrive));
+    JoystickButtons.dY.onTrue(new Balance(m_robotDrive));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -64,7 +64,11 @@ public class SwerveDrive extends SubsystemBase {
   public ChassisSpeeds currentMovement;
 
   // The gyro sensor
-  private static final Gyro navX = new AHRS(SPI.Port.kMXP);
+  public final double navXPitch()  {
+  return navX.getPitch();
+
+  }
+  private static final AHRS navX = new AHRS(SPI.Port.kMXP);
   boolean gyroReset;
 
   // Odometry class for tracking robot pose
