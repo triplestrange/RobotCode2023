@@ -25,6 +25,7 @@ import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
 
 /*
@@ -37,6 +38,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final SwerveDrive m_robotDrive = new SwerveDrive();
   private final Arm m_Arm = new Arm();
+  private final Intake m_Intake = new Intake();
   // The driver's controller
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -64,7 +66,9 @@ public class RobotContainer {
                 JoystickButtons.m_operatorController.getPOV()==180 ? 1 : JoystickButtons.m_operatorController.getPOV()==0 ? -1 : 0
                 
         )));
-        
+        m_Intake.setDefaultCommand(new RunCommand(
+            () -> 
+                m_Intake.moveFinger(JoystickButtons.m_operatorController.getPOV()==270 ? 1 : JoystickButtons.m_operatorController.getPOV()==90 ? -1 : 0)));
   }
 
   /**
@@ -76,15 +80,16 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Driver Controls
-    JoystickButtons.dA.whileTrue(new RunCommand(
-        () -> m_robotDrive.autoAlignCube(),m_robotDrive));
-    JoystickButtons.dX.whileTrue(new RunCommand(
-        () -> m_robotDrive.autoAlignCone(),m_robotDrive));
-    JoystickButtons.dB.whileTrue(new RunCommand(
-        () -> m_robotDrive.autoAlignCone(),m_robotDrive));
-    JoystickButtons.dlWing.onTrue(new InstantCommand(
-        () -> m_robotDrive.zeroHeading(), m_robotDrive));
+    // 
+    JoystickButtons.dA.whileTrue(new RunCommand(m_robotDrive::autoAlignCube,m_robotDrive));
+    JoystickButtons.dX.whileTrue(new RunCommand(m_robotDrive::autoAlignCone,m_robotDrive));
+    JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
     JoystickButtons.dY.onTrue(new Balance(m_robotDrive));
+
+    // Operator Controls
+    // TODO 5 buttons total plus manual override for operator
+    JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
+    JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -18,7 +18,7 @@ public class Balance extends CommandBase {
    * Balances on endgame piece
    */
   private final SwerveDrive swerveDrive;
-  PIDController robotGyro = new PIDController(1, 0, 0);
+  PIDController robotGyro = new PIDController(0.05, 0, 0);
   private Timer lastUnbalancedTime =  new Timer();
 
   public Balance(SwerveDrive swerveDrive) {

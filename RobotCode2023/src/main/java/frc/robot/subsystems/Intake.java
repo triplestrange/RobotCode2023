@@ -20,20 +20,30 @@ public class Intake extends SubsystemBase {
   private final AbsoluteEncoder fingerEncoder;
 
   private final SparkMaxPIDController fingerPID;
-  
+  double intakeSpeed = 1;
   /** Creates a new Intake. */
   public Intake() {
     super();
     fingerJoint = new CANSparkMax(Electrical.FINGER, MotorType.kBrushless);
     rollers = new CANSparkMax(Electrical.ROLLERS, MotorType.kBrushless);
-
+    
     // TODO: determine channel & call getCalibration() on each absolute
     // encoder to determine offset angle
     fingerEncoder = new AbsoluteEncoder(0, 0);
 
     fingerPID = fingerJoint.getPIDController();
-  }
 
+    
+  }
+  public void moveFinger(double motorPowerFinger)  {
+    fingerJoint.set(motorPowerFinger);
+  }
+  public void runIntake()  {
+      rollers.set(intakeSpeed);
+  }
+  public void runOutake() {
+    rollers.set(-intakeSpeed);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
