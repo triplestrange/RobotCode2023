@@ -7,10 +7,9 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -39,7 +38,8 @@ public final class Constants {
     public static final int BL_OFFSET = 0;
     public static final int BR_OFFSET = 0;
 
-    public static final double kMaxSpeedMetersPerSecond = 4.5693;
+    public static final double kMaxSpeedMetersPerSecond = 4.42;
+    public static final double climbMaxSpeedMetersPerSecond = 0.5;
 
     public static final boolean kGyroReversed = true;
 
@@ -50,9 +50,9 @@ public final class Constants {
     public static final boolean backRightSteerEncoderReversed = false;
 
     // Distance between centers of right and left wheels on robot in meters
-    public static final double kTrackWidth = 0.59055;
+    public static final double kTrackWidth = 0.476;
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = 0.59055;
+    public static final double kWheelBase = 0.527;
     // Distance between front and back wheels on robot
 
     // kinematics constructor with module positions as arguments
@@ -89,7 +89,22 @@ public final class Constants {
     public final static double BL_ENC_OFFSET = 0; // 221
     public final static double BR_ENC_OFFSET = 0; // 241
   }
+  public static final class armConstants  {
 
+    // FIXME Change the offsets to current encoder values
+    public final static double SHOULDER_OFFSET = 0;
+    public final static double ELBOW_OFFSET = 0;
+    public final static double WRIST_OFFSET = 0;
+    // Gear ratios
+    public final static double GR_SHOULDER = 75 * (64.0/14);
+    public final static double GR_ELBOW = 45 * (80.0/52);
+    // WILL GORGEN's SUGGESTED GEAR RATIO
+    public final static double GR_WRIST = 200;
+
+    // ARM LENGTHS
+    public final static double SHOULDER_LENGTH = 38 * 0.0254;
+    public final static double ELBOW_LENGTH = 34 * 0.0254;
+  }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 1.5;
     public static final double kMaxAccelerationMetersPerSecondSquared = 2;
@@ -122,7 +137,7 @@ public final class Constants {
     public static final int FR_STEER = 12;
     public static final int BL_STEER = 4;
     public static final int BR_STEER = 15;
-
+    // FIXME Change to correct CAN ID's And give the encoders CAN ID's
     public static final int SHOULDER = 0;
     public static final int ELBOW = 1;
     public static final int WRIST = 2;
@@ -133,7 +148,7 @@ public final class Constants {
 
   public static class JoystickButtons {
     public static final XboxController m_driverController = new XboxController(0);
-    public static final Joystick m_operatorController = new Joystick(1);
+    public static final XboxController m_operatorController = new XboxController(1);
 
     public static final JoystickButton opA = new JoystickButton(m_operatorController, 1);
     public static final JoystickButton opB = new JoystickButton(m_operatorController, 2);
@@ -145,6 +160,10 @@ public final class Constants {
     public static final JoystickButton oprWing = new JoystickButton(m_operatorController, 8);
     public static final JoystickButton oplJoy = new JoystickButton(m_operatorController, 9);
     public static final JoystickButton oprJoy = new JoystickButton(m_operatorController, 10);
+    public static final POVButton opDpadD = new POVButton(m_operatorController, 180);
+    public static final POVButton opDpadU = new POVButton(m_operatorController, 0);
+    public static final POVButton opDpadL = new POVButton(m_operatorController, 270);
+    public static final POVButton opDpadR = new POVButton(m_operatorController, 90);
 
     public static final JoystickButton dA = new JoystickButton(m_driverController, 1);
     public static final JoystickButton dB = new JoystickButton(m_driverController, 2);

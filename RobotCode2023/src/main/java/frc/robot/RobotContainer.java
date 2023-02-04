@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,15 +15,18 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.JoystickButtons;
-import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.util.List;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.JoystickButtons;
+import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.gameplay.automations.Balance;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.SwerveDrive;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -32,7 +37,8 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final SwerveDrive m_robotDrive = new SwerveDrive();
-
+  private final Arm m_Arm = new Arm();
+  private final Intake m_Intake = new Intake();
   // The driver's controller
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,11 +52,23 @@ public class RobotContainer {
         new RunCommand(
             () ->
                 m_robotDrive.drive(
-                    JoystickButtons.m_driverController.getLeftY(),
-                    JoystickButtons.m_driverController.getLeftX(),
-                    JoystickButtons.m_driverController.getRightX(),
-                    false),
+                    JoystickButtons.m_driverController.getLeftY() * 2,
+                    JoystickButtons.m_driverController.getLeftX() * 2,
+                    JoystickButtons.m_driverController.getRightX() * 3,
+                    true),
             m_robotDrive));
+
+
+        m_Arm.setDefaultCommand(new RunCommand(
+            () -> 
+                m_Arm.moveArm(JoystickButtons.m_operatorController.getLeftY(),
+                JoystickButtons.m_operatorController.getRightY(), 
+                JoystickButtons.m_operatorController.getPOV()==180 ? 1 : JoystickButtons.m_operatorController.getPOV()==0 ? -1 : 0
+                
+        )));
+        m_Intake.setDefaultCommand(new RunCommand(
+            () -> 
+                m_Intake.moveFinger(JoystickButtons.m_operatorController.getPOV()==270 ? 1 : JoystickButtons.m_operatorController.getPOV()==90 ? -1 : 0)));
   }
 
   /**
@@ -59,8 +77,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
    * {@link JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
 
+    // Driver Controls
+    // 
+    JoystickButtons.dA.whileTrue(new RunCommand(m_robotDrive::autoAlignCube,m_robotDrive));
+    JoystickButtons.dX.whileTrue(new RunCommand(m_robotDrive::autoAlignCone,m_robotDrive));
+    JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
+    JoystickButtons.dY.onTrue(new Balance(m_robotDrive));
+
+    // Operator Controls
+    // TODO 5 buttons total plus manual override for operator
+    JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
+    JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

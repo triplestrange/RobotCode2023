@@ -9,26 +9,30 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Electrical;
 import frc.robot.Constants.ModuleConstants;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 // import frc.robot.Constants.ModuleConstants;
 // import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.SwerveConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class SwerveDrive extends SubsystemBase {
+  public PIDController transformX = new PIDController(1, 0, 0);
+  public PIDController transformY = new PIDController(1, 0, 0);
+  public PIDController rotation = new PIDController(1,0,0);
   // Robot swerve modules
   private final SwerveModule m_frontLeft = new SwerveModule(Electrical.FL_DRIVE,
       Electrical.FL_STEER,
@@ -52,7 +56,7 @@ public class SwerveDrive extends SubsystemBase {
       Electrical.BR_STEER,
       ModuleConstants.BR_ENCODER,
       SwerveConstants.backRightSteerEncoderReversed,
-      ModuleConstants.FR_ENC_OFFSET);
+      ModuleConstants.BR_ENC_OFFSET);
 
   private SwerveModuleState[] swerveModuleStates;
   private SwerveModuleState[] initStates;
@@ -60,7 +64,11 @@ public class SwerveDrive extends SubsystemBase {
   public ChassisSpeeds currentMovement;
 
   // The gyro sensor
-  private static final Gyro navX = new AHRS(SPI.Port.kMXP);
+  public final double navXPitch()  {
+  return navX.getPitch();
+
+  }
+  private static final AHRS navX = new AHRS(SPI.Port.kMXP);
   boolean gyroReset;
 
   // Odometry class for tracking robot pose
@@ -131,6 +139,8 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("r", getPose().getRotation().getDegrees());
     SmartDashboard.putNumber("GYRO ANGLE", navX.getAngle());
     SmartDashboard.putNumber("TurnRate", getTurnRate());
+    SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
+    .getTable("limelight").getEntry("getpipe").getDouble(0));
   }
 
   /**
@@ -215,7 +225,23 @@ public class SwerveDrive extends SubsystemBase {
     navX.reset();
     gyroReset = true;
   }
-
+  // Pipeline 0 is Fiducial Markers
+  public void autoAlignCube() {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
+    double[] robotPosition = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+    double xSpeed = transformX.calculate(robotPosition[0],0);
+    double ySpeed = transformY.calculate(robotPosition[1],0);
+    double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
+    drive(xSpeed, ySpeed, rSpeed, false);
+  }
+ public void autoAlignCone() {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
+    double[] robotPosition = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+    double xSpeed = transformX.calculate(robotPosition[0],0);
+    double ySpeed = transformY.calculate(robotPosition[1],0);
+    double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
+    drive(xSpeed, ySpeed, rSpeed, false);
+  }
   /**
    * Returns the heading of the robot.
    *
