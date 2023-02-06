@@ -18,21 +18,24 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.Electrical;
 import frc.robot.Constants.ModuleConstants;
 // import frc.robot.Constants.ModuleConstants;
 // import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.visionConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class SwerveDrive extends SubsystemBase {
-  public PIDController transformX = new PIDController(1, 0, 0);
-  public PIDController transformY = new PIDController(1, 0, 0);
-  public PIDController rotation = new PIDController(1,0,0);
+  public PIDController transformX = new PIDController(0.05, 0, 0);
+  public PIDController transformY = new PIDController(0.05, 0, 0);
+  public PIDController rotation = new PIDController(0.05,0,0);
   // Robot swerve modules
   private final SwerveModule m_frontLeft = new SwerveModule(Electrical.FL_DRIVE,
       Electrical.FL_STEER,
@@ -225,22 +228,64 @@ public class SwerveDrive extends SubsystemBase {
     navX.reset();
     gyroReset = true;
   }
-  // Pipeline 0 is Fiducial Markers
-  public void autoAlignCube() {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
-    double[] robotPosition = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
-    double xSpeed = transformX.calculate(robotPosition[0],0);
-    double ySpeed = transformY.calculate(robotPosition[1],0);
-    double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
-    drive(xSpeed, ySpeed, rSpeed, false);
+  // Calculates closest Apriltag for use in autoAlignCube
+  public int optimalID() {
+    Pose2d robotPose = getPose();
+    if (DriverStation.getAlliance() == Alliance.Red)  {
+      if (robotPose.getX() < 0) {
+        return 5;
+      }
+      else  {
+        return robotPose.getY() <= -2.098 ? 1 : robotPose.getY() <= -0.422 ? 2 : 3;
+      }
+    }
+    else  {
+      if (robotPose.getX() > 0) {
+        return 4;
+      }
+      else  {
+        return robotPose.getY() <= -2.098 ? 8 : robotPose.getY() <= -0.422 ? 7 : 6;
+      }
+      }
+      
   }
- public void autoAlignCone() {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
-    double[] robotPosition = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
-    double xSpeed = transformX.calculate(robotPosition[0],0);
-    double ySpeed = transformY.calculate(robotPosition[1],0);
-    double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
+  public void autoAlignCube(double offset, int ID) {
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
+    // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
+    // TODO May have to change tagPose 
+    Pose2d tagPose = visionConstants.tagPose[ID - 1];
+    double xSpeed = transformX.calculate(getPose().getX(),tagPose.getX());
+    double ySpeed = transformY.calculate(getPose().getY() + offset * tagPose.getRotation().getCos(), tagPose.getY());
+    double rSpeed = rotation.calculate(getAngle().getRadians(), tagPose.getRotation().getRadians());
     drive(xSpeed, ySpeed, rSpeed, false);
+    }
+
+    
+
+ public void autoAlignConeOrFeeder(double offset) {
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
+    // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
+    // double xSpeed = transformX.calculate(tx,0);
+    // double ySpeed = transformY.calculate(thor,0);
+    // double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
+    int ID = optimalID();
+
+    double finalOffset = ID == 5 || ID == 4 ? Constants.visionConstants.feederOffsetLeft.getY() : Constants.visionConstants.coneOffsetLeft;
+
+
+    autoAlignCube(finalOffset * offset, optimalID());
+    // drive(xSpeed, ySpeed, rSpeed, false);
+  }
+
+
+  public void updateOdometry()  {
+  double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+
+  resetOdometry(new Pose2d(robotPose[0], robotPose[1], getAngle()));
+
+
   }
   /**
    * Returns the heading of the robot.

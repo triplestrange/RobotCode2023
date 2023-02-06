@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -88,6 +90,26 @@ public final class Constants {
     public final static double FR_ENC_OFFSET = 0; // 179
     public final static double BL_ENC_OFFSET = 0; // 221
     public final static double BR_ENC_OFFSET = 0; // 241
+  }
+  public static final class visionConstants {
+    // Only for the Red Alliance Wall
+    public final static Translation2d scoringOffset = new Translation2d(-0.762,0);
+    public final static Translation2d feederOffsetLeft = new Translation2d(-0.41275,0.5334);
+    public final static double coneOffsetLeft = 0.5588;
+    // This is for both
+    public final static Pose2d[] tagPose = new Pose2d[] {
+      new Pose2d(7.24310 + scoringOffset.getX(), -2.93659, new Rotation2d(0)),
+      new Pose2d(7.24310 + scoringOffset.getX(), 1.26019, new Rotation2d(0)),
+      new Pose2d(7.24310 + scoringOffset.getX(), 0.41621, new Rotation2d(0)),
+      new Pose2d(7.90832 + feederOffsetLeft.getX(), 2.74161, new Rotation2d(0)),
+      new Pose2d(-7.90832 - feederOffsetLeft.getX(), 2.74161, new Rotation2d(Math.PI)),
+      new Pose2d(-7.24310 - scoringOffset.getX(), 0.41621, new Rotation2d(Math.PI)),
+      new Pose2d(-7.24310 - scoringOffset.getX(), -1.26019, new Rotation2d(Math.PI)),
+      new Pose2d(-7.24310 - scoringOffset.getX(), -2.93659, new Rotation2d(Math.PI))
+      
+    };
+
+
   }
   public static final class armConstants  {
 

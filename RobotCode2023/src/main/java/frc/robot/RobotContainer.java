@@ -36,7 +36,7 @@ import frc.robot.subsystems.SwerveDrive;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final SwerveDrive m_robotDrive = new SwerveDrive();
+  public final SwerveDrive m_robotDrive = new SwerveDrive();
   private final Arm m_Arm = new Arm();
   private final Intake m_Intake = new Intake();
   // The driver's controller
@@ -81,8 +81,9 @@ public class RobotContainer {
 
     // Driver Controls
     // 
-    JoystickButtons.dA.whileTrue(new RunCommand(m_robotDrive::autoAlignCube,m_robotDrive));
-    JoystickButtons.dX.whileTrue(new RunCommand(m_robotDrive::autoAlignCone,m_robotDrive));
+    JoystickButtons.dA.whileTrue(new RunCommand( ()-> m_robotDrive.autoAlignCube(0, m_robotDrive.optimalID()),m_robotDrive));
+    JoystickButtons.dX.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(-1),m_robotDrive));
+    JoystickButtons.dB.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
     JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
     JoystickButtons.dY.onTrue(new Balance(m_robotDrive));
 
