@@ -46,11 +46,12 @@ public class Balance extends CommandBase {
     if (Math.abs(tilt) > 2.5) {lastUnbalancedTime.reset();}
     double xSpeed = robotGyro.calculate(tilt, 0);
     //FIXME probably a method for this
+    //FIXME fix the speed param for field orient
     if (xSpeed > SwerveConstants.climbMaxSpeedMetersPerSecond) {
       xSpeed = SwerveConstants.climbMaxSpeedMetersPerSecond;}
     else if (xSpeed < -SwerveConstants.climbMaxSpeedMetersPerSecond) {
     xSpeed = -SwerveConstants.climbMaxSpeedMetersPerSecond;}
-    swerveDrive.drive(xSpeed, 0, 0, isFinished());
+    swerveDrive.drive(xSpeed, 0, 0, true);
   }
 
   // Called once the command ends or is interrupted.
