@@ -59,17 +59,17 @@ public class RobotContainer {
             m_robotDrive));
 
 
-        m_Arm.setDefaultCommand(new RunCommand(
-            () -> 
-                m_Arm.moveArm(JoystickButtons.m_operatorController.getLeftY(),
-                JoystickButtons.m_operatorController.getRightY(), 
-                JoystickButtons.m_operatorController.getPOV()==180 ? 1 : JoystickButtons.m_operatorController.getPOV()==0 ? -1 : 0
+//         m_Arm.setDefaultCommand(new RunCommand(
+//             () -> 
+//                 m_Arm.moveArm(JoystickButtons.m_operatorController.getLeftY(),
+//                 JoystickButtons.m_operatorController.getRightY(), 
+//                 JoystickButtons.m_operatorController.getPOV()==180 ? 1 : JoystickButtons.m_operatorController.getPOV()==0 ? -1 : 0
                 
-        )));
-        m_Intake.setDefaultCommand(new RunCommand(
-            () -> 
-                m_Intake.moveFinger(JoystickButtons.m_operatorController.getPOV()==270 ? 1 : JoystickButtons.m_operatorController.getPOV()==90 ? -1 : 0)));
-  }
+//         )));
+//         m_Intake.setDefaultCommand(new RunCommand(
+//             () -> 
+//                 m_Intake.moveFinger(JoystickButtons.m_operatorController.getPOV()==270 ? 1 : JoystickButtons.m_operatorController.getPOV()==90 ? -1 : 0)));
+   }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by

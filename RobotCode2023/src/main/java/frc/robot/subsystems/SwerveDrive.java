@@ -271,7 +271,10 @@ public class SwerveDrive extends SubsystemBase {
     else if (ySpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
     ySpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
     
-    
+    // System.out.print("xSpeed " + xSpeed + "; ySpeed " + ySpeed + "; rSpeed " + rSpeed);
+    SmartDashboard.putNumber("xSpeed", xSpeed);
+    SmartDashboard.putNumber("ySpeed", ySpeed);
+    SmartDashboard.putNumber("rSpeed", rSpeed);
     drive(xSpeed, ySpeed, rSpeed, true);
     }
 

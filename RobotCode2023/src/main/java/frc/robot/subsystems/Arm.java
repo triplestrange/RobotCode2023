@@ -35,9 +35,9 @@ public class Arm extends SubsystemBase {
 
     // TODO: determine channel & call getCalibration() on each absolute
     // encoder to determine offset angle
-    shoulderEncoder = new AbsoluteEncoder(0, 0);
-    elbowEncoder = new AbsoluteEncoder(0, 0);
-    wristEncoder = new AbsoluteEncoder(0, 0);
+    shoulderEncoder = new AbsoluteEncoder(4, 0);
+    elbowEncoder = new AbsoluteEncoder(7, 0);
+    wristEncoder = new AbsoluteEncoder(6, 0);
 
     shoulderPID = shoulderJoint.getPIDController();
     elbowPID = elbowJoint.getPIDController();

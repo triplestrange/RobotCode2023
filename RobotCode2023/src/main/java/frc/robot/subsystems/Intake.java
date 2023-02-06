@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase {
     
     // TODO: determine channel & call getCalibration() on each absolute
     // encoder to determine offset angle
-    fingerEncoder = new AbsoluteEncoder(0, 0);
+    fingerEncoder = new AbsoluteEncoder(5, 0);
 
     fingerPID = fingerJoint.getPIDController();
 
