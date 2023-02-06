@@ -42,6 +42,7 @@ public final class Constants {
 
     public static final double kMaxSpeedMetersPerSecond = 4.42;
     public static final double climbMaxSpeedMetersPerSecond = 0.5;
+    public static final double autoAlignMaxSpeedMetersPerSecond = 0.2;
 
     public static final boolean kGyroReversed = true;
 

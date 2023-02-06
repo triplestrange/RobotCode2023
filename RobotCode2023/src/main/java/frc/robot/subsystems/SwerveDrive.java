@@ -249,16 +249,30 @@ public class SwerveDrive extends SubsystemBase {
       }
       
   }
+  // FIXME ADD MAX SDEED LIMITS BEFORE TESTING
   public void autoAlignCube(double offset, int ID) {
     // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
     // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
     // TODO May have to change tagPose 
+    
     Pose2d tagPose = visionConstants.tagPose[ID - 1];
     double xSpeed = transformX.calculate(getPose().getX(),tagPose.getX());
     double ySpeed = transformY.calculate(getPose().getY() + offset * tagPose.getRotation().getCos(), tagPose.getY());
     double rSpeed = rotation.calculate(getAngle().getRadians(), tagPose.getRotation().getRadians());
-    drive(xSpeed, ySpeed, rSpeed, false);
+    // MAX SPEEDS
+     if (xSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+      xSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    else if (xSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    xSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+
+     if (ySpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+      ySpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    else if (ySpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    ySpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    
+    
+    drive(xSpeed, ySpeed, rSpeed, true);
     }
 
     
@@ -282,10 +296,8 @@ public class SwerveDrive extends SubsystemBase {
 
   public void updateOdometry()  {
   double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
-
-  resetOdometry(new Pose2d(robotPose[0], robotPose[1], getAngle()));
-
-
+  int tv = (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getInteger(0);
+  if (tv == 1)  {resetOdometry(new Pose2d(robotPose[0], robotPose[1], getAngle()));}
   }
   /**
    * Returns the heading of the robot.
