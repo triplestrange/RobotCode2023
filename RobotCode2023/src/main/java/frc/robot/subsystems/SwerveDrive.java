@@ -239,7 +239,7 @@ public class SwerveDrive extends SubsystemBase {
   }
   // Calculates closest Apriltag for use in autoAlignCube
   public int optimalID() {
-    /*Pose2d robotPose = getPose();
+    Pose2d robotPose = getPose();
     if (DriverStation.getAlliance() == Alliance.Red)  {
       if (robotPose.getX() < 0) {
         return 5;
@@ -255,9 +255,7 @@ public class SwerveDrive extends SubsystemBase {
       else  {
         return robotPose.getY() <= -2.098 ? 8 : robotPose.getY() <= -0.422 ? 7 : 6;
       }
-      }*/
-
-      return 1;
+      }
       
   }
   // FIXME ADD MAX SDEED LIMITS BEFORE TESTING
