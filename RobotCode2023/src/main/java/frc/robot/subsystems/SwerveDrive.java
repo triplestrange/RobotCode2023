@@ -36,6 +36,10 @@ public class SwerveDrive extends SubsystemBase {
   public PIDController transformX = new PIDController(0.05, 0, 0);
   public PIDController transformY = new PIDController(0.05, 0, 0);
   public PIDController rotation = new PIDController(0.05,0,0);
+  public double xAutoSpeed = 0;
+  public double yAutoSpeed = 0;
+  public double rAutoSpeed = 0;
+
   // Robot swerve modules
   private final SwerveModule m_frontLeft = new SwerveModule(Electrical.FL_DRIVE,
       Electrical.FL_STEER,
@@ -144,6 +148,11 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("TurnRate", getTurnRate());
     SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
     .getTable("limelight").getEntry("getpipe").getDouble(0));
+
+    SmartDashboard.putNumber("xSpeed", xAutoSpeed);
+    SmartDashboard.putNumber("ySpeed", yAutoSpeed);
+    SmartDashboard.putNumber("rSpeed", rAutoSpeed);
+    System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n rSpeed: " + rAutoSpeed);
   }
 
   /**
@@ -230,7 +239,7 @@ public class SwerveDrive extends SubsystemBase {
   }
   // Calculates closest Apriltag for use in autoAlignCube
   public int optimalID() {
-    Pose2d robotPose = getPose();
+    /*Pose2d robotPose = getPose();
     if (DriverStation.getAlliance() == Alliance.Red)  {
       if (robotPose.getX() < 0) {
         return 5;
@@ -246,7 +255,9 @@ public class SwerveDrive extends SubsystemBase {
       else  {
         return robotPose.getY() <= -2.098 ? 8 : robotPose.getY() <= -0.422 ? 7 : 6;
       }
-      }
+      }*/
+
+      return 1;
       
   }
   // FIXME ADD MAX SDEED LIMITS BEFORE TESTING
@@ -257,25 +268,23 @@ public class SwerveDrive extends SubsystemBase {
     // TODO May have to change tagPose 
     
     Pose2d tagPose = visionConstants.tagPose[ID - 1];
-    double xSpeed = transformX.calculate(getPose().getX(),tagPose.getX());
-    double ySpeed = transformY.calculate(getPose().getY() + offset * tagPose.getRotation().getCos(), tagPose.getY());
-    double rSpeed = rotation.calculate(getAngle().getRadians(), tagPose.getRotation().getRadians());
+    xAutoSpeed = transformX.calculate(getPose().getX(),tagPose.getX());
+    yAutoSpeed = transformY.calculate(getPose().getY() + offset * tagPose.getRotation().getCos(), tagPose.getY());
+    rAutoSpeed = rotation.calculate(getAngle().getRadians(), tagPose.getRotation().getRadians());
     // MAX SPEEDS
-     if (xSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-      xSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-    else if (xSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    xSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    //  if (xAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    //   xAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    // else if (xAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    // xAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
 
-     if (ySpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-      ySpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-    else if (ySpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    ySpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    //  if (yAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    //   yAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    // else if (yAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    // yAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
     
     // System.out.print("xSpeed " + xSpeed + "; ySpeed " + ySpeed + "; rSpeed " + rSpeed);
-    SmartDashboard.putNumber("xSpeed", xSpeed);
-    SmartDashboard.putNumber("ySpeed", ySpeed);
-    SmartDashboard.putNumber("rSpeed", rSpeed);
-    drive(xSpeed, ySpeed, rSpeed, true);
+    
+    drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
     }
 
     
