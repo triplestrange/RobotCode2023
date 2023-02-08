@@ -94,6 +94,7 @@ public class SwerveDrive extends SubsystemBase {
    * Creates a new DriveSubsystem.
    */
   public SwerveDrive() {
+    resetEncoders();
   }
 
   /**
