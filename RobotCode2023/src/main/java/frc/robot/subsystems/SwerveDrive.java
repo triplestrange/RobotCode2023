@@ -305,7 +305,7 @@ public class SwerveDrive extends SubsystemBase {
 
 
   public void updateOdometry()  {
-  double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+  double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
   int tv = (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getInteger(0);
   if (tv == 1)  {resetOdometry(new Pose2d(robotPose[0], robotPose[1], getAngle()));}
   }
