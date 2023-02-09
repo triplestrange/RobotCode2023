@@ -12,10 +12,10 @@ public class Vision extends SubsystemBase {
 
   /*
    * Methods:
-   * - identify AprilTag
-   * - Calculate robot location based on AprilTag
-   * - Calculate distance to each AprilTag
-   * - get biggest (closest) AprilTag
+   * - identify AprilTag check
+   * - Calculate robot location based on AprilTag check
+   * - Calculate distance to each AprilTag check
+   * - get biggest (closest) AprilTag check
    * - identify cone vs cube
    * - identify orientation of cone
    */

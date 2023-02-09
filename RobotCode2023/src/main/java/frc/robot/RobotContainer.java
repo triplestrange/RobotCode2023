@@ -49,12 +49,13 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
+        // TODO fine tune motor speeds
         new RunCommand(
             () ->
                 m_robotDrive.drive(
-                    JoystickButtons.m_driverController.getLeftY() * 2,
-                    JoystickButtons.m_driverController.getLeftX() * 2,
-                    JoystickButtons.m_driverController.getRightX() * 3,
+                    JoystickButtons.m_driverController.getLeftY() * 5,
+                    JoystickButtons.m_driverController.getLeftX() * 5,
+                    JoystickButtons.m_driverController.getRightX() * 5,
                     true),
             m_robotDrive));
 
