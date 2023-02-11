@@ -24,7 +24,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.gameplay.automations.Balance;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
 
@@ -37,8 +36,8 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
   // The robot's subsystems
   public final SwerveDrive m_robotDrive = new SwerveDrive();
-  // private final Arm m_Arm = new Arm();
-  // private final Intake m_Intake = new Intake();
+  private final Arm m_Arm = new Arm();
+   private final Intake m_Intake = new Intake();
   // The driver's controller
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -67,9 +66,9 @@ public class RobotContainer {
 //                 JoystickButtons.m_operatorController.getPOV()==180 ? 1 : JoystickButtons.m_operatorController.getPOV()==0 ? -1 : 0
                 
 //         )));
-//         m_Intake.setDefaultCommand(new RunCommand(
-//             () -> 
-//                 m_Intake.moveFinger(JoystickButtons.m_operatorController.getPOV()==270 ? 1 : JoystickButtons.m_operatorController.getPOV()==90 ? -1 : 0)));
+         m_Intake.setDefaultCommand(new RunCommand(
+             () -> 
+                 m_Intake.moveFinger(JoystickButtons.m_operatorController.getPOV()==270 ? 1 : JoystickButtons.m_operatorController.getPOV()==90 ? -1 : 0)));
    }
 
   /**
@@ -90,8 +89,12 @@ public class RobotContainer {
 
     // Operator Controls
     // TODO 5 buttons total plus manual override for operator
-    // JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
-    // JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
+    JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
+    JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
+    JoystickButtons.opA.whileTrue(new RunCommand(m_Arm::setScoringHigh, m_Arm));
+    JoystickButtons.opX.whileTrue(new RunCommand( () -> m_Arm.setScoringMid(),m_Arm));
+    JoystickButtons.opB.whileTrue(new RunCommand( () -> m_Arm.setScoringLow(), m_Arm));
+
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
