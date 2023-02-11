@@ -133,25 +133,26 @@ public class Arm extends SubsystemBase {
 
   }
 
-double scoringOffset = 9.609375;
+double coneScoringOffset = 9.609375;
+double cubeScoringOffset = 0;
 
   // Set the position to score in the high position
 public void setScoringHigh() {
-  setArm(90, 46 + scoringOffset);
+  setArm(90, 46 + coneScoringOffset);
   // FIXME change to correct values (width and wrist)
   setWrist(90);
 }
 
 // Set the position to the middle scoring postition
 public void setScoringMid() {
-  setArm(90, 34 + scoringOffset);
+  setArm(90, 34 + coneScoringOffset);
   // FIXME change to correct values (width and wrist)
   setWrist(90);
 }
 
 // Set the position to the lower scoring postition
 public void setScoringLow() {
-  setArm(90, 0 + scoringOffset);
+  setArm(90, 0 + coneScoringOffset);
   // FIXME change to correct values (width and wrist)
   setWrist(90);
 }
