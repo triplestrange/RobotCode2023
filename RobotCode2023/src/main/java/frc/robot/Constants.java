@@ -161,10 +161,10 @@ public final class Constants {
     public static final int BL_STEER = 10;
     public static final int BR_STEER = 9;
     // FIXME Change to correct CAN ID's And give the encoders CAN ID's
-    public static final int SHOULDER = 0;
-    public static final int ELBOW = 1;
-    public static final int WRIST = 2;
-    public static final int FINGER = 3;
+    public static final int SHOULDER = 20;
+    public static final int ELBOW = 21;
+    public static final int WRIST = 22;
+    public static final int FINGER = 23;
 
     public static final int ROLLERS = 99;
   }

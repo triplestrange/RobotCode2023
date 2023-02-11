@@ -133,6 +133,28 @@ public class Arm extends SubsystemBase {
 
   }
 
+double scoringOffset = 9.609375;
+
+  // Set the position to score in the high position
+public void setScoringHigh() {
+  setArm(90, 46 + scoringOffset);
+  // FIXME change to correct values (width and wrist)
+  setWrist(90);
+}
+
+// Set the position to the middle scoring postition
+public void setScoringMid() {
+  setArm(90, 34 + scoringOffset);
+  // FIXME change to correct values (width and wrist)
+  setWrist(90);
+}
+
+// Set the position to the lower scoring postition
+public void setScoringLow() {
+  setArm(90, 0 + scoringOffset);
+  // FIXME change to correct values (width and wrist)
+  setWrist(90);
+}
 
   @Override
   public void periodic() {

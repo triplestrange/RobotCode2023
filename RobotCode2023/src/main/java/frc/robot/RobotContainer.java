@@ -37,8 +37,8 @@ import frc.robot.subsystems.SwerveDrive;
 public class RobotContainer {
   // The robot's subsystems
   public final SwerveDrive m_robotDrive = new SwerveDrive();
-  private final Arm m_Arm = new Arm();
-  private final Intake m_Intake = new Intake();
+  // private final Arm m_Arm = new Arm();
+  // private final Intake m_Intake = new Intake();
   // The driver's controller
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -90,8 +90,8 @@ public class RobotContainer {
 
     // Operator Controls
     // TODO 5 buttons total plus manual override for operator
-    JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
-    JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
+    // JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
+    // JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

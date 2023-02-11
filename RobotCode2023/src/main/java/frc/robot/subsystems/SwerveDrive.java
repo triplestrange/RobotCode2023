@@ -150,10 +150,10 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
     .getTable("limelight").getEntry("getpipe").getDouble(0));
 
-    SmartDashboard.putNumber("xSpeed", xAutoSpeed);
-    SmartDashboard.putNumber("ySpeed", yAutoSpeed);
-    SmartDashboard.putNumber("rSpeed", rAutoSpeed);
-    System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n rSpeed: " + rAutoSpeed);
+    // SmartDashboard.putNumber("xSpeed", xAutoSpeed);
+    // SmartDashboard.putNumber("ySpeed", yAutoSpeed);
+    // SmartDashboard.putNumber("rSpeed", rAutoSpeed);
+    // System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n rSpeed: " + rAutoSpeed);
   }
 
   /**
