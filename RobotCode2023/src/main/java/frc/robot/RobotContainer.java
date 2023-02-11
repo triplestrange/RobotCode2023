@@ -38,7 +38,7 @@ public class RobotContainer {
   // The robot's subsystems
   public final SwerveDrive m_robotDrive = new SwerveDrive();
   private final Arm m_Arm = new Arm();
-   private final Intake m_Intake = new Intake();
+  private final Intake m_Intake = new Intake();
   // The driver's controller
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

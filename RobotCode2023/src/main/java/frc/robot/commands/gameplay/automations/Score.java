@@ -41,4 +41,6 @@ public class Score extends CommandBase {
   public boolean isFinished() {
     return false;
   }
+
+
 }
