@@ -112,7 +112,23 @@ public class Arm extends SubsystemBase {
    * a^2 + b^2 - c^2 = 2abcosC
    * sinA/a = sinB/b = sinC/c
    */
-  public void setArm(double width, double height) {
+  
+
+public static class JointAngles  {
+
+  public double shoulderAngle;
+  public double elbowAngle;
+  public double wristAngle;
+
+  public JointAngles(double shoulderAngle, double elbowAngle, double wristAngle) {
+    
+    this.shoulderAngle = shoulderAngle;
+    this.elbowAngle = elbowAngle;
+    this.wristAngle = wristAngle;
+
+  }
+
+  public static JointAngles anglesFrom2D(double width, double height, double wristAngle) {
   // math checked with CAD
   // Proof: https://imgur.com/3QSfHY5
     double a = 38;
@@ -126,37 +142,14 @@ public class Arm extends SubsystemBase {
     
 // from horizontal
     double shoulderAngle = Math.atan2(height,width) + angle2;
-    setShoulder(shoulderAngle);
 
     double elbowAngle = angle1+shoulderAngle - Math.PI;
-    setElbow(elbowAngle);
+
+    JointAngles angles = new JointAngles(shoulderAngle, elbowAngle, wristAngle);
+    return angles;
 
   }
-
-double coneScoringOffset = 9.609375;
-double cubeScoringOffset = 0;
-
-  // Set the position to score in the high position
-public void setScoringHigh() {
-  setArm(90, 46 + coneScoringOffset);
-  // FIXME change to correct values (width and wrist)
-  setWrist(90);
 }
-
-// Set the position to the middle scoring postition
-public void setScoringMid() {
-  setArm(90, 34 + coneScoringOffset);
-  // FIXME change to correct values (width and wrist)
-  setWrist(90);
-}
-
-// Set the position to the lower scoring postition
-public void setScoringLow() {
-  setArm(90, 0 + coneScoringOffset);
-  // FIXME change to correct values (width and wrist)
-  setWrist(90);
-}
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

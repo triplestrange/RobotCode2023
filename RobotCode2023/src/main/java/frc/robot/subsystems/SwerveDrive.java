@@ -9,9 +9,12 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -26,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Electrical;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.Robot;
 // import frc.robot.Constants.ModuleConstants;
 // import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -33,6 +37,7 @@ import frc.robot.Constants.visionConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class SwerveDrive extends SubsystemBase {
+  private final Robot m_Robot;
   public PIDController transformX = new PIDController(0.05, 0, 0);
   public PIDController transformY = new PIDController(0.05, 0, 0);
   public PIDController rotation = new PIDController(0.05,0,0);
@@ -93,8 +98,9 @@ public class SwerveDrive extends SubsystemBase {
   /**
    * Creates a new DriveSubsystem.
    */
-  public SwerveDrive() {
+  public SwerveDrive(Robot m_robot) {
     resetEncoders();
+    m_Robot = m_robot;
   }
 
   /**
@@ -241,7 +247,7 @@ public class SwerveDrive extends SubsystemBase {
   // Calculates closest Apriltag for use in autoAlignCube
   public int optimalID() {
     Pose2d robotPose = getPose();
-    if (DriverStation.getAlliance() == Alliance.Red)  {
+    if (m_Robot.allianceColor == Alliance.Red)  {
       if (robotPose.getX() < 0) {
         return 5;
       }
@@ -265,27 +271,32 @@ public class SwerveDrive extends SubsystemBase {
     // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
     // TODO May have to change tagPose 
+  
+    Pose2d tagPose = visionConstants.tagPose[ID - 1];    
+    System.out.print("xSpeed " + xAutoSpeed + "; ySpeed " + yAutoSpeed + "; rSpeed " + rAutoSpeed);
     
-    Pose2d tagPose = visionConstants.tagPose[ID - 1];
-    xAutoSpeed = transformX.calculate(getPose().getX(),tagPose.getX());
-    yAutoSpeed = transformY.calculate(getPose().getY() + offset * tagPose.getRotation().getCos(), tagPose.getY());
-    rAutoSpeed = rotation.calculate(getAngle().getRadians(), tagPose.getRotation().getRadians());
-    // MAX SPEEDS
-    //  if (xAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    //   xAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-    // else if (xAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    // xAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-
-    //  if (yAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    //   yAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-    // else if (yAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    // yAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-    
-    // System.out.print("xSpeed " + xSpeed + "; ySpeed " + ySpeed + "; rSpeed " + rSpeed);
-    
-    drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
+    driveTo(new Pose2d(tagPose.getX(), tagPose.getY() + offset * tagPose.getRotation().getCos(), tagPose.getRotation()));
     }
+    public void driveTo(Pose2d targetPose2d)  {
+    double xAutoSpeed = transformX.calculate(getPose().getX(),targetPose2d.getX());
+    double yAutoSpeed = transformY.calculate(getPose().getY(), targetPose2d.getY());
+    double rAutoSpeed = rotation.calculate(getAngle().getRadians(), targetPose2d.getRotation().getRadians());
 
+    // Max Speeds
+    // FIXME fix it
+    // xAutoSpeed = MathUtil.clamp();
+     if (xAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+      xAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    else if (xAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    xAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+
+     if (yAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+      yAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    else if (yAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    yAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+
+      drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
+    }
     
 
  public void autoAlignConeOrFeeder(double offset) {

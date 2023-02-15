@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import javax.sql.rowset.JoinRowSet;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,6 +14,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.subsystems.Arm.JointAngles;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -127,6 +130,21 @@ public final class Constants {
     // ARM LENGTHS
     public final static double SHOULDER_LENGTH = 38 * 0.0254;
     public final static double ELBOW_LENGTH = 34 * 0.0254;
+
+    // ACCEPTABLE PERCENT ERROR
+    public final static double ERROR_IN_RADIANS = Math.PI/180;
+
+    // SCORING PRESETS
+    public final static double CONE_SCORING_OFFSET = 205/16;
+    public final static JointAngles DEFAULT_POSITION = new JointAngles(Math.PI/2, Math.toRadians(75), 0);
+    public final static JointAngles INTERMEDIATE_MID_POSITION = JointAngles.anglesFrom2D(18.5, 33.8 + CONE_SCORING_OFFSET, Math.PI/2);
+    public final static JointAngles INTERMEDIATE_LOW_POSITION = new JointAngles(Math.PI/2, Math.toRadians(-60), 0);
+    public final static JointAngles HIGH_POSITION = JointAngles.anglesFrom2D(70, 33.8 + CONE_SCORING_OFFSET, Math.PI/2);
+    public final static JointAngles MID_POSITION = JointAngles.anglesFrom2D(43.5, 22 + CONE_SCORING_OFFSET, Math.PI/2);
+    //FIXME different values for new intake!
+    public final static JointAngles LOW_POSITION = JointAngles.anglesFrom2D(21.8, -3.2, Math.toRadians(30));
+
+
   }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 1.5;
