@@ -11,19 +11,20 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -84,8 +85,8 @@ public class SwerveDrive extends SubsystemBase {
   boolean gyroReset;
 
   // Odometry class for tracking robot pose
-  public SwerveDriveOdometry m_odometry =
-      new SwerveDriveOdometry(
+  public SwerveDrivePoseEstimator m_odometry =
+      new SwerveDrivePoseEstimator(
           SwerveConstants.kDriveKinematics,
           getAngle(),
           new SwerveModulePosition[] {
@@ -93,7 +94,7 @@ public class SwerveDrive extends SubsystemBase {
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-          });
+          }, new Pose2d());
 
   /**
    * Creates a new DriveSubsystem.
@@ -168,7 +169,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return m_odometry.getEstimatedPosition();
   }
 
   
@@ -188,7 +189,7 @@ public class SwerveDrive extends SubsystemBase {
       },
       pose);
   }
-
+  
   /**
    * Method to drive the robot using joystick info.
    *
@@ -319,7 +320,10 @@ public class SwerveDrive extends SubsystemBase {
   public void updateOdometry()  {
   double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
   int tv = (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getInteger(0);
-  if (tv == 1 && robotPose.length == 6)  {resetOdometry(new Pose2d(robotPose[0], robotPose[1], getAngle()));}
+  if (tv == 1 && robotPose.length == 6)  {
+    Pose2d visionPose = new Pose2d(robotPose[0], robotPose[1], Rotation2d.fromDegrees(robotPose[5]));
+    m_odometry.addVisionMeasurement(visionPose, WPIUtilJNI.now() * 1.0e-6);
+  }
   }
   /**
    * Returns the heading of the robot.
