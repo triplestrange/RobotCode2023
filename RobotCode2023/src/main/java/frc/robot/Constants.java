@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -127,6 +128,12 @@ public final class Constants {
     // WILL GORGEN's SUGGESTED GEAR RATIO
     public final static double GR_WRIST = 200;
 
+    // JOINT FREE SPEEDS IN RADIANS
+    // USING EXPERIMENTAL DATA
+    public final static double FREE_SPEED_SHOULDER = (5820 / 60 * 2 * Math.PI)/GR_SHOULDER;
+    public final static double FREE_SPEED_ELBOW = (5820 / 60 * 2 * Math.PI)/GR_SHOULDER;
+    public final static double FREE_SPEED_WRIST = (11710 / 60 * 2 * Math.PI)/GR_WRIST;
+
     // ARM LENGTHS
     public final static double SHOULDER_LENGTH = 38 * 0.0254;
     public final static double ELBOW_LENGTH = 34 * 0.0254;
@@ -139,12 +146,14 @@ public final class Constants {
     public final static JointAngles DEFAULT_POSITION = new JointAngles(Math.PI/2, Math.toRadians(75), 0);
     public final static JointAngles INTERMEDIATE_MID_POSITION = JointAngles.anglesFrom2D(18.5, 33.8 + CONE_SCORING_OFFSET, Math.PI/2);
     public final static JointAngles INTERMEDIATE_LOW_POSITION = new JointAngles(Math.PI/2, Math.toRadians(-60), 0);
+    // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)
     public final static JointAngles HIGH_POSITION = JointAngles.anglesFrom2D(70, 33.8 + CONE_SCORING_OFFSET, Math.PI/2);
     public final static JointAngles MID_POSITION = JointAngles.anglesFrom2D(43.5, 22 + CONE_SCORING_OFFSET, Math.PI/2);
     //FIXME different values for new intake!
     public final static JointAngles LOW_POSITION = JointAngles.anglesFrom2D(21.8, -3.2, Math.toRadians(30));
 
-
+    // Trajectory config
+    public final static TrajectoryConfig config = new TrajectoryConfig(0.1, 0.1);
   }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 1.5;
@@ -179,12 +188,11 @@ public final class Constants {
     public static final int BL_STEER = 10;
     public static final int BR_STEER = 9;
     // FIXME Change to correct CAN ID's And give the encoders CAN ID's
-    public static final int SHOULDER = 20;
-    public static final int ELBOW = 21;
-    public static final int WRIST = 22;
-    public static final int FINGER = 23;
+    public static final int SHOULDER = 14;
+    public static final int ELBOW = 15;
+    public static final int WRIST = 16;
 
-    public static final int ROLLERS = 99;
+    public static final int ROLLERS = 17;
   }
 
   public static class JoystickButtons {

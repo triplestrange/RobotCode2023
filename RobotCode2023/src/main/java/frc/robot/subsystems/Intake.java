@@ -15,29 +15,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Electrical;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax fingerJoint;
+
   private final CANSparkMax rollers;
-
-  private final AbsoluteEncoder fingerEncoder;
-
-  private final SparkMaxPIDController fingerPID;
   double intakeSpeed = 1;
   /** Creates a new Intake. */
   public Intake() {
     super();
-    fingerJoint = new CANSparkMax(Electrical.FINGER, MotorType.kBrushless);
     rollers = new CANSparkMax(Electrical.ROLLERS, MotorType.kBrushless);
     
     // TODO: determine channel & call getCalibration() on each absolute
-    // encoder to determine offset angle
-    fingerEncoder = new AbsoluteEncoder(5, 0);
-
-    fingerPID = fingerJoint.getPIDController();
-
-    
-  }
-  public void moveFinger(double motorPowerFinger)  {
-    fingerJoint.set(motorPowerFinger);
+    // encoder to determine offset angle    
   }
   public void runIntake()  {
       rollers.set(intakeSpeed);
