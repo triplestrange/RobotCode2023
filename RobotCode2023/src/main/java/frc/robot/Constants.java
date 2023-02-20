@@ -4,13 +4,18 @@
 
 package frc.robot;
 
+import javax.sql.rowset.JoinRowSet;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.subsystems.Arm.JointAngles;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -39,7 +44,9 @@ public final class Constants {
     public static final int BL_OFFSET = 0;
     public static final int BR_OFFSET = 0;
 
-    public static final double kMaxSpeedMetersPerSecond = 4.5693;
+    public static final double kMaxSpeedMetersPerSecond = 4.42;
+    public static final double climbMaxSpeedMetersPerSecond = 0.5;
+    public static final double autoAlignMaxSpeedMetersPerSecond = 0.2;
 
     public static final boolean kGyroReversed = true;
 
@@ -50,9 +57,9 @@ public final class Constants {
     public static final boolean backRightSteerEncoderReversed = false;
 
     // Distance between centers of right and left wheels on robot in meters
-    public static final double kTrackWidth = 0.59055;
+    public static final double kTrackWidth = 0.476;
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = 0.59055;
+    public static final double kWheelBase = 0.527;
     // Distance between front and back wheels on robot
 
     // kinematics constructor with module positions as arguments
@@ -79,17 +86,76 @@ public final class Constants {
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
         (2 * Math.PI) / (double) kSteerEncoderCPR;
     // FIXME Change the encoders to correct ports
-    public static final int FL_ENCODER = 0;
-    public static final int FR_ENCODER = 2;
+    public static final int FL_ENCODER = 2;
+    public static final int FR_ENCODER = 3;
     public static final int BL_ENCODER = 1;
-    public static final int BR_ENCODER = 3;
+    public static final int BR_ENCODER = 0;
     // FIXME Change the offsets to current encoder values
-    public final static double FL_ENC_OFFSET = 0; // 183
-    public final static double FR_ENC_OFFSET = 0; // 179
-    public final static double BL_ENC_OFFSET = 0; // 221
-    public final static double BR_ENC_OFFSET = 0; // 241
+    public final static double FL_ENC_OFFSET = 143; // 183 TODO: 180 off??
+    public final static double FR_ENC_OFFSET = 141; // 179
+    public final static double BL_ENC_OFFSET = 153; // 221 TODO: 180 off??
+    public final static double BR_ENC_OFFSET = 103; // 241
   }
+  public static final class visionConstants {
+    // Only for the Red Alliance Wall
+    public final static Translation2d scoringOffset = new Translation2d(-0.762,0);
+    public final static Translation2d feederOffsetLeft = new Translation2d(-0.41275,0.5334);
+    public final static double coneOffsetLeft = 0.5588;
+    // This is for both
+    public final static Pose2d[] tagPose = new Pose2d[] {
+      new Pose2d(7.24310 + scoringOffset.getX(), -2.93659, new Rotation2d(0)),
+      new Pose2d(7.24310 + scoringOffset.getX(), 1.26019, new Rotation2d(0)),
+      new Pose2d(7.24310 + scoringOffset.getX(), 0.41621, new Rotation2d(0)),
+      new Pose2d(7.90832 + feederOffsetLeft.getX(), 2.74161, new Rotation2d(0)),
+      new Pose2d(-7.90832 - feederOffsetLeft.getX(), 2.74161, new Rotation2d(Math.PI)),
+      new Pose2d(-7.24310 - scoringOffset.getX(), 0.41621, new Rotation2d(Math.PI)),
+      new Pose2d(-7.24310 - scoringOffset.getX(), -1.26019, new Rotation2d(Math.PI)),
+      new Pose2d(-7.24310 - scoringOffset.getX(), -2.93659, new Rotation2d(Math.PI))
+      
+    };
 
+
+  }
+  public static final class armConstants  {
+
+    // FIXME Change the offsets to current encoder values
+    public final static double SHOULDER_OFFSET = 0;
+    public final static double ELBOW_OFFSET = 0;
+    public final static double WRIST_OFFSET = 0;
+    // Gear ratios
+    public final static double GR_SHOULDER = 75 * (64.0/14);
+    public final static double GR_ELBOW = 45 * (80.0/52);
+    // WILL GORGEN's SUGGESTED GEAR RATIO
+    public final static double GR_WRIST = 200;
+
+    // JOINT FREE SPEEDS IN RADIANS
+    // USING EXPERIMENTAL DATA
+    public final static double FREE_SPEED_SHOULDER = (5820 / 60 * 2 * Math.PI)/GR_SHOULDER;
+    public final static double FREE_SPEED_ELBOW = (5820 / 60 * 2 * Math.PI)/GR_SHOULDER;
+    public final static double FREE_SPEED_WRIST = (11710 / 60 * 2 * Math.PI)/GR_WRIST;
+
+    // ARM LENGTHS
+    public final static double SHOULDER_LENGTH = 38 * 0.0254;
+    public final static double ELBOW_LENGTH = 34 * 0.0254;
+
+    // ACCEPTABLE PERCENT ERROR
+    public final static double ERROR_IN_RADIANS = Math.PI/180;
+
+    // SCORING PRESETS
+    public final static double CONE_SCORING_OFFSET = 205/16;
+    public final static JointAngles DEFAULT_POSITION = new JointAngles(Math.PI/2, Math.toRadians(-75), 0);
+
+    public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
+    public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
+    // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)
+    public final static JointAngles HIGH_POSITION = JointAngles.anglesFrom2D(55, 43, Math.PI/2);
+    public final static JointAngles MID_POSITION = JointAngles.anglesFrom2D(43.5, 22 + CONE_SCORING_OFFSET, Math.PI/2);
+    //FIXME different values for new intake!
+    public final static JointAngles LOW_POSITION = JointAngles.anglesFrom2D(21.8, -3.2, Math.toRadians(30));
+
+    // Trajectory config
+    public final static TrajectoryConfig config = new TrajectoryConfig(0.1, 0.1);
+  }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 1.5;
     public static final double kMaxAccelerationMetersPerSecondSquared = 2;
@@ -114,20 +180,25 @@ public final class Constants {
   public static final class Electrical {
     // Swerve Motor Controller CAN ID's
     // FIXME Change to correct CAN ID's and give the encoders CAN ID's
-    public static final int FL_DRIVE = 6;
-    public static final int FR_DRIVE = 13;
-    public static final int BL_DRIVE = 5;
-    public static final int BR_DRIVE = 14;
-    public static final int FL_STEER = 7;
-    public static final int FR_STEER = 12;
-    public static final int BL_STEER = 4;
-    public static final int BR_STEER = 15;
+    public static final int FL_DRIVE = 13;
+    public static final int FR_DRIVE = 6;
+    public static final int BL_DRIVE = 11;
+    public static final int BR_DRIVE = 8;
+    public static final int FL_STEER = 12;
+    public static final int FR_STEER = 7;
+    public static final int BL_STEER = 10;
+    public static final int BR_STEER = 9;
+    // FIXME Change to correct CAN ID's And give the encoders CAN ID's
+    public static final int SHOULDER = 14;
+    public static final int ELBOW = 15;
+    public static final int WRIST = 16;
 
+    public static final int ROLLERS = 17;
   }
 
   public static class JoystickButtons {
     public static final XboxController m_driverController = new XboxController(0);
-    public static final Joystick m_operatorController = new Joystick(1);
+    public static final XboxController m_operatorController = new XboxController(1);
 
     public static final JoystickButton opA = new JoystickButton(m_operatorController, 1);
     public static final JoystickButton opB = new JoystickButton(m_operatorController, 2);
@@ -139,6 +210,10 @@ public final class Constants {
     public static final JoystickButton oprWing = new JoystickButton(m_operatorController, 8);
     public static final JoystickButton oplJoy = new JoystickButton(m_operatorController, 9);
     public static final JoystickButton oprJoy = new JoystickButton(m_operatorController, 10);
+    public static final POVButton opDpadD = new POVButton(m_operatorController, 180);
+    public static final POVButton opDpadU = new POVButton(m_operatorController, 0);
+    public static final POVButton opDpadL = new POVButton(m_operatorController, 270);
+    public static final POVButton opDpadR = new POVButton(m_operatorController, 90);
 
     public static final JoystickButton dA = new JoystickButton(m_driverController, 1);
     public static final JoystickButton dB = new JoystickButton(m_driverController, 2);
