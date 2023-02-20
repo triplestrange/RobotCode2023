@@ -66,6 +66,13 @@ public class Arm extends SubsystemBase {
     elbowRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_ELBOW);
     wristRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_WRIST);
 
+    elbowRelativeEncoder.setPosition(Math.toRadians(-80));
+    shoulderRelativeEncoder.setPosition(Math.PI / 2);
+  
+    shoulderJoint.setSmartCurrentLimit(20);
+    elbowJoint.setSmartCurrentLimit(20);
+    wristJoint.setSmartCurrentLimit(20);
+
     shoulderPID = shoulderJoint.getPIDController();
     elbowPID = elbowJoint.getPIDController();
     wristPID = wristJoint.getPIDController();
@@ -90,7 +97,8 @@ public class Arm extends SubsystemBase {
    public void setShoulder(double angle, double ffSpeed) {
     shoulderPID.setReference(angle, ControlType.kPosition, 
     0, ffSpeed/Constants.armConstants.FREE_SPEED_SHOULDER);
-   }
+    SmartDashboard.putNumber("targetShoulderDeg", Math.toDegrees(angle));
+  }
     public double getShoulder() {
     return shoulderRelativeEncoder.getPosition();
   }
@@ -102,6 +110,7 @@ public class Arm extends SubsystemBase {
   public void setElbow(double angle, double ffSpeed) {
     elbowPID.setReference(angle, ControlType.kPosition,
     0, ffSpeed/Constants.armConstants.FREE_SPEED_ELBOW);
+    SmartDashboard.putNumber("targetElbowDeg", Math.toDegrees(angle));
   }
 
   public double getElbow() {
@@ -114,6 +123,7 @@ public class Arm extends SubsystemBase {
   public void setWrist(double angle, double ffSpeed) {
     wristPID.setReference(angle, ControlType.kPosition, 
     0, ffSpeed/Constants.armConstants.FREE_SPEED_WRIST);
+    SmartDashboard.putNumber("targetWristDeg", Math.toDegrees(angle));
   }
 
   public double getWrist() {
@@ -124,8 +134,8 @@ public class Arm extends SubsystemBase {
     int kP = 1;
     int kI = 0; 
     int kD = 0;
-    int kMinOutput = -1;
-    int kMaxOutput = 1;
+    double kMinOutput = -0.25;
+    double kMaxOutput = 0.25;
 
     controller.setP(kP);
     controller.setI(kI);
@@ -161,8 +171,8 @@ public static class JointAngles  {
   public static JointAngles anglesFrom2D(double width, double height, double wristAngle) {
   // math checked with CAD
   // Proof: https://imgur.com/3QSfHY5
-    double a = 38;
-    double b = 34;
+    double a = Constants.armConstants.SHOULDER_LENGTH;
+    double b = Constants.armConstants.ELBOW_LENGTH;
     double c = Math.hypot(width, height);
 
     double angle1 = Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2))/(2 * a * b));
@@ -214,5 +224,8 @@ public Translation2d getArmPosition()  {
     SmartDashboard.putNumber("shoulderDeg", Math.toDegrees(getShoulder()));
     SmartDashboard.putNumber("elbowDeg", Math.toDegrees(getElbow()));
     SmartDashboard.putNumber("wristDeg", Math.toDegrees(getWrist()));
+    Translation2d currentPos = getArmPosition();
+    SmartDashboard.putNumber("armX", currentPos.getX());
+    SmartDashboard.putNumber("armY", currentPos.getY());
   }
 }

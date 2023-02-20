@@ -25,6 +25,7 @@ import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.armPositions;
+import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
@@ -68,7 +69,7 @@ public class RobotContainer {
         m_Arm.setDefaultCommand(new RunCommand(
             () -> m_Arm.moveArm(
                 0.5 * JoystickButtons.m_operatorController.getLeftY(),
-                0.5 * JoystickButtons.m_operatorController.getRightY(), 
+                -0.5 * JoystickButtons.m_operatorController.getRightY(), 
                 0.5 * (JoystickButtons.m_operatorController.getPOV()==180 ? 1 : JoystickButtons.m_operatorController.getPOV()==0 ? -1 : 0)),
             m_Arm
         ));
@@ -95,14 +96,13 @@ public class RobotContainer {
     JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
     JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
     
-    JoystickButtons.opY.whileTrue(new armPositions(Constants.armConstants.DEFAULT_POSITION, m_Arm)
-      .andThen(new armPositions(Constants.armConstants.INTERMEDIATE_LOW_POSITION, m_Arm)));
-    JoystickButtons.opA.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_MID_POSITION, m_Arm)
-      .andThen(new armPositions(Constants.armConstants.HIGH_POSITION, m_Arm)));
-    JoystickButtons.opX.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_MID_POSITION, m_Arm)
-      .andThen(new armPositions(Constants.armConstants.MID_POSITION, m_Arm)));
-    JoystickButtons.opB.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_LOW_POSITION, m_Arm)
-      .andThen(new armPositions(Constants.armConstants.LOW_POSITION, m_Arm)));
+    // JoystickButtons.opY.whileTrue(new armPositions()
+    //   .andThen(new armPositions(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
+    // JoystickButtons.opA.whileTrue(new armTrajectory(new Pose2d(new Translation2d(0.5,0.5), null), 0, m_Arm));
+    // JoystickButtons.opX.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_MID_POSITION, m_Arm)
+    //   .andThen(new armPositions(Constants.armConstants.MID_POSITION, m_Arm)));
+    // JoystickButtons.opB.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_LOW_POSITION, m_Arm)
+    //   .andThen(new armPositions(Constants.armConstants.LOW_POSITION, m_Arm)));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

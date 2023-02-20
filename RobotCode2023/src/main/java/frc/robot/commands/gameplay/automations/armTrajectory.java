@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.JoystickButtons;
@@ -28,7 +29,7 @@ public class armTrajectory extends CommandBase{
     private final Timer timer = new Timer();
     private double initialWristAngle;
     private double finalWristAngle; 
-    public armTrajectory(Pose2d targetPose2d, Arm arm, double finalWristAngle) {
+    public armTrajectory(Pose2d targetPose2d, double finalWristAngle, Arm arm) {
         addRequirements(arm);
         this.arm = arm;
         this.targetPose2d = targetPose2d;
@@ -74,7 +75,7 @@ public class armTrajectory extends CommandBase{
             // Start at the origin facing the +X direction
             new Pose2d(currentPos, new Rotation2d(initialAngle)),
             // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            List.of(),
             // End 3 meters straight ahead of where we started, facing forward
             new Pose2d(targetPose2d.getX(), targetPose2d.getY(), new Rotation2d(endingAngle)),
             Constants.armConstants.config);
@@ -87,6 +88,9 @@ public class armTrajectory extends CommandBase{
     @Override
     public void execute() {
         Trajectory.State targetState = trajectory.sample(timer.get());
+        
+        SmartDashboard.putNumber("armTrajX", targetState.poseMeters.getX());
+        SmartDashboard.putNumber("armTrajY", targetState.poseMeters.getY());
 
         double wristAngle = 0;
 
