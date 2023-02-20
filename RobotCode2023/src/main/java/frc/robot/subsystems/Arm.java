@@ -190,7 +190,7 @@ public Vector<N2> angleVelocity(Vector <N2> velocity) {
     -Constants.armConstants.SHOULDER_LENGTH * Math.sin(sAngle),
     -Constants.armConstants.ELBOW_LENGTH * Math.sin(eAngle),
     Constants.armConstants.SHOULDER_LENGTH * Math.cos(sAngle),
-    Constants.armConstants.ELBOW_LENGTH * eAngle
+    Constants.armConstants.ELBOW_LENGTH * Math.cos(eAngle)
     
   );
 
