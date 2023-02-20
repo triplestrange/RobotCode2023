@@ -144,9 +144,8 @@ public final class Constants {
     // SCORING PRESETS
     public final static double CONE_SCORING_OFFSET = 205/16;
     public final static JointAngles DEFAULT_POSITION = new JointAngles(Math.PI/2, Math.toRadians(-75), 0);
-
-    public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
-    public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
+    public final static JointAngles INTERMEDIATE_MID_POSITION = JointAngles.anglesFrom2D(18.5, 33.8 + CONE_SCORING_OFFSET, Math.PI/2);
+    public final static JointAngles INTERMEDIATE_LOW_POSITION = new JointAngles(Math.PI/2, Math.toRadians(-60), 0);
     // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)
     public final static JointAngles HIGH_POSITION = JointAngles.anglesFrom2D(55, 43, Math.PI/2);
     public final static JointAngles MID_POSITION = JointAngles.anglesFrom2D(43.5, 22 + CONE_SCORING_OFFSET, Math.PI/2);
