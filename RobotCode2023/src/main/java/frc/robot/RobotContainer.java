@@ -61,6 +61,32 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {}
 
+<<<<<<< Updated upstream
+=======
+    // Driver Controls
+    // 
+    JoystickButtons.dA.whileTrue(new RunCommand( ()-> m_robotDrive.autoAlignCube(0, m_robotDrive.optimalID()),m_robotDrive));
+    JoystickButtons.dX.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(-1),m_robotDrive));
+    JoystickButtons.dB.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
+    JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
+    JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
+
+    // Operator Controls
+    // TODO 5 buttons total plus manual override for operator
+    JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
+    JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
+    
+    JoystickButtons.opY.whileTrue(new armPositions(Constants.armConstants.DEFAULT_POSITION, m_Arm)
+      .andThen(new armPositions(Constants.armConstants.INTERMEDIATE_LOW_POSITION, m_Arm)));
+    JoystickButtons.opA.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_MID_POSITION, m_Arm)
+      .andThen(new armPositions(Constants.armConstants.HIGH_POSITION, m_Arm)));
+    JoystickButtons.opX.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_MID_POSITION, m_Arm)
+      .andThen(new armPositions(Constants.armConstants.MID_POSITION, m_Arm)));
+    JoystickButtons.opB.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_LOW_POSITION, m_Arm)
+      .andThen(new armPositions(Constants.armConstants.LOW_POSITION, m_Arm)));
+      
+  }
+>>>>>>> Stashed changes
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
