@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,15 +15,20 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.JoystickButtons;
-import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.util.List;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.JoystickButtons;
+import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.gameplay.automations.Balance;
+import frc.robot.commands.gameplay.automations.armPositions;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Arm.JointAngles;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -31,27 +38,41 @@ import java.util.List;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final SwerveDrive m_robotDrive = new SwerveDrive();
-
+  private final Robot m_Robot;
+  public final SwerveDrive m_robotDrive;
+  private final Arm m_Arm = new Arm();
+  private final Intake m_Intake = new Intake();
   // The driver's controller
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  public RobotContainer(Robot m_robot) {
+    m_Robot = m_robot;
+    m_robotDrive = new SwerveDrive(m_robot);
+
     // Configure the button bindings
     configureButtonBindings();
-
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
+        // TODO fine tune motor speeds
         new RunCommand(
             () ->
                 m_robotDrive.drive(
-                    JoystickButtons.m_driverController.getLeftY(),
-                    JoystickButtons.m_driverController.getLeftX(),
-                    JoystickButtons.m_driverController.getRightX(),
-                    false),
+                    JoystickButtons.m_driverController.getLeftY() * 5,
+                    JoystickButtons.m_driverController.getLeftX() * 5,
+                    JoystickButtons.m_driverController.getRightX() * 5,
+                    true),
             m_robotDrive));
-  }
+
+
+        m_Arm.setDefaultCommand(new RunCommand(
+            () -> m_Arm.moveArm(
+                0.5 * JoystickButtons.m_operatorController.getLeftY(),
+                0.5 * JoystickButtons.m_operatorController.getRightY(), 
+                0.5 * (JoystickButtons.m_operatorController.getPOV()==180 ? 1 : JoystickButtons.m_operatorController.getPOV()==0 ? -1 : 0)),
+            m_Arm
+        ));
+   }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -59,8 +80,30 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
    * {@link JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
 
+    // Driver Controls
+    // 
+    JoystickButtons.dA.whileTrue(new RunCommand( ()-> m_robotDrive.autoAlignCube(0, m_robotDrive.optimalID()),m_robotDrive));
+    JoystickButtons.dX.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(-1),m_robotDrive));
+    JoystickButtons.dB.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
+    JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
+    JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
+
+    // Operator Controls
+    // TODO 5 buttons total plus manual override for operator
+    JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
+    JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
+    
+    JoystickButtons.opY.whileTrue(new armPositions(Constants.armConstants.DEFAULT_POSITION, m_Arm)
+      .andThen(new armPositions(Constants.armConstants.INTERMEDIATE_LOW_POSITION, m_Arm)));
+    JoystickButtons.opA.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_MID_POSITION, m_Arm)
+      .andThen(new armPositions(Constants.armConstants.HIGH_POSITION, m_Arm)));
+    JoystickButtons.opX.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_MID_POSITION, m_Arm)
+      .andThen(new armPositions(Constants.armConstants.MID_POSITION, m_Arm)));
+    JoystickButtons.opB.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_LOW_POSITION, m_Arm)
+      .andThen(new armPositions(Constants.armConstants.LOW_POSITION, m_Arm)));
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

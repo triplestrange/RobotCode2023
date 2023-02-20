@@ -9,26 +9,43 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.Electrical;
 import frc.robot.Constants.ModuleConstants;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import frc.robot.Robot;
 // import frc.robot.Constants.ModuleConstants;
 // import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.visionConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class SwerveDrive extends SubsystemBase {
+  private final Robot m_Robot;
+  public PIDController transformX = new PIDController(0.05, 0, 0);
+  public PIDController transformY = new PIDController(0.05, 0, 0);
+  public PIDController rotation = new PIDController(0.05,0,0);
+  public double xAutoSpeed = 0;
+  public double yAutoSpeed = 0;
+  public double rAutoSpeed = 0;
+
   // Robot swerve modules
   private final SwerveModule m_frontLeft = new SwerveModule(Electrical.FL_DRIVE,
       Electrical.FL_STEER,
@@ -52,7 +69,7 @@ public class SwerveDrive extends SubsystemBase {
       Electrical.BR_STEER,
       ModuleConstants.BR_ENCODER,
       SwerveConstants.backRightSteerEncoderReversed,
-      ModuleConstants.FR_ENC_OFFSET);
+      ModuleConstants.BR_ENC_OFFSET);
 
   private SwerveModuleState[] swerveModuleStates;
   private SwerveModuleState[] initStates;
@@ -60,12 +77,16 @@ public class SwerveDrive extends SubsystemBase {
   public ChassisSpeeds currentMovement;
 
   // The gyro sensor
-  private static final Gyro navX = new AHRS(SPI.Port.kMXP);
+  public final double navXPitch()  {
+  return navX.getPitch();
+
+  }
+  private static final AHRS navX = new AHRS(SPI.Port.kMXP);
   boolean gyroReset;
 
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry =
-      new SwerveDriveOdometry(
+  public SwerveDrivePoseEstimator m_odometry =
+      new SwerveDrivePoseEstimator(
           SwerveConstants.kDriveKinematics,
           getAngle(),
           new SwerveModulePosition[] {
@@ -73,12 +94,14 @@ public class SwerveDrive extends SubsystemBase {
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-          });
+          }, new Pose2d());
 
   /**
    * Creates a new DriveSubsystem.
    */
-  public SwerveDrive() {
+  public SwerveDrive(Robot m_robot) {
+    resetEncoders();
+    m_Robot = m_robot;
   }
 
   /**
@@ -131,6 +154,13 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("r", getPose().getRotation().getDegrees());
     SmartDashboard.putNumber("GYRO ANGLE", navX.getAngle());
     SmartDashboard.putNumber("TurnRate", getTurnRate());
+    SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
+    .getTable("limelight").getEntry("getpipe").getDouble(0));
+
+    SmartDashboard.putNumber("xSpeed", xAutoSpeed);
+    SmartDashboard.putNumber("ySpeed", yAutoSpeed);
+    SmartDashboard.putNumber("rSpeed", rAutoSpeed);
+  //  System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n rSpeed: " + rAutoSpeed);
   }
 
   /**
@@ -139,7 +169,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return m_odometry.getEstimatedPosition();
   }
 
   
@@ -159,7 +189,7 @@ public class SwerveDrive extends SubsystemBase {
       },
       pose);
   }
-
+  
   /**
    * Method to drive the robot using joystick info.
    *
@@ -215,7 +245,86 @@ public class SwerveDrive extends SubsystemBase {
     navX.reset();
     gyroReset = true;
   }
+  // Calculates closest Apriltag for use in autoAlignCube
+  public int optimalID() {
+    Pose2d robotPose = getPose();
+    if (m_Robot.allianceColor == Alliance.Red)  {
+      if (robotPose.getX() < 0) {
+        return 5;
+      }
+      else  {
+        return robotPose.getY() <= -2.098 ? 1 : robotPose.getY() <= -0.422 ? 2 : 3;
+      }
+    }
+    else  {
+      if (robotPose.getX() > 0) {
+        return 4;
+      }
+      else  {
+        return robotPose.getY() <= -2.098 ? 8 : robotPose.getY() <= -0.422 ? 7 : 6;
+      }
+      }
+      
+  }
+  // FIXME ADD MAX SDEED LIMITS BEFORE TESTING
+  public void autoAlignCube(double offset, int ID) {
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
+    // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
+    // TODO May have to change tagPose 
+  
+    Pose2d tagPose = visionConstants.tagPose[ID - 1];    
+    System.out.print("xSpeed " + xAutoSpeed + "; ySpeed " + yAutoSpeed + "; rSpeed " + rAutoSpeed);
+    
+    driveTo(new Pose2d(tagPose.getX(), tagPose.getY() + offset * tagPose.getRotation().getCos(), tagPose.getRotation()));
+    }
+    public void driveTo(Pose2d targetPose2d)  {
+    double xAutoSpeed = transformX.calculate(getPose().getX(),targetPose2d.getX());
+    double yAutoSpeed = transformY.calculate(getPose().getY(), targetPose2d.getY());
+    double rAutoSpeed = rotation.calculate(getAngle().getRadians(), targetPose2d.getRotation().getRadians());
 
+    // Max Speeds
+    // FIXME fix it
+    // xAutoSpeed = MathUtil.clamp();
+     if (xAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+      xAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    else if (xAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    xAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+
+     if (yAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+      yAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    else if (yAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
+    yAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+
+      drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
+    }
+    
+
+ public void autoAlignConeOrFeeder(double offset) {
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
+    // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
+    // double xSpeed = transformX.calculate(tx,0);
+    // double ySpeed = transformY.calculate(thor,0);
+    // double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
+    int ID = optimalID();
+
+    double finalOffset = ID == 5 || ID == 4 ? Constants.visionConstants.feederOffsetLeft.getY() : Constants.visionConstants.coneOffsetLeft;
+
+
+    autoAlignCube(finalOffset * offset, optimalID());
+    // drive(xSpeed, ySpeed, rSpeed, false);
+  }
+
+
+  public void updateOdometry()  {
+  double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+  int tv = (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getInteger(0);
+  if (tv == 1 && robotPose.length == 6)  {
+    Pose2d visionPose = new Pose2d(robotPose[0], robotPose[1], Rotation2d.fromDegrees(robotPose[5]));
+    m_odometry.addVisionMeasurement(visionPose, WPIUtilJNI.now() * 1.0e-6);
+  }
+  }
   /**
    * Returns the heading of the robot.
    *
