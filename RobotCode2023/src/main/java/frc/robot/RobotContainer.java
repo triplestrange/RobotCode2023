@@ -103,7 +103,6 @@ public class RobotContainer {
       .andThen(new armPositions(Constants.armConstants.MID_POSITION, m_Arm)));
     JoystickButtons.opB.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_LOW_POSITION, m_Arm)
       .andThen(new armPositions(Constants.armConstants.LOW_POSITION, m_Arm)));
-      */
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
