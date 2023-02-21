@@ -16,13 +16,8 @@ import frc.robot.Constants.AutoConstants;
 
 
 public class baseAuto extends SequentialCommandGroup {
-    //movement for autos
-    public movements(SwerveDrive swerve, Arm arm) {
-        TrajectoryConfig config = new TrajectoryConfig(0, AutoConstants.kMaxAccelerationMetersPerSecondSquared);
-        this.arm = arm;
-        return swerve;
-    }
-
+    
+    String trajectoryJSON = "";
 
 
 }
