@@ -273,7 +273,15 @@ public class SwerveDrive extends SubsystemBase {
     // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
     // TODO May have to change tagPose 
   
-    Pose2d tagPose = visionConstants.tagPose[ID - 1];    
+    Pose2d tagPose = visionConstants.tagPose[ID - 1];  
+
+    if (m_Robot.allianceColor == Alliance.Blue) {
+      tagPose = new Pose2d(tagPose.getX() + 8.27, tagPose.getY() + 4, tagPose.getRotation());
+    }  
+    else  {
+    tagPose = new Pose2d(8.27 - tagPose.getX(), 4 - tagPose.getY(), tagPose.getRotation().rotateBy(new Rotation2d(Math.PI)));
+    }
+  
     System.out.print("xSpeed " + xAutoSpeed + "; ySpeed " + yAutoSpeed + "; rSpeed " + rAutoSpeed);
     
     driveTo(new Pose2d(tagPose.getX(), tagPose.getY() + offset * tagPose.getRotation().getCos(), tagPose.getRotation()));
@@ -309,16 +317,14 @@ public class SwerveDrive extends SubsystemBase {
 
 
   public void updateOdometry()  {
-    double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired").getDoubleArray(new double[6]);
 
-    if (m_Robot.allianceColor == Alliance.Red)  {
-      robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired").getDoubleArray(new double[6]);
-    }
+    double[] robotPose;
+
     if (m_Robot.allianceColor == Alliance.Blue) {
       robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue").getDoubleArray(new double[6]);
     }
     else  {
-      System.out.println("Error, could not get alliance color");
+      robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired").getDoubleArray(new double[6]);
     }
 
   int tv = (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getInteger(0);
