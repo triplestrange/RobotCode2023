@@ -25,6 +25,7 @@ import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.armPositions;
+import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
