@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -143,17 +144,17 @@ public final class Constants {
 
     // SCORING PRESETS
     public final static double CONE_SCORING_OFFSET = 205/16;
-    public final static JointAngles DEFAULT_POSITION = new JointAngles(Math.PI/2, Math.toRadians(-75), 0);
-    public final static JointAngles INTERMEDIATE_MID_POSITION = JointAngles.anglesFrom2D(18.5, 33.8 + CONE_SCORING_OFFSET, Math.PI/2);
-    public final static JointAngles INTERMEDIATE_LOW_POSITION = new JointAngles(Math.PI/2, Math.toRadians(-60), 0);
+    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.22, 0.13, new Rotation2d(0));
+    public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
+    public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
     // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)
-    public final static JointAngles HIGH_POSITION = JointAngles.anglesFrom2D(55, 43, Math.PI/2);
-    public final static JointAngles MID_POSITION = JointAngles.anglesFrom2D(43.5, 22 + CONE_SCORING_OFFSET, Math.PI/2);
+    public final static Pose2d HIGH_POSITION = new Pose2d(Units.inchesToMeters(55), Units.inchesToMeters(43), new Rotation2d(0));
+    public final static Pose2d MID_POSITION = new Pose2d(Units.inchesToMeters(42), Units.inchesToMeters(33), new Rotation2d(0));
     //FIXME different values for new intake!
-    public final static JointAngles LOW_POSITION = JointAngles.anglesFrom2D(21.8, -3.2, Math.toRadians(30));
+    public final static Pose2d LOW_POSITION = new Pose2d(Units.inchesToMeters(21.8), Units.inchesToMeters(-3.2), new Rotation2d(0)); 
 
     // Trajectory config
-    public final static TrajectoryConfig config = new TrajectoryConfig(0.1, 0.1);
+    public final static TrajectoryConfig config = new TrajectoryConfig(2, 1);
   }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 1.5;

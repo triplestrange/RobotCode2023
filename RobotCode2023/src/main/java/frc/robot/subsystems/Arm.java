@@ -66,7 +66,7 @@ public class Arm extends SubsystemBase {
     elbowRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_ELBOW);
     wristRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_WRIST);
 
-    elbowRelativeEncoder.setPosition(Math.toRadians(-80));
+    elbowRelativeEncoder.setPosition(Math.toRadians(-75));
     shoulderRelativeEncoder.setPosition(Math.PI / 2);
   
     shoulderJoint.setSmartCurrentLimit(20);
@@ -131,7 +131,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void initializePID(SparkMaxPIDController controller) {
-    int kP = 1;
+    int kP = 15;
     int kI = 0; 
     int kD = 0;
     double kMinOutput = -0.25;

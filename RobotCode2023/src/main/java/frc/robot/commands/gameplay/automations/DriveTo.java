@@ -13,7 +13,6 @@ public class DriveTo extends CommandBase {
 
   private Pose2d pose2d; 
 
-
   private SwerveDrive m_SwerveDrive;
   /** Creates a new Approach. */
   /*

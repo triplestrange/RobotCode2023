@@ -29,11 +29,11 @@ public class armTrajectory extends CommandBase{
     private final Timer timer = new Timer();
     private double initialWristAngle;
     private double finalWristAngle; 
-    public armTrajectory(Pose2d targetPose2d, double finalWristAngle, Arm arm) {
+    public armTrajectory(Pose2d targetPose2d, Arm arm) {
         addRequirements(arm);
         this.arm = arm;
         this.targetPose2d = targetPose2d;
-        this.finalWristAngle = finalWristAngle;
+        this.finalWristAngle = targetPose2d.getRotation().getRadians();
     }
   
     // Called when the command is initially scheduled.
@@ -46,28 +46,35 @@ public class armTrajectory extends CommandBase{
         initialAngle = arm.getWrist();
         if (currentPos.getX() < (13 * 0.0254))    {
             initialAngle = Math.PI / 2; 
+            SmartDashboard.putNumber("initialAngle", initialAngle);
         }
 
-        else if (currentPos.getY() > (7 * 0.0254)) {
+        else if (currentPos.getY() < (7 * 0.0254)) {
             initialAngle = Math.PI / 2;
+            SmartDashboard.putNumber("initialAngle", initialAngle);
         }
 
         else {
 
             initialAngle = Math.PI; 
+            SmartDashboard.putNumber("initialAngle", initialAngle);
         }
 
         if (targetPose2d.getX() < (13 * 0.0254))    {
             endingAngle = Math.PI / -2; 
+            SmartDashboard.putNumber("EndingAngle", endingAngle);
         }
 
-        else if (targetPose2d.getY() > (7 * 0.0254)) {
+        else if (targetPose2d.getY() < (7 * 0.0254)) {
             endingAngle = Math.PI / -2;
+            SmartDashboard.putNumber("endingAngle", endingAngle);
         }
 
         else {
 
             endingAngle = 0; 
+            SmartDashboard.putNumber("endingAngle", endingAngle
+            );
         }
 
         trajectory =
@@ -92,9 +99,8 @@ public class armTrajectory extends CommandBase{
         SmartDashboard.putNumber("armTrajX", targetState.poseMeters.getX());
         SmartDashboard.putNumber("armTrajY", targetState.poseMeters.getY());
 
-        double wristAngle = 0;
 
-        JointAngles targetAngles = JointAngles.anglesFrom2D(targetState.poseMeters.getX(), targetState.poseMeters.getY(), wristAngle);
+        JointAngles targetAngles = JointAngles.anglesFrom2D(targetState.poseMeters.getX(), targetState.poseMeters.getY(), finalWristAngle);
         Rotation2d direction = targetState.poseMeters.getRotation();
         Vector<N2> linearVelocity = VecBuilder.fill(direction.getCos(), direction.getSin()).times(targetState.velocityMetersPerSecond);
          

@@ -96,13 +96,10 @@ public class RobotContainer {
     JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
     JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
     
-    // JoystickButtons.opY.whileTrue(new armPositions()
-    //   .andThen(new armPositions(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
-    // JoystickButtons.opA.whileTrue(new armTrajectory(new Pose2d(new Translation2d(0.5,0.5), null), 0, m_Arm));
-    // JoystickButtons.opX.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_MID_POSITION, m_Arm)
-    //   .andThen(new armPositions(Constants.armConstants.MID_POSITION, m_Arm)));
-    // JoystickButtons.opB.whileTrue(new armPositions(Constants.armConstants.INTERMEDIATE_LOW_POSITION, m_Arm)
-    //   .andThen(new armPositions(Constants.armConstants.LOW_POSITION, m_Arm)));
+    JoystickButtons.opY.whileTrue(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
+    JoystickButtons.opA.whileTrue(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+    JoystickButtons.opX.whileTrue(new armTrajectory(Constants.armConstants.MID_POSITION, m_Arm));
+    JoystickButtons.opB.whileTrue(new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
