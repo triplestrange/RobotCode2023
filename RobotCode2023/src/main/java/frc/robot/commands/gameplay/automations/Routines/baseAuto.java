@@ -16,8 +16,13 @@ import frc.robot.Constants.AutoConstants;
 
 
 public class baseAuto extends SequentialCommandGroup {
-    
-    String trajectoryJSON = "";
-
-
+    //FIXME path? trajectorypath? everything???? I hate this
+    public void initialize() {
+        try {
+            String trajectoryJSON = "output/chaosYAY.wpilib.JSON";
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+        }
+    }
 }
