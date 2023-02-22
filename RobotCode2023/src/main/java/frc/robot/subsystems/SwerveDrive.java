@@ -8,6 +8,8 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -26,6 +28,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Electrical;
@@ -273,7 +278,15 @@ public class SwerveDrive extends SubsystemBase {
     // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
     // TODO May have to change tagPose 
   
-    Pose2d tagPose = visionConstants.tagPose[ID - 1];    
+    Pose2d tagPose = visionConstants.tagPose[ID - 1];  
+
+    if (m_Robot.allianceColor == Alliance.Blue) {
+      tagPose = new Pose2d(tagPose.getX() + 8.27, tagPose.getY() + 4, tagPose.getRotation());
+    }  
+    else  {
+    tagPose = new Pose2d(8.27 - tagPose.getX(), 4 - tagPose.getY(), tagPose.getRotation().rotateBy(new Rotation2d(Math.PI)));
+    }
+  
     System.out.print("xSpeed " + xAutoSpeed + "; ySpeed " + yAutoSpeed + "; rSpeed " + rAutoSpeed);
     
     driveTo(new Pose2d(tagPose.getX(), tagPose.getY() + offset * tagPose.getRotation().getCos(), tagPose.getRotation()));
@@ -284,17 +297,8 @@ public class SwerveDrive extends SubsystemBase {
     double rAutoSpeed = rotation.calculate(getAngle().getRadians(), targetPose2d.getRotation().getRadians());
 
     // Max Speeds
-    // FIXME fix it
-    // xAutoSpeed = MathUtil.clamp();
-     if (xAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-      xAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-    else if (xAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    xAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-
-     if (yAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-      yAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-    else if (yAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    yAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    xAutoSpeed = MathUtil.clamp(xAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond, SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
+    yAutoSpeed = MathUtil.clamp(yAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond, SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
 
       drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
     }
@@ -318,7 +322,16 @@ public class SwerveDrive extends SubsystemBase {
 
 
   public void updateOdometry()  {
-  double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+
+    double[] robotPose;
+
+    if (m_Robot.allianceColor == Alliance.Blue) {
+      robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue").getDoubleArray(new double[6]);
+    }
+    else  {
+      robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired").getDoubleArray(new double[6]);
+    }
+
   int tv = (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getInteger(0);
   if (tv == 1 && robotPose.length == 6)  {
     Pose2d visionPose = new Pose2d(robotPose[0], robotPose[1], Rotation2d.fromDegrees(robotPose[5]));
@@ -351,4 +364,27 @@ public class SwerveDrive extends SubsystemBase {
     m_frontRight.resetWheel();
     m_rearRight.resetWheel();
   }
+  
+  // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
+public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+   return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          // Reset odometry for the first path you run during auto
+          if(isFirstPath){
+              this.resetOdometry(traj.getInitialHolonomicPose());
+          }
+        }),
+        new PPSwerveControllerCommand(
+            traj, 
+            this::getPose, // Pose supplier
+            SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
+            new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
+            new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            this::setModuleStates, // Module states consumer
+            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+            this // Requires this drive subsystem
+        )
+    );
+}
 }

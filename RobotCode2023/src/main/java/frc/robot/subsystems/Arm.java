@@ -17,10 +17,13 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Electrical;
+import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.armConstants;
 
 public class Arm extends SubsystemBase {
@@ -39,6 +42,14 @@ public class Arm extends SubsystemBase {
   private final SparkMaxPIDController shoulderPID;
   private final SparkMaxPIDController elbowPID;
   private final SparkMaxPIDController wristPID;
+
+  private double motorPowerShoulder;
+  private double motorPowerElbow;
+  private double motorPowerWrist;
+
+  private double lastShoulderAngle;
+  private double lastElbowAngle;
+  private double lastWristAngle;
 
   /** Creates a new Arm. */
   public Arm() {
@@ -68,6 +79,10 @@ public class Arm extends SubsystemBase {
 
     elbowRelativeEncoder.setPosition(Math.toRadians(-75));
     shoulderRelativeEncoder.setPosition(Math.PI / 2);
+
+    lastShoulderAngle = getShoulder();
+    lastElbowAngle = getElbow();
+    lastWristAngle = getWrist();
   
     shoulderJoint.setSmartCurrentLimit(20);
     elbowJoint.setSmartCurrentLimit(20);
@@ -90,14 +105,57 @@ public class Arm extends SubsystemBase {
     wristJoint.burnFlash();
   }
   public void moveArm(double motorPowerShoulder, double motorPowerElbow, double motorPowerWrist)  {
-    shoulderJoint.set(motorPowerShoulder);
-    elbowJoint.set(motorPowerElbow);
-    wristJoint.set(motorPowerWrist);
+    this.motorPowerShoulder = motorPowerShoulder;
+    this.motorPowerElbow = motorPowerElbow;
+    this.motorPowerWrist = motorPowerWrist;
+
+    if (getArmPosition().getX() > Units.inchesToMeters(65.22) && motorPowerShoulder < 0) {
+      motorPowerShoulder = 0;
+    }
+    if (getArmPosition().getX() > Units.inchesToMeters(65.22) && ((motorPowerElbow > 0 && getElbow() < 0) || (motorPowerElbow < 0 && getElbow() > 0))) {
+        motorPowerElbow = 0;
+    }
+    if (getArmPosition().getY() > Units.inchesToMeters(78) && motorPowerElbow > 0) {
+      motorPowerElbow = 0;
+    }
+    if (getArmPosition().getY() > Units.inchesToMeters(78) && ((motorPowerShoulder > 0 && getShoulder() < Math.PI / 2) || (motorPowerShoulder < 0 && getShoulder() > Math.PI / 2)))  {
+        motorPowerShoulder = 0;
+    }
+
+    if (motorPowerShoulder < 0.05)  {
+      shoulderPID.setReference(lastShoulderAngle, ControlType.kPosition);
+    }
+
+    else {
+      shoulderJoint.set(motorPowerShoulder);
+      lastShoulderAngle = getShoulder();
+    }
+    if (motorPowerElbow < 0.05)  {
+      elbowPID.setReference(lastElbowAngle, ControlType.kPosition);
+
+    }
+
+    else {
+      elbowJoint.set(motorPowerElbow);
+      lastElbowAngle = getElbow();
+    }
+    if (motorPowerWrist < 0.05)  {
+      wristPID.setReference(lastWristAngle, ControlType.kPosition);
+
+    }
+
+    else {
+      wristJoint.set(motorPowerWrist);
+      lastWristAngle = getWrist();
+    }
+    
   }
    public void setShoulder(double angle, double ffSpeed) {
     shoulderPID.setReference(angle, ControlType.kPosition, 
     0, ffSpeed/Constants.armConstants.FREE_SPEED_SHOULDER);
     SmartDashboard.putNumber("targetShoulderDeg", Math.toDegrees(angle));
+    lastShoulderAngle = angle;
+
   }
     public double getShoulder() {
     return shoulderRelativeEncoder.getPosition();
@@ -111,6 +169,7 @@ public class Arm extends SubsystemBase {
     elbowPID.setReference(angle, ControlType.kPosition,
     0, ffSpeed/Constants.armConstants.FREE_SPEED_ELBOW);
     SmartDashboard.putNumber("targetElbowDeg", Math.toDegrees(angle));
+    lastElbowAngle = angle; 
   }
 
   public double getElbow() {
@@ -124,6 +183,7 @@ public class Arm extends SubsystemBase {
     wristPID.setReference(angle, ControlType.kPosition, 
     0, ffSpeed/Constants.armConstants.FREE_SPEED_WRIST);
     SmartDashboard.putNumber("targetWristDeg", Math.toDegrees(angle));
+    lastWristAngle = angle;
   }
 
   public double getWrist() {
