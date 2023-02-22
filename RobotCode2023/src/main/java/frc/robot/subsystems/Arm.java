@@ -17,10 +17,13 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Electrical;
+import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.armConstants;
 
 public class Arm extends SubsystemBase {
@@ -39,6 +42,10 @@ public class Arm extends SubsystemBase {
   private final SparkMaxPIDController shoulderPID;
   private final SparkMaxPIDController elbowPID;
   private final SparkMaxPIDController wristPID;
+
+  private double motorPowerShoulder;
+  private double motorPowerElbow;
+  private double motorPowerWrist;
 
   /** Creates a new Arm. */
   public Arm() {
@@ -90,6 +97,19 @@ public class Arm extends SubsystemBase {
     wristJoint.burnFlash();
   }
   public void moveArm(double motorPowerShoulder, double motorPowerElbow, double motorPowerWrist)  {
+    this.motorPowerShoulder = motorPowerShoulder;
+    this.motorPowerElbow = motorPowerElbow;
+    this.motorPowerWrist = motorPowerWrist;
+
+    if (getArmPosition().getX() > Units.inchesToMeters(65.22) && JoystickButtons.m_driverController.getLeftY() > 0) {
+      if (getArmPosition().getX() > Units.inchesToMeters(65.22) && JoystickButtons.m_driverController.getRightX() > 0) {
+        motorPowerElbow = 0;
+      }
+      motorPowerShoulder = 0;
+    }
+    if (getArmPosition().getY() > Units.inchesToMeters(78) && JoystickButtons.m_driverController.getRightY() > 0) {
+      motorPowerElbow = 0;
+    }
     shoulderJoint.set(motorPowerShoulder);
     elbowJoint.set(motorPowerElbow);
     wristJoint.set(motorPowerWrist);
