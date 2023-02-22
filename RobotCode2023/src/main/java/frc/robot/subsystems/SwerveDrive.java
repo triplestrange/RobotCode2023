@@ -284,17 +284,8 @@ public class SwerveDrive extends SubsystemBase {
     double rAutoSpeed = rotation.calculate(getAngle().getRadians(), targetPose2d.getRotation().getRadians());
 
     // Max Speeds
-    // FIXME fix it
-    // xAutoSpeed = MathUtil.clamp();
-     if (xAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-      xAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-    else if (xAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    xAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-
-     if (yAutoSpeed > SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-      yAutoSpeed = SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
-    else if (yAutoSpeed < -SwerveConstants.autoAlignMaxSpeedMetersPerSecond) {
-    yAutoSpeed = -SwerveConstants.autoAlignMaxSpeedMetersPerSecond;}
+    xAutoSpeed = MathUtil.clamp(xAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond, SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
+    yAutoSpeed = MathUtil.clamp(yAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond, SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
 
       drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
     }
@@ -318,7 +309,18 @@ public class SwerveDrive extends SubsystemBase {
 
 
   public void updateOdometry()  {
-  double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+    double[] robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired").getDoubleArray(new double[6]);
+
+    if (m_Robot.allianceColor == Alliance.Red)  {
+      robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired").getDoubleArray(new double[6]);
+    }
+    if (m_Robot.allianceColor == Alliance.Blue) {
+      robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue").getDoubleArray(new double[6]);
+    }
+    else  {
+      System.out.println("Error, could not get alliance color");
+    }
+
   int tv = (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getInteger(0);
   if (tv == 1 && robotPose.length == 6)  {
     Pose2d visionPose = new Pose2d(robotPose[0], robotPose[1], Rotation2d.fromDegrees(robotPose[5]));
