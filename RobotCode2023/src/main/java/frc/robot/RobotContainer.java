@@ -69,7 +69,7 @@ public class RobotContainer {
             () -> m_Arm.moveArm(
                 0.5 * JoystickButtons.m_operatorController.getLeftY(),
                 0.5 * JoystickButtons.m_operatorController.getRightY(), 
-                0.5 * (JoystickButtons.m_operatorController.getPOV()==180 ? 1 : JoystickButtons.m_operatorController.getPOV()==0 ? -1 : 0)),
+                0.5 * (JoystickButtons.m_operatorController.getLeftTriggerAxis() - JoystickButtons.m_operatorController.getRightTriggerAxis())),
             m_Arm
         ));
    }
