@@ -1,9 +1,16 @@
 package frc.robot.commands.AutoRoutines.Routines;
 
+import java.util.HashMap;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.gameplay.automations.DriveTo;
@@ -17,9 +24,22 @@ public class OneConeLeaveCommunity extends SequentialCommandGroup{
 
     public OneConeLeaveCommunity(SwerveDrive m_Drive, Arm m_Arm)    {
 
-        PathPlannerTrajectory OneConeLeaveCommunity = PathPlanner.loadPath("OneCone, Leave Community", new PathConstraints(4, 3));
+       addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+        // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
+    PathPlannerTrajectory oneConeLeaveCommunity = PathPlanner.loadPath("OneCone, Leave Community", new PathConstraints(4, 3));
 
-        addCommands(m_Drive.followTrajectoryCommand(OneConeLeaveCommunity, true));
+    // This is just an example event map. It would be better to have a constant, global event map
+    // in your code that will be used by all path following commands.
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("grabCone", new armTrajectory(new Pose2d(1, 1, new Rotation2d(Math.PI)), m_Arm));
+    eventMap.put("scoreCone", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+    
+
+    FollowPathWithEvents command = new FollowPathWithEvents(
+    m_Drive.followTrajectoryCommand(oneConeLeaveCommunity, true),
+    oneConeLeaveCommunity.getMarkers(),
+    eventMap
+);
 
     }
     
