@@ -2,7 +2,7 @@ package frc.robot.commands.gameplay.automations;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-
+import java.sql.Time;
 import java.util.List;
 
 import edu.wpi.first.math.VecBuilder;
@@ -119,6 +119,12 @@ public class armTrajectory extends CommandBase{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+
+      if (trajectory.getTotalTimeSeconds() < timer.get())    {
+
+        return true;
+      }
+
       return false;
     }
   

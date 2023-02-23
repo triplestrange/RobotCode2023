@@ -122,7 +122,7 @@ public class Arm extends SubsystemBase {
         motorPowerShoulder = 0;
     }
 
-    if (motorPowerShoulder < 0.05)  {
+    if (motorPowerShoulder < 0.05 || motorPowerShoulder > -0.05)  {
       shoulderPID.setReference(lastShoulderAngle, ControlType.kPosition);
     }
 
@@ -130,7 +130,7 @@ public class Arm extends SubsystemBase {
       shoulderJoint.set(motorPowerShoulder);
       lastShoulderAngle = getShoulder();
     }
-    if (motorPowerElbow < 0.05)  {
+    if (motorPowerElbow < 0.05 || motorPowerElbow > -0.05)  {
       elbowPID.setReference(lastElbowAngle, ControlType.kPosition);
 
     }
@@ -139,7 +139,7 @@ public class Arm extends SubsystemBase {
       elbowJoint.set(motorPowerElbow);
       lastElbowAngle = getElbow();
     }
-    if (motorPowerWrist < 0.05)  {
+    if (motorPowerWrist < 0.05 || motorPowerWrist > -0.05)  {
       wristPID.setReference(lastWristAngle, ControlType.kPosition);
 
     }
@@ -239,7 +239,10 @@ public static class JointAngles  {
     
     // figure out how to calculate shoulder angle
     double angle2 = Math.asin((Math.sin(angle1)/c) * b);
-    
+    if (a + b < c)  {
+      angle1 = Math.PI;
+      angle2 = 0;
+    }
 // from horizontal
     double shoulderAngle = Math.atan2(height,width) + angle2;
 
