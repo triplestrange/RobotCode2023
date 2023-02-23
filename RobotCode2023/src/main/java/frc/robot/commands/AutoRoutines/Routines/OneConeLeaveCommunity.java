@@ -7,6 +7,8 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -29,7 +31,8 @@ public class OneConeLeaveCommunity extends SequentialCommandGroup{
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+    eventMap.put("grabCone", new armTrajectory(new Pose2d(1, 1, new Rotation2d(Math.PI)), m_Arm));
+    eventMap.put("scoreCone", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
     
 
     FollowPathWithEvents command = new FollowPathWithEvents(
