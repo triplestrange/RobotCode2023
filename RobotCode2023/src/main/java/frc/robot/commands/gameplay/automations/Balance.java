@@ -51,7 +51,7 @@ public class Balance extends CommandBase {
       xSpeed = SwerveConstants.climbMaxSpeedMetersPerSecond;}
     else if (xSpeed < -SwerveConstants.climbMaxSpeedMetersPerSecond) {
     xSpeed = -SwerveConstants.climbMaxSpeedMetersPerSecond;}
-    swerveDrive.drive(xSpeed, 0, 0, true);
+    swerveDrive.drive(xSpeed, 0, 0, false);
   }
 
   // Called once the command ends or is interrupted.

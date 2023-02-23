@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import org.opencv.core.Mat;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
@@ -107,6 +109,7 @@ public class SwerveDrive extends SubsystemBase {
   public SwerveDrive(Robot m_robot) {
     resetEncoders();
     m_Robot = m_robot;
+    rotation.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   /**
@@ -254,21 +257,25 @@ public class SwerveDrive extends SubsystemBase {
   public int optimalID() {
     Pose2d robotPose = getPose();
     if (m_Robot.allianceColor == Alliance.Red)  {
-      if (robotPose.getX() < 0) {
+      if (robotPose.getX() > 8.27) {
         return 5;
       }
       else  {
-        return robotPose.getY() <= -2.098 ? 1 : robotPose.getY() <= -0.422 ? 2 : 3;
+        return robotPose.getY() <= 4 + 2.098 ? 1 : robotPose.getY() <= 4 + 0.422 ? 2 : 3;
       }
     }
+
+
     else  {
-      if (robotPose.getX() > 0) {
+      if (robotPose.getX() > 8.27) {
         return 4;
       }
       else  {
-        return robotPose.getY() <= -2.098 ? 8 : robotPose.getY() <= -0.422 ? 7 : 6;
+        return robotPose.getY() <= 4 - 2.098 ? 8 : robotPose.getY() <= 4 - 0.422 ? 7 : 6;
       }
       }
+      
+
       
   }
   // FIXME ADD MAX SDEED LIMITS BEFORE TESTING

@@ -137,7 +137,7 @@ public final class Constants {
 
     // ARM LENGTHS
     public final static double SHOULDER_LENGTH = 38 * 0.0254;
-    public final static double ELBOW_LENGTH = 34 * 0.0254;
+    public final static double ELBOW_LENGTH = 37.125 * 0.0254;
 
     // ACCEPTABLE PERCENT ERROR
     public final static double ERROR_IN_RADIANS = Math.PI/180;
