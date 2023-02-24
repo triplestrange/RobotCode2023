@@ -20,11 +20,11 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
 
-public class bottomOneConeBalance extends SequentialCommandGroup{
+public class BottomOneConeBalance extends SequentialCommandGroup{
 
     
 
-    public bottomOneConeBalance(SwerveDrive m_Drive, Arm m_Arm)    {
+    public BottomOneConeBalance(SwerveDrive m_Drive, Arm m_Arm)    {
 
        addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2

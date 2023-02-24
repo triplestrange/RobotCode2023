@@ -20,11 +20,11 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
 
-public class middleOneConeBalance extends SequentialCommandGroup{
+public class MiddleOneConeBalance extends SequentialCommandGroup{
 
     
 
-    public middleOneConeBalance(SwerveDrive m_Drive, Arm m_Arm)    {
+    public MiddleOneConeBalance(SwerveDrive m_Drive, Arm m_Arm)    {
 
        addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
 
