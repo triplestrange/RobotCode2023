@@ -66,10 +66,12 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "names": [
+          "grabCone"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 5.0
       }
     },
     {
@@ -91,10 +93,12 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "names": [
+          "scoreCone"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 5.0
       }
     },
     {
@@ -148,18 +152,5 @@
   "maxVelocity": null,
   "maxAcceleration": null,
   "isReversed": false,
-  "markers": [
-    {
-      "position": 2.97,
-      "names": [
-        "scoreCone"
-      ]
-    },
-    {
-      "position": 2.05,
-      "names": [
-        "pickupCone"
-      ]
-    }
-  ]
+  "markers": []
 }

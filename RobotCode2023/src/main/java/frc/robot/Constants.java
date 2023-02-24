@@ -157,7 +157,7 @@ public final class Constants {
 
     // SCORING PRESETS
     public final static double CONE_SCORING_OFFSET = 205/16;
-    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.22, 0.13, new Rotation2d(0));
+    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.221019, 0.067161, new Rotation2d(0));
     public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
     public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
     // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)
@@ -167,7 +167,7 @@ public final class Constants {
     public final static Pose2d LOW_POSITION = new Pose2d(Units.inchesToMeters(21.8), Units.inchesToMeters(-3.2), new Rotation2d(0)); 
 
     // Trajectory config
-    public final static TrajectoryConfig config = new TrajectoryConfig(2, 1);
+    public final static TrajectoryConfig config = new TrajectoryConfig(0.5, 0.2);
   }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 1.5;
