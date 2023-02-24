@@ -77,12 +77,13 @@ public class Arm extends SubsystemBase {
     elbowRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_ELBOW);
     wristRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_WRIST);
 
-    elbowRelativeEncoder.setPosition(Math.toRadians(-75));
+    wristRelativeEncoder.setPosition(0.300000);
+    elbowRelativeEncoder.setPosition(Math.toRadians(-71.657202));
     shoulderRelativeEncoder.setPosition(Math.PI / 2);
 
-    lastShoulderAngle = getShoulder();
-    lastElbowAngle = getElbow();
-    lastWristAngle = getWrist();
+    // lastShoulderAngle = getShoulder();
+    // lastElbowAngle = getElbow();
+    // lastWristAngle = getWrist();
   
     shoulderJoint.setSmartCurrentLimit(20);
     elbowJoint.setSmartCurrentLimit(20);
@@ -122,34 +123,34 @@ public class Arm extends SubsystemBase {
         motorPowerShoulder = 0;
     }
 
-    if (motorPowerShoulder < 0.05 || motorPowerShoulder > -0.05)  {
-      shoulderPID.setReference(lastShoulderAngle, ControlType.kPosition);
-    }
+  //   if (motorPowerShoulder < 0.05 || motorPowerShoulder > -0.05)  {
+  //     shoulderPID.setReference(lastShoulderAngle, ControlType.kPosition);
+  //   }
 
-    else {
-      shoulderJoint.set(motorPowerShoulder);
-      lastShoulderAngle = getShoulder();
-    }
-    if (motorPowerElbow < 0.05 || motorPowerElbow > -0.05)  {
-      elbowPID.setReference(lastElbowAngle, ControlType.kPosition);
+  //   else {
+  //     shoulderJoint.set(motorPowerShoulder);
+  //     lastShoulderAngle = getShoulder();
+  //   }
+  //   if (motorPowerElbow < 0.05 || motorPowerElbow > -0.05)  {
+  //     elbowPID.setReference(lastElbowAngle, ControlType.kPosition);
 
-    }
+  //   }
 
-    else {
-      elbowJoint.set(motorPowerElbow);
-      lastElbowAngle = getElbow();
-    }
-    if (motorPowerWrist < 0.05 || motorPowerWrist > -0.05)  {
-      wristPID.setReference(lastWristAngle, ControlType.kPosition);
+  //   else {
+  //     elbowJoint.set(motorPowerElbow);
+  //     lastElbowAngle = getElbow();
+  //   }
+  //   if (motorPowerWrist < 0.05 || motorPowerWrist > -0.05)  {
+  //     wristPID.setReference(lastWristAngle, ControlType.kPosition);
 
-    }
+  //   }
 
-    else {
-      wristJoint.set(motorPowerWrist);
-      lastWristAngle = getWrist();
-    }
+  //   else {
+  //     wristJoint.set(motorPowerWrist);
+  //     lastWristAngle = getWrist();
+  //   }
     
-  }
+   }
    public void setShoulder(double angle, double ffSpeed) {
     shoulderPID.setReference(angle, ControlType.kPosition, 
     0, ffSpeed/Constants.armConstants.FREE_SPEED_SHOULDER);
@@ -191,7 +192,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void initializePID(SparkMaxPIDController controller) {
-    int kP = 15;
+    int kP = 1;
     int kI = 0; 
     int kD = 0;
     double kMinOutput = -0.25;

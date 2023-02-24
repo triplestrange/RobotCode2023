@@ -22,6 +22,8 @@ public class Intake extends SubsystemBase {
   public Intake() {
     super();
     rollers = new CANSparkMax(Electrical.ROLLERS, MotorType.kBrushless);
+
+    rollers.setSmartCurrentLimit(1);
     
     // TODO: determine channel & call getCalibration() on each absolute
     // encoder to determine offset angle    
