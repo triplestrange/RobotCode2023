@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.DriveTo;
 import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
@@ -31,15 +32,17 @@ public class bottomOneConeBalance extends SequentialCommandGroup{
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
-    HashMap<String, Command> eventMap = new HashMap<>();
-
+        
     
 
     FollowPathWithEvents command = new FollowPathWithEvents(
     m_Drive.followTrajectoryCommand(bottomOneConeBalance, true),
     bottomOneConeBalance.getMarkers(),
-    eventMap
+    Constants.AutoConstants.eventMap
+
 );
+
+addCommands(new Balance(m_Drive));
 
     }
     
