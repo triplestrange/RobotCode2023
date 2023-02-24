@@ -19,7 +19,17 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.SwerveDrive;
+import frc.robot.commands.gameplay.automations.armTrajectory;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.JointAngles;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -179,8 +189,12 @@ public final class Constants {
 
     // HashMap for PathPlanner
 
-    public static final HashMap<String, Command> eventMap = new HashMap<>();
-
+    public static HashMap<String, Command> eventMap = new HashMap<>();
+    public void eventMapEvents (SwerveDrive m_Drive, Arm m_Arm) {
+    eventMap.put("scoreCone", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+    eventMap.put("pickupCone", new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
+    eventMap.put("pickupCube", new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
+    };
 
   }
 

@@ -32,7 +32,7 @@ public class middleRightTwoConeBalanceAuto extends SequentialCommandGroup{
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
-        
+
     
 
     FollowPathWithEvents command = new FollowPathWithEvents(

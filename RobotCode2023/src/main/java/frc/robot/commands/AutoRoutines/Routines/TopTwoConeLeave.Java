@@ -27,7 +27,7 @@ public class TopTwoConeLeave extends SequentialCommandGroup{
 
        addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-    PathPlannerTrajectory oneConeLeave = PathPlanner.loadPath("top2ConeBalance", new PathConstraints(4, 3));
+    PathPlannerTrajectory oneConeLeave = PathPlanner.loadPath("top2ConeLeave", new PathConstraints(4, 3));
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
@@ -39,8 +39,8 @@ public class TopTwoConeLeave extends SequentialCommandGroup{
 
     FollowPathWithEvents command = new FollowPathWithEvents(
     m_Drive.followTrajectoryCommand(oneConeLeaveCommunity, true),
-    oneConeLeaveCommunity.getMarkers(),
-    eventMap
+    TopTwoConeLeave.getMarkers(),
+    Constants.AutoConstants.eventMap
 );
 
     }

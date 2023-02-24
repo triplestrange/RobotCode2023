@@ -28,11 +28,7 @@ public class bottomOneConeBalance extends SequentialCommandGroup{
 
        addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-<<<<<<< Updated upstream:RobotCode2023/src/main/java/frc/robot/commands/AutoRoutines/Routines/bottomOneConeBalance.java
     PathPlannerTrajectory bottomOneConeBalance = PathPlanner.loadPath("bottom1ConeBalance", new PathConstraints(4, 3));
-=======
-    PathPlannerTrajectory oneConeLeaveCommunity = PathPlanner.loadPath("bottom1ConeLeave", new PathConstraints(4, 3));
->>>>>>> Stashed changes:RobotCode2023/src/main/java/frc/robot/commands/AutoRoutines/Routines/OneConeLeaveCommunity.java
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.

@@ -41,7 +41,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "pickupCube"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -49,15 +51,15 @@
     },
     {
       "anchorPoint": {
-        "x": 3.910538347392485,
-        "y": 3.3049476625269048
+        "x": 4.854809108114456,
+        "y": 3.3451293970257123
       },
       "prevControl": {
-        "x": 5.711422001791372,
-        "y": 3.3200158129639576
+        "x": 6.655692762513347,
+        "y": 3.360197547462765
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
