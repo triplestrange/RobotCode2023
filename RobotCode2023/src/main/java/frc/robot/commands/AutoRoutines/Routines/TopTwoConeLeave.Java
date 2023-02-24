@@ -16,32 +16,30 @@ import frc.robot.Constants;
 import frc.robot.commands.gameplay.automations.DriveTo;
 import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.gameplay.balance;
 
-public class bottomOneConeBalance extends SequentialCommandGroup{
+public class TopTwoConeLeave extends SequentialCommandGroup{
 
     
 
-    public bottomOneConeBalance(SwerveDrive m_Drive, Arm m_Arm)    {
+    public TopTwoConeLeaveCommunity(SwerveDrive m_Drive, Arm m_Arm)    {
 
        addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-<<<<<<< Updated upstream:RobotCode2023/src/main/java/frc/robot/commands/AutoRoutines/Routines/bottomOneConeBalance.java
-    PathPlannerTrajectory bottomOneConeBalance = PathPlanner.loadPath("bottom1ConeBalance", new PathConstraints(4, 3));
-=======
-    PathPlannerTrajectory oneConeLeaveCommunity = PathPlanner.loadPath("bottom1ConeLeave", new PathConstraints(4, 3));
->>>>>>> Stashed changes:RobotCode2023/src/main/java/frc/robot/commands/AutoRoutines/Routines/OneConeLeaveCommunity.java
+    PathPlannerTrajectory oneConeLeave = PathPlanner.loadPath("top2ConeBalance", new PathConstraints(4, 3));
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
     HashMap<String, Command> eventMap = new HashMap<>();
-
+    eventMap.put("grabCone", new armTrajectory(new Pose2d(1, 1, new Rotation2d(Math.PI)), m_Arm));
+    eventMap.put("scoreCone", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+    eventMap.put("autoBalance", new )
     
 
     FollowPathWithEvents command = new FollowPathWithEvents(
-    m_Drive.followTrajectoryCommand(bottomOneConeBalance, true),
-    bottomOneConeBalance.getMarkers(),
+    m_Drive.followTrajectoryCommand(oneConeLeaveCommunity, true),
+    oneConeLeaveCommunity.getMarkers(),
     eventMap
 );
 
