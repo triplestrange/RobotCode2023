@@ -30,13 +30,13 @@ public class bottomOneConeLeave extends SequentialCommandGroup{
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
-    HashMap<String, Command> eventMap = new HashMap<>();
     
 
     FollowPathWithEvents command = new FollowPathWithEvents(
     m_Drive.followTrajectoryCommand(bottomOneConeLeave, true),
     bottomOneConeLeave.getMarkers(),
-    eventMap
+    Constants.AutoConstants.eventMap
+
 );
 
     }
