@@ -24,20 +24,20 @@ public class BottomOneConeLeave extends SequentialCommandGroup{
 
     public BottomOneConeLeave(SwerveDrive m_Drive, Arm m_Arm)    {
 
-       addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-        // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-    PathPlannerTrajectory bottomOneConeLeave = PathPlanner.loadPath("bottom1ConeLeave", new PathConstraints(4, 3));
+            addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+                // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
+            PathPlannerTrajectory bottomOneConeLeave = PathPlanner.loadPath("bottom1ConeLeave", new PathConstraints(4, 3));
 
-    // This is just an example event map. It would be better to have a constant, global event map
-    // in your code that will be used by all path following commands.
-    
+            // This is just an example event map. It would be better to have a constant, global event map
+            // in your code that will be used by all path following commands.
+            
 
-    FollowPathWithEvents command = new FollowPathWithEvents(
-    m_Drive.followTrajectoryCommand(bottomOneConeLeave, true),
-    bottomOneConeLeave.getMarkers(),
-    Constants.AutoConstants.eventMap
+            FollowPathWithEvents command = new FollowPathWithEvents(
+            m_Drive.followTrajectoryCommand(bottomOneConeLeave, true),
+            bottomOneConeLeave.getMarkers(),
+            Constants.AutoConstants.eventMap
 
-);
+        );
 
     }
     

@@ -17,6 +17,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.Intake;
@@ -188,12 +190,14 @@ public final class Constants {
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // HashMap for PathPlanner
-
+    //bottom is limelight side, top is opposite
     public static HashMap<String, Command> eventMap = new HashMap<>();
-    public void eventMapEvents (SwerveDrive m_Drive, Arm m_Arm) {
-    eventMap.put("scoreCone", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-    eventMap.put("pickupCone", new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
-    eventMap.put("pickupCube", new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
+    public void eventMapEvents (SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
+    eventMap.put("scoreObject", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+    eventMap.put("pickupObject", new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
+    eventMap.put("intakeOn", new RunCommand(m_Intake::runIntake, m_Intake));
+    eventMap.put("intakeOff", new InstantCommand(m_Intake::runIntake)); //change runIntake to defaultIntake/intakeOff?
+    eventMap.put("retractArm", new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
     };
 
   }

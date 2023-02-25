@@ -20,29 +20,26 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.gameplay.balance;
 
 public class TopTwoConeLeave extends SequentialCommandGroup{
-
     
-
     public TopTwoConeLeaveCommunity(SwerveDrive m_Drive, Arm m_Arm)    {
 
        addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-    PathPlannerTrajectory oneConeLeave = PathPlanner.loadPath("top2ConeLeave", new PathConstraints(4, 3));
+        PathPlannerTrajectory oneConeLeave = PathPlanner.loadPath("top2ConeLeave", new PathConstraints(4, 3));
 
-    // This is just an example event map. It would be better to have a constant, global event map
-    // in your code that will be used by all path following commands.
-    HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("grabCone", new armTrajectory(new Pose2d(1, 1, new Rotation2d(Math.PI)), m_Arm));
-    eventMap.put("scoreCone", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-    eventMap.put("autoBalance", new )
-    
+        // This is just an example event map. It would be better to have a constant, global event map
+        // in your code that will be used by all path following commands.
+        HashMap<String, Command> eventMap = new HashMap<>();
+        eventMap.put("grabCone", new armTrajectory(new Pose2d(1, 1, new Rotation2d(Math.PI)), m_Arm));
+        eventMap.put("scoreCone", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+        eventMap.put("autoBalance", new )
+        
 
-    FollowPathWithEvents command = new FollowPathWithEvents(
-    m_Drive.followTrajectoryCommand(oneConeLeaveCommunity, true),
-    TopTwoConeLeave.getMarkers(),
-    Constants.AutoConstants.eventMap
-);
+        FollowPathWithEvents command = new FollowPathWithEvents(
+            m_Drive.followTrajectoryCommand(oneConeLeaveCommunity, true),
+            TopTwoConeLeave.getMarkers(),
+            Constants.AutoConstants.eventMap
+        );
 
     }
-    
 }
