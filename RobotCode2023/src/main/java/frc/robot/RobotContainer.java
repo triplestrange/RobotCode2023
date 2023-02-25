@@ -41,7 +41,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final Robot m_Robot;
   public final SwerveDrive m_robotDrive;
-  private final Arm m_Arm = new Arm();
+  public final Arm m_Arm = new Arm();
   private final Intake m_Intake = new Intake();
   // The driver's controller
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -69,10 +69,12 @@ public class RobotContainer {
         m_Arm.setDefaultCommand(new RunCommand(
             () -> m_Arm.moveArm(
                 0.5 * JoystickButtons.m_operatorController.getLeftY(),
-                0.5 * JoystickButtons.m_operatorController.getRightY(), 
+                -0.5 * JoystickButtons.m_operatorController.getRightY(), 
                 0.5 * (JoystickButtons.m_operatorController.getLeftTriggerAxis() - JoystickButtons.m_operatorController.getRightTriggerAxis())),
             m_Arm
         ));
+
+        m_Intake.setDefaultCommand(new RunCommand(m_Intake::setIntakeZero, m_Intake));
    }
 
   /**
@@ -106,5 +108,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
+   
 }
   

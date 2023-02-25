@@ -77,6 +77,7 @@ public class Arm extends SubsystemBase {
     elbowRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_ELBOW);
     wristRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_WRIST);
 
+<<<<<<< Updated upstream
     elbowRelativeEncoder.setPosition(Math.toRadians(-75));
     shoulderRelativeEncoder.setPosition(Math.PI / 2);
 
@@ -86,6 +87,17 @@ public class Arm extends SubsystemBase {
   
     shoulderJoint.setSmartCurrentLimit(20);
     elbowJoint.setSmartCurrentLimit(20);
+=======
+    double shoulderInit = Math.PI / 2;
+    double elbowInit = Math.toRadians(-71.657202);
+    double wristInit = 0;
+    shoulderRelativeEncoder.setPosition(shoulderInit);
+    elbowRelativeEncoder.setPosition(elbowInit);
+    wristRelativeEncoder.setPosition(wristInit-shoulderInit*38/26+elbowInit*38/26);
+
+    shoulderJoint.setSmartCurrentLimit(40);
+    elbowJoint.setSmartCurrentLimit(40);
+>>>>>>> Stashed changes
     wristJoint.setSmartCurrentLimit(20);
 
     shoulderPID = shoulderJoint.getPIDController();
@@ -122,20 +134,32 @@ public class Arm extends SubsystemBase {
         motorPowerShoulder = 0;
     }
 
+<<<<<<< Updated upstream
     if (motorPowerShoulder < 0.05 || motorPowerShoulder > -0.05)  {
+=======
+    if (motorPowerShoulder < 0.05 && motorPowerShoulder > -0.05)  {
+>>>>>>> Stashed changes
       shoulderPID.setReference(lastShoulderAngle, ControlType.kPosition);
     }
 
     else {
+<<<<<<< Updated upstream
       shoulderJoint.set(motorPowerShoulder);
       lastShoulderAngle = getShoulder();
     }
     if (motorPowerElbow < 0.05 || motorPowerElbow > -0.05)  {
+=======
+       shoulderJoint.set(motorPowerShoulder);
+      lastShoulderAngle = getShoulder();
+    }
+    if (motorPowerElbow < 0.05 && motorPowerElbow > -0.05)  {
+>>>>>>> Stashed changes
       elbowPID.setReference(lastElbowAngle, ControlType.kPosition);
 
     }
 
     else {
+<<<<<<< Updated upstream
       elbowJoint.set(motorPowerElbow);
       lastElbowAngle = getElbow();
     }
@@ -146,6 +170,18 @@ public class Arm extends SubsystemBase {
 
     else {
       wristJoint.set(motorPowerWrist);
+=======
+       elbowJoint.set(motorPowerElbow);
+      lastElbowAngle = getElbow();
+    }
+    if (motorPowerWrist < 0.05 && motorPowerWrist > -0.05)  {
+      // wristPID.setReference(lastWristAngle, ControlType.kPosition);
+      setWrist(lastWristAngle, 0);
+    }
+
+    else {
+       wristJoint.set(motorPowerWrist);
+>>>>>>> Stashed changes
       lastWristAngle = getWrist();
     }
     
@@ -180,18 +216,22 @@ public class Arm extends SubsystemBase {
    * Angle 0 = metacarpals is on top of radius
    */
   public void setWrist(double angle, double ffSpeed) {
-    wristPID.setReference(angle, ControlType.kPosition, 
+    wristPID.setReference(angle-getShoulder()*38/26+getElbow()*38/26, ControlType.kPosition, 
     0, ffSpeed/Constants.armConstants.FREE_SPEED_WRIST);
     SmartDashboard.putNumber("targetWristDeg", Math.toDegrees(angle));
     lastWristAngle = angle;
   }
 
   public double getWrist() {
-    return wristRelativeEncoder.getPosition();
+    return wristRelativeEncoder.getPosition()+getShoulder()*38/26-getElbow()*38/26;
   }
 
   public void initializePID(SparkMaxPIDController controller) {
+<<<<<<< Updated upstream
     int kP = 15;
+=======
+    int kP = 5;
+>>>>>>> Stashed changes
     int kI = 0; 
     int kD = 0;
     double kMinOutput = -0.25;
@@ -281,6 +321,13 @@ public Translation2d getArmPosition()  {
 
   return new Translation2d(intakeX, intakeY);
 }
+
+public void setArmAngles()  {
+
+  lastShoulderAngle = getShoulder();
+  lastElbowAngle = getElbow();
+  lastWristAngle = getWrist();
+}
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -290,5 +337,9 @@ public Translation2d getArmPosition()  {
     Translation2d currentPos = getArmPosition();
     SmartDashboard.putNumber("armX", currentPos.getX());
     SmartDashboard.putNumber("armY", currentPos.getY());
+
+    SmartDashboard.putNumber("lastShoulderAngle", lastShoulderAngle);
+    SmartDashboard.putNumber("lastElbowAngle", lastElbowAngle);
+    SmartDashboard.putNumber("lastWristAngle", lastWristAngle);
   }
 }
