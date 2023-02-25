@@ -43,7 +43,7 @@ public class armTrajectory extends CommandBase{
         Translation2d currentPos  = arm.getArmPosition();
         double initialAngle;
         double endingAngle;
-        initialAngle = arm.getWrist();
+        initialWristAngle = arm.getWrist();
         if (currentPos.getX() < (13 * 0.0254))    {
             initialAngle = Math.PI / 2; 
             SmartDashboard.putNumber("initialAngle", initialAngle);
@@ -62,7 +62,7 @@ public class armTrajectory extends CommandBase{
 
         if (targetPose2d.getX() < (13 * 0.0254))    {
             endingAngle = Math.PI / -2; 
-            SmartDashboard.putNumber("EndingAngle", endingAngle);
+            SmartDashboard.putNumber("endingAngle", endingAngle);
         }
 
         else if (targetPose2d.getY() < (7 * 0.0254)) {

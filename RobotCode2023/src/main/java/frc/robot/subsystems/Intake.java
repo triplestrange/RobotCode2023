@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase {
     super();
     rollers = new CANSparkMax(Electrical.ROLLERS, MotorType.kBrushless);
 
-    rollers.setSmartCurrentLimit(1);
+    rollers.setSmartCurrentLimit(20);
     
     // TODO: determine channel & call getCalibration() on each absolute
     // encoder to determine offset angle    
@@ -33,6 +33,9 @@ public class Intake extends SubsystemBase {
   }
   public void runOutake() {
     rollers.set(-intakeSpeed);
+  }
+  public void intakeOff() {
+    rollers.set(0);
   }
   @Override
   public void periodic() {
