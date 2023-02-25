@@ -74,7 +74,7 @@ public class RobotContainer {
             m_Arm
         ));
 
-        m_Intake.setDefaultCommand(new RunCommand(m_Intake::setIntakeZero, m_Intake));
+        m_Intake.setDefaultCommand(new RunCommand(m_Intake::intakeOff, m_Intake));
    }
 
   /**
