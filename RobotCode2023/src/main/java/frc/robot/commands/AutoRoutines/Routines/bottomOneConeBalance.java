@@ -24,25 +24,19 @@ public class BottomOneConeBalance extends SequentialCommandGroup{
 
     
 
-    public BottomOneConeBalance(SwerveDrive m_Drive, Arm m_Arm)    {
+    public BottomOneConeBalanc(SwerveDrive m_Drive, Arm m_Arm)    {
 
-       addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+        addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-    PathPlannerTrajectory bottomOneConeBalance = PathPlanner.loadPath("bottom1ConeBalance", new PathConstraints(4, 3));
-
-    // This is just an example event map. It would be better to have a constant, global event map
-    // in your code that will be used by all path following commands.
+        PathPlannerTrajectory bottomOneConeBalance = PathPlanner.loadPath("bottom1ConeBalance", new PathConstraints(4, 3));
         
-    
+        FollowPathWithEvents command = new FollowPathWithEvents(
+        m_Drive.followTrajectoryCommand(bottomOneConeBalance, true),
+        bottomOneConeBalance.getMarkers(),
+        Constants.AutoConstants.eventMap
+        );
 
-    FollowPathWithEvents command = new FollowPathWithEvents(
-    m_Drive.followTrajectoryCommand(bottomOneConeBalance, true),
-    bottomOneConeBalance.getMarkers(),
-    Constants.AutoConstants.eventMap
-
-);
-
-addCommands(new Balance(m_Drive));
+        addCommands(new Balance(m_Drive));
 
     }
     
