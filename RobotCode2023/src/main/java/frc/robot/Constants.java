@@ -145,17 +145,18 @@ public final class Constants {
     // SCORING PRESETS
     public final static double CONE_SCORING_OFFSET = 205/16;
 
-    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.362929, 0.102049, new Rotation2d(0));
+    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.296756, 0.070137, Rotation2d.fromDegrees(0));
     public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
     public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
     // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)
-    public final static Pose2d HIGH_POSITION = new Pose2d(Units.inchesToMeters(55 - 6), Units.inchesToMeters(43 + 12), new Rotation2d(0));
-    public final static Pose2d MID_POSITION = new Pose2d(Units.inchesToMeters(42), Units.inchesToMeters(33), new Rotation2d(0));
+    public final static Pose2d HIGH_POSITION = new Pose2d(1.0888, 1.376, Rotation2d.fromDegrees(-33.213));
+    public final static Pose2d MID_POSITION = new Pose2d(0.915, 1.218, Rotation2d.fromDegrees(-61.530));
     //FIXME different values for new intake!
-    public final static Pose2d LOW_POSITION = new Pose2d(Units.inchesToMeters(21.8), Units.inchesToMeters(-3.2), new Rotation2d(0)); 
+    public final static Pose2d LOW_UPRIGHT_CONE_POSITION = new Pose2d(0.744, 0.155, Rotation2d.fromDegrees(-38));
+    public final static Pose2d LOW_LYING_CONE_POSITION = new Pose2d(0.744, 0.155, Rotation2d.fromDegrees(-38));
 
     // Trajectory config
-    public final static TrajectoryConfig config = new TrajectoryConfig(2, 1);
+    public final static TrajectoryConfig config = new TrajectoryConfig(.5, .25);
   }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 1.5;

@@ -128,10 +128,14 @@ public class SwerveModule {
    * @param state Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState state) {
+    setDesiredState(state, false);
+  }
+
+  public void setDesiredState(SwerveModuleState state, boolean forceAngle) {
 
     double desiredDrive = state.speedMetersPerSecond / Constants.SwerveConstants.kMaxSpeedMetersPerSecond;
 
-    if (Math.abs(desiredDrive) < 0.05) {
+    if (Math.abs(desiredDrive) < 0.05 && !forceAngle) {
       m_driveMotor.set(0);
       return;
     }
