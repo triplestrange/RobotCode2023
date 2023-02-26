@@ -88,6 +88,11 @@ public class SwerveDrive extends SubsystemBase {
   return navX.getPitch();
 
   }
+
+  public final double navXRoll() {
+    return navX.getRoll();
+  }
+
   private static final AHRS navX = new AHRS(SPI.Port.kMXP);
   boolean gyroReset;
 
@@ -168,6 +173,9 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("xSpeed", xAutoSpeed);
     SmartDashboard.putNumber("ySpeed", yAutoSpeed);
     SmartDashboard.putNumber("rSpeed", rAutoSpeed);
+    SmartDashboard.putNumber("pitch", navX.getPitch());
+    SmartDashboard.putNumber("roll", navX.getRoll());
+    SmartDashboard.putNumber("yaw", navX.getYaw());
   //  System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n rSpeed: " + rAutoSpeed);
   }
 
@@ -234,6 +242,13 @@ public class SwerveDrive extends SubsystemBase {
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
     m_rearRight.setDesiredState(desiredStates[3]);
+  }
+
+  public void setXWheels() {
+    m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
+    m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), true);
+    m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), true);
+    m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
   }
 
   /**

@@ -160,14 +160,15 @@ public final class Constants {
     // SCORING PRESETS
     public final static double CONE_SCORING_OFFSET = 205/16;
 
-    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.362929, 0.102049, new Rotation2d(0));
+    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.296756, 0.070137, Rotation2d.fromDegrees(0));
     public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
     public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
     // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)
-    public final static Pose2d HIGH_POSITION = new Pose2d(Units.inchesToMeters(55 - 6), Units.inchesToMeters(43 + 12), new Rotation2d(0));
-    public final static Pose2d MID_POSITION = new Pose2d(Units.inchesToMeters(42), Units.inchesToMeters(33), new Rotation2d(0));
+    public final static Pose2d HIGH_POSITION = new Pose2d(1.0888, 1.376, Rotation2d.fromDegrees(-33.213));
+    public final static Pose2d MID_POSITION = new Pose2d(0.915, 1.218, Rotation2d.fromDegrees(-61.530));
     //FIXME different values for new intake!
-    public final static Pose2d LOW_POSITION = new Pose2d(Units.inchesToMeters(21.8), Units.inchesToMeters(-3.2), new Rotation2d(0)); 
+    public final static Pose2d LOW_UPRIGHT_CONE_POSITION = new Pose2d(0.744, 0.155, Rotation2d.fromDegrees(-38));
+    public final static Pose2d LOW_LYING_CONE_POSITION = new Pose2d(0.744, 0.155, Rotation2d.fromDegrees(-38));
 
     // Trajectory config
     public final static TrajectoryConfig config = new TrajectoryConfig(0.5, 0.2);
@@ -195,12 +196,12 @@ public final class Constants {
     public static HashMap<String, Command> eventMap = new HashMap<>();
     public void eventMapEvents (SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
     eventMap.put("scoreObject", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-    eventMap.put("pickupObject", new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
+    eventMap.put("pickupObject", new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
     eventMap.put("intakeOn", new RunCommand(m_Intake::runIntake, m_Intake));
     eventMap.put("intakeOut", new RunCommand(m_Intake::runOutake, m_Intake));
     eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
     eventMap.put("retractArm", new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
-    eventMap.put("lowerArm", new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
+    eventMap.put("lowerArm", new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
 
     };
 

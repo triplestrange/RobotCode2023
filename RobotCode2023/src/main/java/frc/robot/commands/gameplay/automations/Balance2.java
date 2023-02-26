@@ -12,16 +12,15 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveDrive;
 
 
-public class Balance extends CommandBase {
+public class Balance2 extends CommandBase {
   /** Creates a new Balance. */
   /*
    * Balances on endgame piece
    */
   private final SwerveDrive swerveDrive;
-  PIDController robotGyro = new PIDController(0.04, 0, 0.015);
-  private Timer lastUnbalancedTime =  new Timer();
+  private boolean finished;
 
-  public Balance(SwerveDrive swerveDrive) {
+  public Balance2(SwerveDrive swerveDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrive);
     this.swerveDrive = swerveDrive;
@@ -30,38 +29,32 @@ public class Balance extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    finished = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double tilt = swerveDrive.navXRoll();
 
-
-    SmartDashboard.putNumber("Time since !balanced", lastUnbalancedTime.get());
     SmartDashboard.putNumber("Robot Tilt", tilt);
     
+    if (Math.abs(tilt) < 5) finished = true;
 
-    
-    if (Math.abs(tilt) > 2.5) {lastUnbalancedTime.reset();}
-    double xSpeed = robotGyro.calculate(tilt, 0);
-    //FIXME probably a method for this
-    //FIXME fix the speed param for field orient
-    if (xSpeed > SwerveConstants.climbMaxSpeedMetersPerSecond) {
-      xSpeed = SwerveConstants.climbMaxSpeedMetersPerSecond;}
-    else if (xSpeed < -SwerveConstants.climbMaxSpeedMetersPerSecond) {
-    xSpeed = -SwerveConstants.climbMaxSpeedMetersPerSecond;}
-    SmartDashboard.putNumber("balanceX", xSpeed);
+    double xSpeed = -Math.signum(tilt) * 0.3;
     swerveDrive.drive(xSpeed, 0, 0, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    swerveDrive.setXWheels();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return lastUnbalancedTime.hasElapsed(1);
+    return finished;
   }
 }

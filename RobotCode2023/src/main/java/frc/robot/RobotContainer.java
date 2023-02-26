@@ -26,6 +26,8 @@ import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AutoRoutines.Routines.TopTwoConeBalanceAuto;
 import frc.robot.commands.gameplay.automations.Balance;
+import frc.robot.commands.gameplay.automations.Balance2;
+import frc.robot.commands.gameplay.automations.FilteredDrive;
 import frc.robot.commands.gameplay.automations.armPositions;
 import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
@@ -58,6 +60,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+  
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -117,17 +120,19 @@ public class RobotContainer {
     JoystickButtons.dX.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(-1),m_robotDrive));
     JoystickButtons.dB.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
     JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
-    JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
+    JoystickButtons.dY.whileTrue(new Balance2(m_robotDrive));
+    JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
 
     // Operator Controls
     // TODO 5 buttons total plus manual override for operator
     JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
     JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
     
-    JoystickButtons.opY.whileTrue(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
-    JoystickButtons.opA.whileTrue(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+    JoystickButtons.opB.whileTrue(new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+    JoystickButtons.opY.whileTrue(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
     JoystickButtons.opX.whileTrue(new armTrajectory(Constants.armConstants.MID_POSITION, m_Arm));
-    JoystickButtons.opB.whileTrue(new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
+    JoystickButtons.opA.whileTrue(new armTrajectory(Constants.armConstants.LOW_LYING_CONE_POSITION, m_Arm));
+    JoystickButtons.opDpadD.whileTrue(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

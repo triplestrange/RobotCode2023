@@ -132,7 +132,7 @@ public class Arm extends SubsystemBase {
     if (motorPowerElbow < 0.05 && motorPowerElbow > -0.05)  {
       elbowPID.setReference(lastElbowAngle, ControlType.kPosition);
     } else {
-      elbowJoint.set(motorPowerElbow);
+      elbowJoint.set(motorPowerElbow + 0.05*Math.cos(getElbow()));
       lastElbowAngle = getElbow();
     }
 
@@ -186,11 +186,11 @@ public class Arm extends SubsystemBase {
   }
 
   public void initializePID(SparkMaxPIDController controller) {
-    int kP = 5;
+    int kP = 10;
     int kI = 0; 
     int kD = 0;
-    double kMinOutput = -0.25;
-    double kMaxOutput = 0.25;
+    double kMinOutput = -0.5;
+    double kMaxOutput = 0.5;
 
     controller.setP(kP);
     controller.setI(kI);

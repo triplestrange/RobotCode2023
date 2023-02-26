@@ -44,13 +44,13 @@ public class armTrajectory extends CommandBase{
         double initialAngle;
         double endingAngle;
         initialWristAngle = arm.getWrist();
-        if (currentPos.getX() < (13 * 0.0254))    {
-            initialAngle = Math.PI / 2; 
+        if (currentPos.getX() < (20 * 0.0254))    {
+            initialAngle = Math.toRadians(30); 
             SmartDashboard.putNumber("initialAngle", initialAngle);
         }
 
         else if (currentPos.getY() < (7 * 0.0254)) {
-            initialAngle = Math.PI / 2;
+            initialAngle = Math.toRadians(45);
             SmartDashboard.putNumber("initialAngle", initialAngle);
         }
 
@@ -60,13 +60,13 @@ public class armTrajectory extends CommandBase{
             SmartDashboard.putNumber("initialAngle", initialAngle);
         }
 
-        if (targetPose2d.getX() < (13 * 0.0254))    {
-            endingAngle = Math.PI / -2; 
+        if (targetPose2d.getX() < (20 * 0.0254))    {
+            endingAngle = Math.toRadians(210); 
             SmartDashboard.putNumber("endingAngle", endingAngle);
         }
 
         else if (targetPose2d.getY() < (7 * 0.0254)) {
-            endingAngle = Math.PI / -2;
+            endingAngle = Math.toRadians(225);
             SmartDashboard.putNumber("endingAngle", endingAngle);
         }
 
@@ -106,10 +106,10 @@ public class armTrajectory extends CommandBase{
          
 
         Vector <N2> angleVector = arm.angleVelocity(linearVelocity);
-        arm.setShoulder(targetAngles.shoulderAngle, angleVector.get(0, 0));
-        arm.setElbow(targetAngles.elbowAngle, angleVector.get(1, 0));
+        arm.setShoulder(targetAngles.shoulderAngle, 0*angleVector.get(0, 0));
+        arm.setElbow(targetAngles.elbowAngle, 0*angleVector.get(1, 0));
         arm.setWrist(initialWristAngle + (finalWristAngle - initialWristAngle) * timer.get()/trajectory.getTotalTimeSeconds(), 
-        finalWristAngle - initialWristAngle / trajectory.getTotalTimeSeconds());
+                finalWristAngle - initialWristAngle / trajectory.getTotalTimeSeconds());
     }
   
     // Called once the command ends or is interrupted.
