@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.AutoRoutines.Routines.TopTwoConeBalanceAuto;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.armPositions;
 import frc.robot.commands.gameplay.automations.armTrajectory;
@@ -43,11 +45,16 @@ public class RobotContainer {
   public final SwerveDrive m_robotDrive;
   public final Arm m_Arm = new Arm();
   private final Intake m_Intake = new Intake();
+  private final SendableChooser<Command> choose;
   // The driver's controller
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer(Robot m_robot) {
+  public RobotContainer(Robot m_robot, SendableChooser<Command> choose) {
     m_Robot = m_robot;
     m_robotDrive = new SwerveDrive(m_robot);
+
+    this.choose = choose;
+
+    choose.addOption("Top Two Cone Balance", new TopTwoConeBalanceAuto(m_robotDrive, m_Arm, m_Intake));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -59,23 +66,42 @@ public class RobotContainer {
         new RunCommand(
             () ->
                 m_robotDrive.drive(
-                    JoystickButtons.m_driverController.getLeftY() * 5,
-                    JoystickButtons.m_driverController.getLeftX() * 5,
-                    JoystickButtons.m_driverController.getRightX() * 5,
+                    // JoystickButtons.m_driverController.getLeftY() * 5,
+                    // JoystickButtons.m_driverController.getLeftX() * 5,
+                    // JoystickButtons.m_driverController.getRightX() * 5,
+                    JoystickButtons.m_driverController.getLeftY() * 2,
+                    JoystickButtons.m_driverController.getLeftX() * 2,
+                    JoystickButtons.m_driverController.getRawAxis(2) * 5,
                     true),
             m_robotDrive));
+    // m_robotDrive.setDefaultCommand(new FilteredDrive(m_robotDrive, 
+            // XBOX
+            // () -> JoystickButtons.m_driverController.getLeftY() * 5,
+            // () -> JoystickButtons.m_driverController.getLeftX() * 5,
+            // () -> JoystickButtons.m_driverController.getRightX() * 5));
+            // Logitech
+            // () -> JoystickButtons.m_driverController.getLeftY() * 2, 
+            // () -> JoystickButtons.m_driverController.getLeftX() * 2, 
+            // () -> JoystickButtons.m_driverController.getRawAxis(2) * 5));
+        
 
 
-        m_Arm.setDefaultCommand(new RunCommand(
+    m_Arm.setDefaultCommand(new RunCommand(
+    //     () -> m_Arm.moveArm(
+    //         0.1 * JoystickButtons.m_operatorController.getLeftY(),
+    //         -0.1 * JoystickButtons.m_operatorController.getRightY(), 
+    //         0.1 * (JoystickButtons.m_operatorController.getLeftTriggerAxis() - JoystickButtons.m_operatorController.getRightTriggerAxis())),
+    //     m_Arm
+    // ));
+
             () -> m_Arm.moveArm(
-                0.5 * JoystickButtons.m_operatorController.getLeftY(),
-                -0.5 * JoystickButtons.m_operatorController.getRightY(), 
-                0.5 * (JoystickButtons.m_operatorController.getLeftTriggerAxis() - JoystickButtons.m_operatorController.getRightTriggerAxis())),
-            m_Arm
-        ));
-
-        m_Intake.setDefaultCommand(new RunCommand(m_Intake::intakeOff, m_Intake));
-   }
+            0.1 * JoystickButtons.m_operatorController.getLeftY(),
+            -0.1 * JoystickButtons.m_operatorController.getRightY(), 
+            0.1 * (JoystickButtons.m_operatorController.getRightTriggerAxis() - JoystickButtons.m_operatorController.getLeftTriggerAxis())),
+        m_Arm
+    ));
+    m_Intake.setDefaultCommand(new RunCommand(m_Intake::intakeOff, m_Intake));
+  }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by

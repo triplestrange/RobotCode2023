@@ -197,8 +197,11 @@ public final class Constants {
     eventMap.put("scoreObject", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
     eventMap.put("pickupObject", new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
     eventMap.put("intakeOn", new RunCommand(m_Intake::runIntake, m_Intake));
+    eventMap.put("intakeOut", new RunCommand(m_Intake::runOutake, m_Intake));
     eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
     eventMap.put("retractArm", new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
+    eventMap.put("lowerArm", new armTrajectory(Constants.armConstants.LOW_POSITION, m_Arm));
+
     };
 
   }

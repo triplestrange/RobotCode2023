@@ -42,25 +42,25 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "IntakeOff"
+          "grabCone"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "before",
-        "waitTime": 3.0
+        "waitBehavior": "after",
+        "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 1.7909518525803976,
-        "y": 3.8172647773866983
+        "x": 1.760815551706292,
+        "y": 4.440081662118213
       },
       "prevControl": {
-        "x": 1.7559142552917706,
-        "y": 5.452352650855944
+        "x": 0.8372957693691139,
+        "y": 5.7898413439956276
       },
       "nextControl": {
-        "x": 1.8259894498690246,
-        "y": 2.182176903917453
+        "x": 2.5443593744330353,
+        "y": 3.2949022289022034
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -69,8 +69,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "scoreObject",
-          "IntakeOut"
+          "scoreCone"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
@@ -79,12 +78,12 @@
     },
     {
       "anchorPoint": {
-        "x": 2.1060975771240646,
-        "y": 2.8968697747822043
+        "x": 2.966267586670512,
+        "y": 2.842857715790621
       },
       "prevControl": {
-        "x": 2.1060975771240646,
-        "y": 2.8968697747822043
+        "x": 2.966267586670512,
+        "y": 2.842857715790621
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -94,8 +93,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "autoBalance",
-          "IntakeOff"
+          "autoBalance"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -103,29 +101,5 @@
       }
     }
   ],
-  "maxVelocity": 1.0,
-  "maxAcceleration": 0.3,
-  "isReversed": null,
-  "markers": [
-    {
-      "position": 0.5454545454546642,
-      "names": [
-        "event",
-        "lowerArm",
-        "IntakeOn"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "grabCone"
-      ]
-    },
-    {
-      "position": 1.1999999999999873,
-      "names": [
-        "retractArm"
-      ]
-    }
-  ]
+  "markers": []
 }

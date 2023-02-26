@@ -11,7 +11,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.DriveTo;
@@ -24,22 +26,25 @@ public class TopTwoConeBalanceAuto extends SequentialCommandGroup{
 
     
 
-    public TopTwoConeBalanceAuto(SwerveDrive m_Drive, Arm m_Arm)    {
+    public TopTwoConeBalanceAuto(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake)    {
 
        addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+       addCommands(new RunCommand(m_Intake::runIntake, m_Intake).withTimeout(0.5));
+       addCommands(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
+
         // This will load the file "Example Path.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-    PathPlannerTrajectory topTwoConeBalanceAuto = PathPlanner.loadPath("top2coneBalanceAuto", new PathConstraints(4, 3));
+    PathPlannerTrajectory topTwoConeBalanceAuto = PathPlanner.loadPath("top2coneBalanceAuto", new PathConstraints(1, 0.3));
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
         
     
 
-    FollowPathWithEvents command = new FollowPathWithEvents(
+    addCommands( new FollowPathWithEvents(
     m_Drive.followTrajectoryCommand(topTwoConeBalanceAuto, true),
     topTwoConeBalanceAuto.getMarkers(),
     Constants.AutoConstants.eventMap
-);
+));
 
     addCommands(new Balance(m_Drive));
 
