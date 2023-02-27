@@ -28,6 +28,8 @@ import frc.robot.commands.AutoRoutines.TopOneConeLeave;
 import frc.robot.commands.AutoRoutines.TopOneConeLeave;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.Balance2;
+import frc.robot.commands.gameplay.automations.DriveNormal;
+import frc.robot.commands.gameplay.automations.DriveTurbo;
 import frc.robot.commands.gameplay.automations.FilteredDrive;
 import frc.robot.commands.gameplay.automations.armPositions;
 import frc.robot.commands.gameplay.automations.armTrajectory;
@@ -64,20 +66,11 @@ public class RobotContainer {
   
     // Configure default commands
     m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        // TODO fine tune motor speeds
-        new RunCommand(
-            () ->
-                m_robotDrive.drive(
-                    // JoystickButtons.m_driverController.getLeftY() * 5,
-                    // JoystickButtons.m_driverController.getLeftX() * 5,
-                    // JoystickButtons.m_driverController.getRightX() * 5,
-                    JoystickButtons.m_driverController.getLeftY() * 2,
-                    JoystickButtons.m_driverController.getLeftX() * 2,
-                    JoystickButtons.m_driverController.getRawAxis(2) * 5,
-                    true),
-            m_robotDrive));
+      // The left stick controls translation of the robot.
+      // Turning is controlled by the X axis of the right stick.
+      // TODO fine tune motor speeds
+      new DriveNormal(m_robotDrive)
+    );
     // m_robotDrive.setDefaultCommand(new FilteredDrive(m_robotDrive, 
             // XBOX
             // () -> JoystickButtons.m_driverController.getLeftY() * 5,
@@ -120,6 +113,7 @@ public class RobotContainer {
     JoystickButtons.dA.whileTrue(new RunCommand( ()-> m_robotDrive.autoAlignCube(0, m_robotDrive.optimalID()),m_robotDrive));
     JoystickButtons.dX.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(-1),m_robotDrive));
     JoystickButtons.dB.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
+    JoystickButtons.dlBump.whileTrue(new DriveTurbo(m_robotDrive));
     JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
     JoystickButtons.dY.whileTrue(new Balance2(m_robotDrive));
     JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
