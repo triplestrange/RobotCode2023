@@ -160,7 +160,7 @@ public final class Constants {
     // SCORING PRESETS
     public final static double CONE_SCORING_OFFSET = 205/16;
 
-    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.296756, 0.070137, Rotation2d.fromDegrees(0));
+    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.163746, 0.036551, Rotation2d.fromDegrees(0));
     public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
     public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
     // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)

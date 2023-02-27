@@ -5,26 +5,22 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Electrical;
-import frc.robot.Constants.JoystickButtons;
-import frc.robot.Constants.armConstants;
 
 public class Arm extends SubsystemBase {
   private final CANSparkMax shoulderJoint;
@@ -109,34 +105,34 @@ public class Arm extends SubsystemBase {
     this.motorPowerElbow = motorPowerElbow;
     this.motorPowerWrist = motorPowerWrist;
 
-    if (getArmPosition().getX() > Units.inchesToMeters(65.22) && motorPowerShoulder < 0) {
+    if ((getArmPosition().getX() > Units.inchesToMeters(48 + 18) && motorPowerShoulder < 0) || getArmPosition().getX() > 18 - 9 && getShoulder() > Math.toRadians(97)) {
       motorPowerShoulder = 0;
     }
-    if (getArmPosition().getX() > Units.inchesToMeters(65.22) && ((motorPowerElbow > 0 && getElbow() < 0) || (motorPowerElbow < 0 && getElbow() > 0))) {
+    if (getArmPosition().getX() > Units.inchesToMeters(48 + 18) && ((motorPowerElbow > 0 && getElbow() < 0) || (motorPowerElbow < 0 && getElbow() > 0))) {
       motorPowerElbow = 0;
     }
-    if (getArmPosition().getY() > Units.inchesToMeters(78) && motorPowerElbow > 0) {
+    if (getArmPosition().getY() > Units.inchesToMeters(78 - 12.25) && motorPowerElbow > 0) {
       motorPowerElbow = 0;
     }
-    if (getArmPosition().getY() > Units.inchesToMeters(78) && ((motorPowerShoulder > 0 && getShoulder() < Math.PI / 2) || (motorPowerShoulder < 0 && getShoulder() > Math.PI / 2)))  {
+    if (getArmPosition().getY() > Units.inchesToMeters(78 - 12.25) && ((motorPowerShoulder > 0 && getShoulder() < Math.PI / 2) || (motorPowerShoulder < 0 && getShoulder() > Math.PI / 2)))  {
       motorPowerShoulder = 0;
     }
 
-    if (motorPowerShoulder < 0.05 && motorPowerShoulder > -0.05)  {
+    if (Math.abs(motorPowerShoulder) < 0.05)  {
       shoulderPID.setReference(lastShoulderAngle, ControlType.kPosition);
     } else {
       shoulderJoint.set(motorPowerShoulder);
       lastShoulderAngle = getShoulder();
     }
 
-    if (motorPowerElbow < 0.05 && motorPowerElbow > -0.05)  {
+    if (Math.abs(motorPowerElbow) < 0.05 )  {
       elbowPID.setReference(lastElbowAngle, ControlType.kPosition);
     } else {
       elbowJoint.set(motorPowerElbow + 0.05*Math.cos(getElbow()));
       lastElbowAngle = getElbow();
     }
 
-    if (motorPowerWrist < 0.05 && motorPowerWrist > -0.05)  {
+    if (Math.abs(motorPowerWrist) < 0.05 )  {
       // wristPID.setReference(lastWristAngle, ControlType.kPosition);
       setWrist(lastWristAngle, 0);
     } else {

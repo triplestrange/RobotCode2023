@@ -24,7 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.AutoRoutines.Routines.TopTwoConeBalanceAuto;
+import frc.robot.commands.AutoRoutines.TopOneConeLeave;
+import frc.robot.commands.AutoRoutines.TopOneConeLeave;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.Balance2;
 import frc.robot.commands.gameplay.automations.FilteredDrive;
@@ -56,7 +57,7 @@ public class RobotContainer {
 
     this.choose = choose;
 
-    choose.addOption("Top Two Cone Balance", new TopTwoConeBalanceAuto(m_robotDrive, m_Arm, m_Intake));
+    choose.addOption("Top One Cone Leave", new TopOneConeLeave(m_robotDrive, m_Arm, m_Intake));
 
     // Configure the button bindings
     configureButtonBindings();

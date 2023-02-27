@@ -11,6 +11,7 @@ import org.opencv.core.Mat;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.MathUtil;
@@ -393,7 +394,8 @@ public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFir
         new InstantCommand(() -> {
           // Reset odometry for the first path you run during auto
           if(isFirstPath){
-              this.resetOdometry(traj.getInitialHolonomicPose());
+            PathPlannerState state = PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(), m_Robot.allianceColor);
+              this.resetOdometry(new Pose2d(state.poseMeters.getTranslation(), state.holonomicRotation));
           }
         }),
         new PPSwerveControllerCommand(
