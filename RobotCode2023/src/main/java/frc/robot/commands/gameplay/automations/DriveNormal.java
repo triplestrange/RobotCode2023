@@ -32,7 +32,7 @@ public class DriveNormal extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = 2.5;
+    double speed = 1;
     m_swerveDrive.drive(
       JoystickButtons.m_driverController.getLeftY() * speed,
       JoystickButtons.m_driverController.getLeftX() * speed,
