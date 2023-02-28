@@ -17,6 +17,8 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -27,9 +29,9 @@ public class Arm extends SubsystemBase {
   private final CANSparkMax elbowJoint;
   private final CANSparkMax wristJoint;
 
-  private final AbsoluteEncoder shoulderEncoder;
-  private final AbsoluteEncoder elbowEncoder;
-  private final AbsoluteEncoder wristEncoder;
+  private final DutyCycleEncoder shoulderEncoder;
+  private final DutyCycleEncoder elbowEncoder;
+  private final DutyCycleEncoder wristEncoder;
 
   private final RelativeEncoder shoulderRelativeEncoder;
   private final RelativeEncoder elbowRelativeEncoder;
@@ -61,9 +63,9 @@ public class Arm extends SubsystemBase {
 
     // TODO: determine channel & call getCalibration() on each absolute
     // encoder to determine offset angle
-    shoulderEncoder = new AbsoluteEncoder(4, 0);
-    elbowEncoder = new AbsoluteEncoder(7, 0);
-    wristEncoder = new AbsoluteEncoder(6, 0);
+    shoulderEncoder = new DutyCycleEncoder(0);
+    elbowEncoder = new DutyCycleEncoder(1);
+    wristEncoder = new DutyCycleEncoder(2);
 
     shoulderRelativeEncoder = shoulderJoint.getEncoder();
     elbowRelativeEncoder = elbowJoint.getEncoder();
@@ -292,5 +294,9 @@ public void setArmAngles()  {
     SmartDashboard.putNumber("lastShoulderAngle", lastShoulderAngle);
     SmartDashboard.putNumber("lastElbowAngle", lastElbowAngle);
     SmartDashboard.putNumber("lastWristAngle", lastWristAngle);
+
+    SmartDashboard.putNumber("shoulderPositionOffset", shoulderEncoder.getPositionOffset());
+    SmartDashboard.putNumber("elbowPositionOffset", elbowEncoder.getPositionOffset());
+    SmartDashboard.putNumber("wristPositionOffset", wristEncoder.getPositionOffset());
   }
 }
