@@ -106,6 +106,7 @@ public class SwerveModule {
     m_turningMotor.setIdleMode(IdleMode.kBrake);
 
     m_turningMotor.setInverted(true);
+    m_driveMotor.setInverted(true);
 
     m_driveMotor.burnFlash();
     m_turningMotor.burnFlash();
