@@ -36,7 +36,7 @@ public class DriveNormal extends CommandBase {
     m_swerveDrive.drive(
       JoystickButtons.m_driverController.getLeftY() * speed,
       JoystickButtons.m_driverController.getLeftX() * speed,
-      JoystickButtons.m_driverController.getRawAxis(2) * 4,
+      -JoystickButtons.m_driverController.getRawAxis(2) * 4,
       true
     );
   }
