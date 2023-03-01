@@ -6,15 +6,12 @@ package frc.robot;
 
 import java.util.HashMap;
 
-import javax.sql.rowset.JoinRowSet;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,12 +22,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Arm.JointAngles;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -101,15 +92,13 @@ public final class Constants {
     public static final double kSteerEncoderDistancePerPulse =
         // Assumes the encoders are on a 1:1 reduction with the module shaft.
         (2 * Math.PI) / (double) kSteerEncoderCPR;
-    // FIXME Change the encoders to correct ports
     public static final int FL_ENCODER = 2;
     public static final int FR_ENCODER = 3;
     public static final int BL_ENCODER = 1;
     public static final int BR_ENCODER = 0;
-    // FIXME Change the offsets to current encoder values
-    public final static double FL_ENC_OFFSET = 143; // 183 TODO: 180 off??
+    public final static double FL_ENC_OFFSET = 143; // 183 
     public final static double FR_ENC_OFFSET = 141; // 179
-    public final static double BL_ENC_OFFSET = 153; // 221 TODO: 180 off??
+    public final static double BL_ENC_OFFSET = 153; // 221 
     public final static double BR_ENC_OFFSET = 103; // 241
   }
   public static final class visionConstants {
@@ -165,10 +154,9 @@ public final class Constants {
     public final static Pose2d DEFAULT_POSITION = new Pose2d(0.163746, 0.036551, Rotation2d.fromDegrees(0));
     public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
     public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
-    // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)
     public final static Pose2d HIGH_POSITION = new Pose2d(1.289, 1.399, Rotation2d.fromDegrees(-71.176));
     public final static Pose2d MID_POSITION = new Pose2d(0.915, 1.218, Rotation2d.fromDegrees(-61.530));
-    //FIXME different values for new intake!
+
     public final static Pose2d LOW_UPRIGHT_CONE_POSITION = new Pose2d(0.744, 0.155, Rotation2d.fromDegrees(-38));
     public final static Pose2d LOW_LYING_CONE_POSITION = new Pose2d(0.744, 0.155, Rotation2d.fromDegrees(-38));
 
@@ -212,7 +200,6 @@ public final class Constants {
   
   public static final class Electrical {
     // Swerve Motor Controller CAN ID's
-    // FIXME Change to correct CAN ID's and give the encoders CAN ID's
     public static final int FL_DRIVE = 13;
     public static final int FR_DRIVE = 6;
     public static final int BL_DRIVE = 11;
@@ -221,7 +208,7 @@ public final class Constants {
     public static final int FR_STEER = 7;
     public static final int BL_STEER = 10;
     public static final int BR_STEER = 9;
-    // FIXME Change to correct CAN ID's And give the encoders CAN ID's
+
     public static final int SHOULDER = 14;
     public static final int ELBOW = 15;
     public static final int WRIST = 16;

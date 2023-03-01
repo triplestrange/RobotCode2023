@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-import org.opencv.core.Mat;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -19,15 +18,12 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -80,8 +76,6 @@ public class SwerveDrive extends SubsystemBase {
       ModuleConstants.BR_ENC_OFFSET);
 
   private SwerveModuleState[] swerveModuleStates;
-  private SwerveModuleState[] initStates;
-  private double horPos;
   public ChassisSpeeds currentMovement;
 
   // The gyro sensor
@@ -294,12 +288,10 @@ public class SwerveDrive extends SubsystemBase {
 
       
   }
-  // FIXME ADD MAX SDEED LIMITS BEFORE TESTING
+
+  
   public void autoAlignCube(double offset, int ID) {
-    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
-    // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-    // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
-    // TODO May have to change tagPose 
+
   
     Pose2d tagPose = visionConstants.tagPose[ID - 1];  
 

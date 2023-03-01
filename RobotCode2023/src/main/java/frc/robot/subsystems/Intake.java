@@ -5,12 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Electrical;
 
@@ -23,9 +20,8 @@ public class Intake extends SubsystemBase {
     super();
     rollers = new CANSparkMax(Electrical.ROLLERS, MotorType.kBrushless);
 
-    rollers.setSmartCurrentLimit(20);
-    
-    // TODO: determine channel & call getCalibration() on each absolute
+    rollers.setSmartCurrentLimit(30);
+    rollers.setIdleMode(IdleMode.kBrake);
     // encoder to determine offset angle    
   }
   public void runIntake()  {

@@ -4,8 +4,6 @@
 
 package frc.robot.commands.gameplay.automations;
 
-import javax.swing.text.rtf.RTFEditorKit;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -55,8 +53,9 @@ public class Balance extends CommandBase {
     
     if (Math.abs(tilt) > 2.5) {lastUnbalancedTime.reset();}
     double ySpeed = -robotGyro.calculate(tilt, 0);
-    //FIXME probably a method for this
+
     //FIXME fix the speed param for field orient
+    //FIXME Change the logic to work with field orient
     ySpeed = MathUtil.clamp(ySpeed, -SwerveConstants.climbMaxSpeedMetersPerSecond, SwerveConstants.climbMaxSpeedMetersPerSecond);
     balancePos = new Pose2d(balancePos.getX() + ySpeed/25, balancePos.getY(), new Rotation2d(balancePos.getRotation().getRadians()));
     SmartDashboard.putNumber("balanceX", ySpeed);

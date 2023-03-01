@@ -4,41 +4,21 @@
 
 package frc.robot;
 
-import java.util.List;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.JoystickButtons;
-import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.AutoRoutines.BottomOneConeLeave;
-import frc.robot.commands.AutoRoutines.MiddleOneConeBalance;
-import frc.robot.commands.AutoRoutines.TopOneConeLeave;
-import frc.robot.commands.AutoRoutines.TopOneConeLeave;
+import frc.robot.commands.AutoRoutines.AutoMain;
 import frc.robot.commands.gameplay.automations.Balance;
-import frc.robot.commands.gameplay.automations.Balance2;
 import frc.robot.commands.gameplay.automations.DriveNormal;
 import frc.robot.commands.gameplay.automations.DriveTurbo;
-import frc.robot.commands.gameplay.automations.FilteredDrive;
-import frc.robot.commands.gameplay.automations.armPositions;
 import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.Arm.JointAngles;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -53,17 +33,19 @@ public class RobotContainer {
   public final Arm m_Arm = new Arm();
   private final Intake m_Intake = new Intake();
   private final SendableChooser<Command> choose;
+  private final AutoMain m_Autos;
   // The driver's controller
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer(Robot m_robot, SendableChooser<Command> choose) {
-    m_Robot = m_robot;
-    m_robotDrive = new SwerveDrive(m_robot);
+  public RobotContainer(Robot m_Robot, SendableChooser<Command> choose) {
+    this.m_Robot = m_Robot;
+    m_robotDrive = new SwerveDrive(m_Robot);
+    this.m_Autos = new AutoMain(m_robotDrive, m_Arm, m_Intake);
 
     this.choose = choose;
 
-    choose.addOption("Top One Cone Leave", new TopOneConeLeave(m_robotDrive, m_Arm, m_Intake));
-    choose.addOption("Bottom One Cone Leave", new BottomOneConeLeave(m_robotDrive, m_Arm, m_Intake));
-    choose.addOption("Middle One Cone Balance", new MiddleOneConeBalance(m_robotDrive, m_Arm, m_Intake));
+    choose.addOption("Top One Cone Leave", m_Autos.topOneConeLeaveCommand());
+    choose.addOption("Bottom One Cone Leave", m_Autos.bottomOneConeLeaveCommand());
+    choose.addOption("Middle One Cone Balance", m_Autos.middleOneConeBalanceCommand());
     // Configure the button bindings
     configureButtonBindings();
   
@@ -122,7 +104,6 @@ public class RobotContainer {
     JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
 
     // Operator Controls
-    // TODO 5 buttons total plus manual override for operator
     JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
     JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
     

@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
 public class Score extends CommandBase {
-  private final Arm arm;
   /** Creates a new Score. */
   /*
    * Should do the following:
@@ -21,7 +20,6 @@ public class Score extends CommandBase {
    */
   public Score(Arm arm) {
     addRequirements(arm);
-    this.arm = arm;
   }
 
   // Called when the command is initially scheduled.
