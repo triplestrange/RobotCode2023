@@ -166,7 +166,7 @@ public final class Constants {
     public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
     public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
     // FIXME HIGH_POSITION isn't reachable by arm (returns NaN joint angles)
-    public final static Pose2d HIGH_POSITION = new Pose2d(1.0888, 1.376, Rotation2d.fromDegrees(-33.213));
+    public final static Pose2d HIGH_POSITION = new Pose2d(1.289, 1.399, Rotation2d.fromDegrees(-71.176));
     public final static Pose2d MID_POSITION = new Pose2d(0.915, 1.218, Rotation2d.fromDegrees(-61.530));
     //FIXME different values for new intake!
     public final static Pose2d LOW_UPRIGHT_CONE_POSITION = new Pose2d(0.744, 0.155, Rotation2d.fromDegrees(-38));

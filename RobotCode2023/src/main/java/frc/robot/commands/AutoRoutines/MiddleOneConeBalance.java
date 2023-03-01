@@ -22,7 +22,7 @@ public class MiddleOneConeBalance extends SequentialCommandGroup{
         PathPlannerTrajectory MiddleOneConeBalance = PathPlanner.loadPath("midPreloadBalance", new PathConstraints(1, 0.2));
 
         addCommands(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-        addCommands(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(3));
+        addCommands(new RunCommand(m_Intake::runOutake, m_Intake));
         addCommands(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
         
         addCommands(new FollowPathWithEvents(
