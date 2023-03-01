@@ -141,8 +141,10 @@ public final class Constants {
     // Gear ratios
     public final static double GR_SHOULDER = 75 * (64.0/14);
     public final static double GR_ELBOW = 75 * (80.0/48);
-    // WILL GORGEN's SUGGESTED GEAR RATIO
     public final static double GR_WRIST = 160;
+
+    public final static double ENC_GR_SHOULDER = (14/64);
+    public final static double ENC_GR_ELBOW = (48/80);
 
     // JOINT FREE SPEEDS IN RADIANS
     // USING EXPERIMENTAL DATA

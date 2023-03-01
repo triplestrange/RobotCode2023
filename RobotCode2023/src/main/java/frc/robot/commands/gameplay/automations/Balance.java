@@ -43,6 +43,10 @@ public class Balance extends CommandBase {
   public void execute() {
     double tilt = m_SwerveDrive.navXRoll();
 
+    if (Math.abs(tilt) < 5) {
+      tilt = 0;
+    }
+
 
     SmartDashboard.putNumber("Time since !balanced", lastUnbalancedTime.get());
     SmartDashboard.putNumber("Robot Tilt", tilt);
@@ -50,13 +54,13 @@ public class Balance extends CommandBase {
 
     
     if (Math.abs(tilt) > 2.5) {lastUnbalancedTime.reset();}
-    double xSpeed = robotGyro.calculate(tilt, 0);
+    double ySpeed = -robotGyro.calculate(tilt, 0);
     //FIXME probably a method for this
     //FIXME fix the speed param for field orient
-    xSpeed = MathUtil.clamp(xSpeed, -SwerveConstants.climbMaxSpeedMetersPerSecond, SwerveConstants.climbMaxSpeedMetersPerSecond);
-    balancePos = new Pose2d(balancePos.getX() + xSpeed/50, balancePos.getY(), new Rotation2d(balancePos.getRotation().getRadians()));
-    SmartDashboard.putNumber("balanceX", xSpeed);
-    m_SwerveDrive.drive(xSpeed, 0, 0, false);
+    ySpeed = MathUtil.clamp(ySpeed, -SwerveConstants.climbMaxSpeedMetersPerSecond, SwerveConstants.climbMaxSpeedMetersPerSecond);
+    balancePos = new Pose2d(balancePos.getX() + ySpeed/25, balancePos.getY(), new Rotation2d(balancePos.getRotation().getRadians()));
+    SmartDashboard.putNumber("balanceX", ySpeed);
+    m_SwerveDrive.drive(ySpeed, 0, 0, false);
   }
 
   // Called once the command ends or is interrupted.

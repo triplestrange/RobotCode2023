@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.AutoRoutines.BottomOneConeLeave;
+import frc.robot.commands.AutoRoutines.MiddleOneConeBalance;
 import frc.robot.commands.AutoRoutines.TopOneConeLeave;
 import frc.robot.commands.AutoRoutines.TopOneConeLeave;
 import frc.robot.commands.gameplay.automations.Balance;
@@ -60,7 +62,8 @@ public class RobotContainer {
     this.choose = choose;
 
     choose.addOption("Top One Cone Leave", new TopOneConeLeave(m_robotDrive, m_Arm, m_Intake));
-
+    choose.addOption("Bottom One Cone Leave", new BottomOneConeLeave(m_robotDrive, m_Arm, m_Intake));
+    choose.addOption("Middle One Cone Balance", new MiddleOneConeBalance(m_robotDrive, m_Arm, m_Intake));
     // Configure the button bindings
     configureButtonBindings();
   
@@ -115,7 +118,7 @@ public class RobotContainer {
     JoystickButtons.dB.whileTrue(new RunCommand( () -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
     JoystickButtons.dlBump.whileTrue(new DriveTurbo(m_robotDrive));
     JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
-    JoystickButtons.dY.whileTrue(new Balance2(m_robotDrive));
+    JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
     JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
 
     // Operator Controls
