@@ -136,7 +136,6 @@ public class Arm extends SubsystemBase {
    public void setShoulder(double angle, double ffSpeed) {
     shoulderPID.setReference(angle, ControlType.kPosition, 
     0, ffSpeed/Constants.armConstants.FREE_SPEED_SHOULDER);
-    SmartDashboard.putNumber("targetShoulderDeg", Math.toDegrees(angle));
     lastShoulderAngle = angle;
 
   }
@@ -151,7 +150,6 @@ public class Arm extends SubsystemBase {
   public void setElbow(double angle, double ffSpeed) {
     elbowPID.setReference(angle, ControlType.kPosition,
         0, ffSpeed / Constants.armConstants.FREE_SPEED_ELBOW);
-    SmartDashboard.putNumber("targetElbowDeg", Math.toDegrees(angle));
     lastElbowAngle = angle;
   }
 
@@ -165,7 +163,6 @@ public class Arm extends SubsystemBase {
   public void setWrist(double angle, double ffSpeed) {
     wristPID.setReference(angle - getShoulder() * 38 / 26 + getElbow() * 38 / 26, ControlType.kPosition, 
     0, ffSpeed/Constants.armConstants.FREE_SPEED_WRIST);
-    SmartDashboard.putNumber("targetWristDeg", Math.toDegrees(angle));
     lastWristAngle = angle;
   }
 
@@ -271,9 +268,8 @@ public void setArmAngles()  {
   lastElbowAngle = getElbow();
   lastWristAngle = getWrist();
 }
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+
+public void updateSmartDashBoard()  {
     SmartDashboard.putNumber("shoulderDeg", Math.toDegrees(getShoulder()));
     SmartDashboard.putNumber("elbowDeg", Math.toDegrees(getElbow()));
     SmartDashboard.putNumber("wristDeg", Math.toDegrees(getWrist()));
@@ -288,5 +284,12 @@ public void setArmAngles()  {
     SmartDashboard.putNumber("shoulderPositionOffset", shoulderEncoder.getCalibration());
     SmartDashboard.putNumber("elbowPositionOffset", elbowEncoder.getCalibration());
     SmartDashboard.putNumber("wristPositionOffset", wristEncoder.getCalibration());
+
+
+}
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+   
   }
 }

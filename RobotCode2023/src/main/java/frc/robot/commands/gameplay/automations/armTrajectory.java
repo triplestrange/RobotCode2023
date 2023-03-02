@@ -94,6 +94,8 @@ public class armTrajectory extends CommandBase{
         timer.reset();
         timer.start();
     }
+
+    
   
     // Called every time the scheduler runs while the command is scheduled.
     @Override

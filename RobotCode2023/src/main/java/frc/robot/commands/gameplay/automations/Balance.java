@@ -36,6 +36,7 @@ public class Balance extends CommandBase {
   @Override
   public void initialize() {}
 
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -44,10 +45,6 @@ public class Balance extends CommandBase {
     if (Math.abs(tilt) < 5) {
       tilt = 0;
     }
-
-
-    SmartDashboard.putNumber("Time since !balanced", lastUnbalancedTime.get());
-    SmartDashboard.putNumber("Robot Tilt", tilt);
     
 
     
@@ -58,7 +55,6 @@ public class Balance extends CommandBase {
     //FIXME Change the logic to work with field orient
     ySpeed = MathUtil.clamp(ySpeed, -SwerveConstants.climbMaxSpeedMetersPerSecond, SwerveConstants.climbMaxSpeedMetersPerSecond);
     balancePos = new Pose2d(balancePos.getX() + ySpeed/25, balancePos.getY(), new Rotation2d(balancePos.getRotation().getRadians()));
-    SmartDashboard.putNumber("balanceX", ySpeed);
     m_SwerveDrive.drive(ySpeed, 0, 0, false);
   }
 

@@ -23,6 +23,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
   private SendableChooser<Command> choose;
+  private double i;
   
   
   public Alliance allianceColor;
@@ -55,6 +56,12 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.\
     m_robotContainer.m_robotDrive.updateOdometry();
     CommandScheduler.getInstance().run();
+    i=+1;
+    if (i%10 == 0) {
+      m_robotContainer.m_Arm.updateSmartDashBoard();
+      m_robotContainer.m_robotDrive.updateSmartDashBoard();
+
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

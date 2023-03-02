@@ -141,36 +141,7 @@ public class SwerveDrive extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
         });
-    SmartDashboard.putNumber("FLSteering", m_frontLeft.m_absoluteEncoder.getAngle());
-    SmartDashboard.putNumber("FRSteering", m_frontRight.m_absoluteEncoder.getAngle());
-    SmartDashboard.putNumber("BLSteering", m_rearLeft.m_absoluteEncoder.getAngle());
-    SmartDashboard.putNumber("BRSteering", m_rearRight.m_absoluteEncoder.getAngle());
-    SmartDashboard.putNumber("FLSteeringDeg", m_frontLeft.m_absoluteEncoder.getAngle() * 180.0 / Math.PI);
-    SmartDashboard.putNumber("FRSteeringDeg", m_frontRight.m_absoluteEncoder.getAngle() * 180.0 / Math.PI);
-    SmartDashboard.putNumber("BLSteeringDeg", m_rearLeft.m_absoluteEncoder.getAngle() * 180.0 / Math.PI);
-    SmartDashboard.putNumber("BRSteeringDeg", m_rearRight.m_absoluteEncoder.getAngle() * 180.0 / Math.PI);
-    SmartDashboard.putNumber("FLSteerNEO", m_frontLeft.m_turningEncoder.getPosition());
-    SmartDashboard.putNumber("FRSteerNEO", m_frontRight.m_turningEncoder.getPosition());
-    SmartDashboard.putNumber("BLSteerNEO", m_rearLeft.m_turningEncoder.getPosition());
-    SmartDashboard.putNumber("BRSteerNEO", m_rearRight.m_turningEncoder.getPosition());
-    SmartDashboard.putNumber("FLneo", m_frontLeft.getState().angle.getRadians());
-    SmartDashboard.putNumber("FRneo", m_frontRight.getState().angle.getRadians());
-    SmartDashboard.putNumber("BLneo", m_rearLeft.getState().angle.getRadians());
-    SmartDashboard.putNumber("BRneo", m_rearRight.getState().angle.getRadians());
-    SmartDashboard.putNumber("x", getPose().getTranslation().getX());
-    SmartDashboard.putNumber("y", getPose().getTranslation().getY());
-    SmartDashboard.putNumber("r", getPose().getRotation().getDegrees());
-    SmartDashboard.putNumber("GYRO ANGLE", navX.getAngle());
-    SmartDashboard.putNumber("TurnRate", getTurnRate());
-    SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
-    .getTable("limelight").getEntry("getpipe").getDouble(0));
-
-    SmartDashboard.putNumber("xSpeed", xAutoSpeed);
-    SmartDashboard.putNumber("ySpeed", yAutoSpeed);
-    SmartDashboard.putNumber("rSpeed", rAutoSpeed);
-    SmartDashboard.putNumber("pitch", navX.getPitch());
-    SmartDashboard.putNumber("roll", navX.getRoll());
-    SmartDashboard.putNumber("yaw", navX.getYaw());
+    
   //  System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n rSpeed: " + rAutoSpeed);
   }
 
@@ -360,7 +331,6 @@ public class SwerveDrive extends SubsystemBase {
    */
   public static double getHeading() {
     double heading = Math.IEEEremainder(navX.getAngle(), 360) * (SwerveConstants.kGyroReversed ? -1.0 : 1.0);
-    SmartDashboard.putNumber("heading", heading);
     return heading;
   }
 
@@ -402,5 +372,40 @@ public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFir
             this // Requires this drive subsystem
         )
     );
+    
+    }
+
+    public void updateSmartDashBoard()  {
+      SmartDashboard.putNumber("FLSteering", m_frontLeft.m_absoluteEncoder.getAngle());
+    SmartDashboard.putNumber("FRSteering", m_frontRight.m_absoluteEncoder.getAngle());
+    SmartDashboard.putNumber("BLSteering", m_rearLeft.m_absoluteEncoder.getAngle());
+    SmartDashboard.putNumber("BRSteering", m_rearRight.m_absoluteEncoder.getAngle());
+    SmartDashboard.putNumber("FLSteeringDeg", m_frontLeft.m_absoluteEncoder.getAngle() * 180.0 / Math.PI);
+    SmartDashboard.putNumber("FRSteeringDeg", m_frontRight.m_absoluteEncoder.getAngle() * 180.0 / Math.PI);
+    SmartDashboard.putNumber("BLSteeringDeg", m_rearLeft.m_absoluteEncoder.getAngle() * 180.0 / Math.PI);
+    SmartDashboard.putNumber("BRSteeringDeg", m_rearRight.m_absoluteEncoder.getAngle() * 180.0 / Math.PI);
+    SmartDashboard.putNumber("FLSteerNEO", m_frontLeft.m_turningEncoder.getPosition());
+    SmartDashboard.putNumber("FRSteerNEO", m_frontRight.m_turningEncoder.getPosition());
+    SmartDashboard.putNumber("BLSteerNEO", m_rearLeft.m_turningEncoder.getPosition());
+    SmartDashboard.putNumber("BRSteerNEO", m_rearRight.m_turningEncoder.getPosition());
+    SmartDashboard.putNumber("FLneo", m_frontLeft.getState().angle.getRadians());
+    SmartDashboard.putNumber("FRneo", m_frontRight.getState().angle.getRadians());
+    SmartDashboard.putNumber("BLneo", m_rearLeft.getState().angle.getRadians());
+    SmartDashboard.putNumber("BRneo", m_rearRight.getState().angle.getRadians());
+    SmartDashboard.putNumber("x", getPose().getTranslation().getX());
+    SmartDashboard.putNumber("y", getPose().getTranslation().getY());
+    SmartDashboard.putNumber("r", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("GYRO ANGLE", navX.getAngle());
+    SmartDashboard.putNumber("TurnRate", getTurnRate());
+    SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
+    .getTable("limelight").getEntry("getpipe").getDouble(0));
+
+    SmartDashboard.putNumber("xSpeed", xAutoSpeed);
+    SmartDashboard.putNumber("ySpeed", yAutoSpeed);
+    SmartDashboard.putNumber("rSpeed", rAutoSpeed);
+    SmartDashboard.putNumber("pitch", navX.getPitch());
+    SmartDashboard.putNumber("roll", navX.getRoll());
+    SmartDashboard.putNumber("yaw", navX.getYaw());
+
 }
 }
