@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.commands.AutoRoutines.AutoMain;
 import frc.robot.commands.gameplay.automations.Balance;
-import frc.robot.commands.gameplay.automations.DriveNormal;
-import frc.robot.commands.gameplay.automations.DriveTurbo;
+import frc.robot.commands.drive.*;
 import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
@@ -54,8 +53,7 @@ public class RobotContainer {
       // The left stick controls translation of the robot.
       // Turning is controlled by the X axis of the right stick.
       // TODO fine tune motor speeds
-      new DriveNormal(m_robotDrive)
-    );
+      new DriveNormal(m_robotDrive));
     // m_robotDrive.setDefaultCommand(new FilteredDrive(m_robotDrive, 
             // XBOX
             // () -> JoystickButtons.m_driverController.getLeftY() * 5,

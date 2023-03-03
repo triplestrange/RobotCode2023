@@ -7,7 +7,7 @@
         "https://3015rangerrobotics.github.io/pathplannerlib/repo"
     ],
     "jsonUrl": "https://3015rangerrobotics.github.io/pathplannerlib/PathplannerLib.json",
-    "javaDependencies": [
+    "javaDependencies":[
         {
             "groupId": "com.pathplanner.lib",
             "artifactId": "PathplannerLib-java",
