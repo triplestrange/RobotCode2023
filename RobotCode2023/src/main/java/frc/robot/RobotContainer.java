@@ -24,6 +24,8 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.gameplay.automations.Balance;
+import frc.robot.commands.drive.DriveNormal;
+import frc.robot.commands.drive.DriveTurbo;
 import frc.robot.commands.gameplay.automations.armPositions;
 import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
