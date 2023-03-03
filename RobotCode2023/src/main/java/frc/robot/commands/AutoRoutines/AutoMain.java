@@ -33,21 +33,27 @@ public class AutoMain extends CommandBase   {
         this.m_Drive = m_Drive;
         this.m_Arm = m_Arm;
         this.m_Intake = m_Intake;
-       
-        // Base Commands
-        scoreHigh = (new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm)
+    }
+
+    // Base Commands
+    public final Command scoreHigh()  {
+        return (new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm)
         .andThen(new RunCommand(m_Intake::runOutake, m_Intake))
         .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
 
-        scoreMiddle = (new armTrajectory(Constants.armConstants.MID_POSITION, m_Arm)
-        .andThen(new RunCommand(m_Intake::runOutake, m_Intake))
-        .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
+    }
 
-        scoreLow = (new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm)
+    public final Command scoreMiddle()  {
+        return (new armTrajectory(Constants.armConstants.MID_POSITION, m_Arm)
         .andThen(new RunCommand(m_Intake::runOutake, m_Intake))
         .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
     }
 
+    public final Command scoreLow() {
+        return (new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm)
+        .andThen(new RunCommand(m_Intake::runOutake, m_Intake))
+        .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
+    }
     public Command topOneConeLeaveCommand()  {
         PathPlannerTrajectory TopOneConeLeave = PathPlanner.loadPath("top1ConeLeave", new PathConstraints(1, 0.2));
 
