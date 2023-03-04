@@ -91,7 +91,7 @@ public class SwerveDrive extends SubsystemBase {
   private static final AHRS navX = new AHRS(SPI.Port.kMXP);
   boolean gyroReset;
 
-  // Odometry class for tracking robot pose
+  // Odometry class for tracking robot pose with vision
   public SwerveDrivePoseEstimator m_odometry =
       new SwerveDrivePoseEstimator(
           SwerveConstants.kDriveKinematics,
@@ -323,6 +323,7 @@ public class SwerveDrive extends SubsystemBase {
     Pose2d visionPose = new Pose2d(robotPose[0], robotPose[1], Rotation2d.fromDegrees(robotPose[5]));
     m_odometry.addVisionMeasurement(visionPose, WPIUtilJNI.now() * 1.0e-6);
   }
+  // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
   }
   /**
    * Returns the heading of the robot.

@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -52,14 +53,14 @@ public final class Constants {
     public static final int BR_OFFSET = 0;
 
     public static final double kMaxSpeedMetersPerSecond = 4.42;
-    public static final double climbMaxSpeedMetersPerSecond = 0.5;
-    public static final double autoAlignMaxSpeedMetersPerSecond = 0.2;
+    public static final double climbMaxSpeedMetersPerSecond = 1;
+    public static final double autoAlignMaxSpeedMetersPerSecond = 0.1;
 
     public static final boolean kGyroReversed = true;
 
     // encoder's aren't reversed
     public static final boolean frontLeftSteerEncoderReversed = false;
-    public static final boolean backLeftSteerEncoderReversed = false;
+    public static final boolean backLeftSteerEncoderReversed = false;    
     public static final boolean frontRightSteerEncoderReversed = false;
     public static final boolean backRightSteerEncoderReversed = false;
 
@@ -98,7 +99,7 @@ public final class Constants {
     public static final int BR_ENCODER = 0;
     public final static double FL_ENC_OFFSET = 143; // 183 
     public final static double FR_ENC_OFFSET = 141; // 179
-    public final static double BL_ENC_OFFSET = 153; // 221 
+    public final static double BL_ENC_OFFSET = 0; // 221 
     public final static double BR_ENC_OFFSET = 103; // 241
   }
   public static final class visionConstants {
@@ -132,8 +133,8 @@ public final class Constants {
     public final static double GR_ELBOW = 75 * (80.0/48);
     public final static double GR_WRIST = 160;
 
-    public final static double ENC_GR_SHOULDER = (14/64);
-    public final static double ENC_GR_ELBOW = (48/80);
+    public final static double ENC_GR_SHOULDER = (14.0/64);
+    public final static double ENC_GR_ELBOW = (48.0/80);
 
     // JOINT FREE SPEEDS IN RADIANS
     // USING EXPERIMENTAL DATA
@@ -154,14 +155,16 @@ public final class Constants {
     public final static Pose2d DEFAULT_POSITION = new Pose2d(0.163746, 0.036551, Rotation2d.fromDegrees(0));
     public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
     public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
-    public final static Pose2d HIGH_POSITION = new Pose2d(1.289, 1.399, Rotation2d.fromDegrees(-71.176));
-    public final static Pose2d MID_POSITION = new Pose2d(0.915, 1.218, Rotation2d.fromDegrees(-61.530));
+    public final static Pose2d HIGH_POSITION = new Pose2d(1.086031, 1.547758, Rotation2d.fromDegrees(-53.2));
+    public final static Pose2d MID_POSITION = new Pose2d(1.06, 1.33, Rotation2d.fromDegrees(-126.6));
 
-    public final static Pose2d LOW_UPRIGHT_CONE_POSITION = new Pose2d(0.744, 0.155, Rotation2d.fromDegrees(-38));
-    public final static Pose2d LOW_LYING_CONE_POSITION = new Pose2d(0.744, 0.155, Rotation2d.fromDegrees(-38));
+    public final static Pose2d LOW_UPRIGHT_CONE_POSITION = new Pose2d(0.817959, 0.160288, Rotation2d.fromDegrees(-21));
+    public final static Pose2d LOW_LYING_CONE_POSITION = new Pose2d(0.767, -0.068, Rotation2d.fromDegrees(1.66));
+
+    public final static Pose2d FEEDER_POSITION = new Pose2d(1.240994, 1.362817, Rotation2d.fromDegrees(-38));
 
     // Trajectory config
-    public final static TrajectoryConfig config = new TrajectoryConfig(0.5, 0.2);
+    public final static TrajectoryConfig config = new TrajectoryConfig(5, 1.5);
   }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 1.5;

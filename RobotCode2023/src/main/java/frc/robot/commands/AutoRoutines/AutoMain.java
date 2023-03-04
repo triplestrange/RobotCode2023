@@ -7,8 +7,10 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
+import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.armTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
@@ -22,11 +24,11 @@ public class AutoMain extends CommandBase   {
 
 
     // Commands for AutoRoutines
-    Command scoreHigh;
-    Command scoreMiddle;
-    Command scoreLow;
+    // Command scoreHigh;
+    // Command scoreMiddle;
+    // Command scoreLow;
 
-    Command balance;
+    // Command balance;
 
     public AutoMain(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake)    {
         // Class Variables
@@ -38,26 +40,32 @@ public class AutoMain extends CommandBase   {
     // Base Commands
     public final Command scoreHigh()  {
         return (new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm)
-        .andThen(new RunCommand(m_Intake::runOutake, m_Intake))
+        .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(3))
+        .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
         .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
 
     }
 
     public final Command scoreMiddle()  {
         return (new armTrajectory(Constants.armConstants.MID_POSITION, m_Arm)
-        .andThen(new RunCommand(m_Intake::runOutake, m_Intake))
+        .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(3))
+        .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
         .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
     }
 
     public final Command scoreLow() {
         return (new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm)
-        .andThen(new RunCommand(m_Intake::runOutake, m_Intake))
+        .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
+        .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
         .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
     }
+    public final Command balance(){
+        return (new Balance(m_Drive));
+    }
     public Command topOneConeLeaveCommand()  {
-        PathPlannerTrajectory TopOneConeLeave = PathPlanner.loadPath("top1ConeLeave", new PathConstraints(1, 0.2));
+        PathPlannerTrajectory TopOneConeLeave = PathPlanner.loadPath("top1ConeLeave", new PathConstraints(3, 1));
 
-        return scoreHigh
+        return scoreHigh()
         .andThen(new FollowPathWithEvents(
         m_Drive.followTrajectoryCommand(TopOneConeLeave, true),
         TopOneConeLeave.getMarkers(),
@@ -67,21 +75,22 @@ public class AutoMain extends CommandBase   {
     }
 
     public Command middleOneConeBalanceCommand()  {
-        PathPlannerTrajectory MiddleOneConeBalance = PathPlanner.loadPath("midPreloadBalance", new PathConstraints(1, 0.2));
+        PathPlannerTrajectory MiddleOneConeBalance = PathPlanner.loadPath("middle1ConeBalance", new PathConstraints(.1, 0.02));
 
-        return scoreHigh
+
+        return scoreHigh()
         .andThen(new FollowPathWithEvents(
         m_Drive.followTrajectoryCommand(MiddleOneConeBalance, true),
         MiddleOneConeBalance.getMarkers(),
         Constants.AutoConstants.eventMap))
-        .andThen(balance);
+        .andThen(balance());
 
     }
 
     public Command bottomOneConeLeaveCommand()  {
-        PathPlannerTrajectory BottomOneConeLeave = PathPlanner.loadPath("bottom1ConeLeave", new PathConstraints(1, 0.2));
+        PathPlannerTrajectory BottomOneConeLeave = PathPlanner.loadPath("bottom1ConeLeave", new PathConstraints(3, 1));
 
-        return scoreHigh
+        return scoreHigh()
         .andThen(new FollowPathWithEvents(
         m_Drive.followTrajectoryCommand(BottomOneConeLeave, true),
         BottomOneConeLeave.getMarkers(),

@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -43,22 +44,26 @@ public class Arm extends SubsystemBase {
   private double lastElbowAngle;
   private double lastWristAngle;
 
+  private double shoulderInit;
+  private double elbowInit;
+  private double wristInit;
+
   /** Creates a new Arm. */
   public Arm() {
     super();
     shoulderJoint = new CANSparkMax(Electrical.SHOULDER, MotorType.kBrushless);
     elbowJoint = new CANSparkMax(Electrical.ELBOW, MotorType.kBrushless);
     wristJoint = new CANSparkMax(Electrical.WRIST, MotorType.kBrushless);
-    shoulderJoint.restoreFactoryDefaults();
-    elbowJoint.restoreFactoryDefaults();
-    wristJoint.restoreFactoryDefaults();
+    // shoulderJoint.restoreFactoryDefaults();
+    // elbowJoint.restoreFactoryDefaults();
+    // wristJoint.restoreFactoryDefaults();
 
     shoulderJoint.setInverted(true);
 
     // encoder to determine offset angle
-    shoulderEncoder = new AbsoluteEncoder(4, 0);
-    elbowEncoder = new AbsoluteEncoder(5, 0);
-    wristEncoder = new AbsoluteEncoder(6, 0);
+    shoulderEncoder = new AbsoluteEncoder(7, 152.678402, true);
+    elbowEncoder = new AbsoluteEncoder(6, 226.560079);
+    wristEncoder = new AbsoluteEncoder(5, 158.522452);
 
     shoulderRelativeEncoder = shoulderJoint.getEncoder();
     elbowRelativeEncoder = elbowJoint.getEncoder();
@@ -69,12 +74,18 @@ public class Arm extends SubsystemBase {
     wristRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_WRIST);
 
     // Old method without abs encoders
-    // double shoulderInit = Math.PI / 2;
-    // double elbowInit = Math.toRadians(-71.657202);
-    // double wristInit = 0;
-    shoulderRelativeEncoder.setPosition(shoulderEncoder.getAngle() * Constants.armConstants.ENC_GR_SHOULDER);
-    elbowRelativeEncoder.setPosition(shoulderEncoder.getAngle() * Constants.armConstants.ENC_GR_ELBOW);
-    wristRelativeEncoder.setPosition(wristEncoder.getAngle());
+    // shoulderInit = Math.PI / 2;
+    // elbowInit = Math.toRadians(-71.657202);
+    // wristInit = 0;
+
+    // With abs encoders
+    shoulderInit = (Math.PI / 2) + MathUtil.angleModulus(shoulderEncoder.getAngle()) * Constants.armConstants.ENC_GR_SHOULDER;
+    elbowInit = Math.toRadians(-71.657202) + MathUtil.angleModulus(elbowEncoder.getAngle()) * Constants.armConstants.ENC_GR_SHOULDER;
+    wristInit = 0;
+    
+    shoulderRelativeEncoder.setPosition(shoulderInit);
+    elbowRelativeEncoder.setPosition(elbowInit);
+    wristRelativeEncoder.setPosition(wristInit - shoulderInit * 38 / 26 + elbowInit * 38 / 26);
 
     shoulderJoint.setSmartCurrentLimit(40);
     elbowJoint.setSmartCurrentLimit(40);
@@ -97,10 +108,10 @@ public class Arm extends SubsystemBase {
     wristJoint.burnFlash();
   }
   public void moveArm(double motorPowerShoulder, double motorPowerElbow, double motorPowerWrist)  {
-    if ((getArmPosition().getX() > Units.inchesToMeters(48 + 18) && motorPowerShoulder < 0) || getArmPosition().getX() > 18 - 9 && getShoulder() > Math.toRadians(97)) {
+    if (((getArmPosition().getX() > Units.inchesToMeters(48 + 18) && motorPowerShoulder < 0)) || (getArmPosition().getX() > 18 - 9) && (getShoulder() > Math.toRadians(97) && motorPowerShoulder > 0)) {
       motorPowerShoulder = 0;
     }
-    if (getArmPosition().getX() > Units.inchesToMeters(48 + 18) && ((motorPowerElbow > 0 && getElbow() < 0) || (motorPowerElbow < 0 && getElbow() > 0))) {
+    if ((getArmPosition().getX() > Units.inchesToMeters(48 + 18)) && ((motorPowerElbow > 0 && getElbow() < 0) || (motorPowerElbow < 0 && getElbow() > 0))) {
       motorPowerElbow = 0;
     }
     if (getArmPosition().getY() > Units.inchesToMeters(78 - 12.25) && motorPowerElbow > 0) {
@@ -171,7 +182,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void initializePID(SparkMaxPIDController controller) {
-    int kP = 10;
+    int kP = 7;
     int kI = 0; 
     int kD = 0;
     double kMinOutput = -0.5;
@@ -269,6 +280,16 @@ public void setArmAngles()  {
   lastWristAngle = getWrist();
 }
 
+public void resetArmEncoders()  {
+  shoulderRelativeEncoder.setPosition(shoulderInit);
+  elbowRelativeEncoder.setPosition(elbowInit);
+  wristRelativeEncoder.setPosition(wristInit - shoulderInit * 38 / 26 + elbowInit * 38 / 26);
+
+  lastShoulderAngle = shoulderInit;
+  lastElbowAngle = elbowInit;
+  lastWristAngle = wristInit;
+}
+
 public void updateSmartDashBoard()  {
     SmartDashboard.putNumber("shoulderDeg", Math.toDegrees(getShoulder()));
     SmartDashboard.putNumber("elbowDeg", Math.toDegrees(getElbow()));
@@ -281,10 +302,13 @@ public void updateSmartDashBoard()  {
     SmartDashboard.putNumber("lastElbowAngle", lastElbowAngle);
     SmartDashboard.putNumber("lastWristAngle", lastWristAngle);
 
-    SmartDashboard.putNumber("shoulderPositionOffset", shoulderEncoder.getCalibration());
-    SmartDashboard.putNumber("elbowPositionOffset", elbowEncoder.getCalibration());
-    SmartDashboard.putNumber("wristPositionOffset", wristEncoder.getCalibration());
+    SmartDashboard.putNumber("shoulderPositionOffset", Units.radiansToDegrees(shoulderEncoder.getAngle()));
+    SmartDashboard.putNumber("elbowPositionOffset", Units.radiansToDegrees(elbowEncoder.getAngle()));
+    SmartDashboard.putNumber("wristPositionOffset", Units.radiansToDegrees(wristEncoder.getAngle()));
 
+    SmartDashboard.putNumber("Shoulder", shoulderInit);
+    SmartDashboard.putNumber("Elbow Angle", elbowInit);
+    SmartDashboard.putNumber("Wrist", wristInit);
 
 }
   @Override

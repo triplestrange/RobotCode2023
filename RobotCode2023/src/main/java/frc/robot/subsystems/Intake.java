@@ -25,10 +25,10 @@ public class Intake extends SubsystemBase {
     // encoder to determine offset angle    
   }
   public void runIntake()  {
-      rollers.set(intakeSpeed);
+      rollers.set(-intakeSpeed);
   }
   public void runOutake() {
-    rollers.set(-intakeSpeed);
+    rollers.set(intakeSpeed);
   }
   public void intakeOff() {
     rollers.set(0);

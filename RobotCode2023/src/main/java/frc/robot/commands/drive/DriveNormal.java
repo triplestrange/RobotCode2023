@@ -12,7 +12,7 @@ import frc.robot.subsystems.SwerveDrive;
 
 public class DriveNormal extends CommandBase {
   SwerveDrive m_swerveDrive;
-  Timer timer;
+  Timer timer = new Timer();
   double time; 
 
   /*

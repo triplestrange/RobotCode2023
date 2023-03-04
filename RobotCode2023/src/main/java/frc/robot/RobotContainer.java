@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import javax.management.ObjectInstance;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.commands.AutoRoutines.AutoMain;
+import frc.robot.commands.drive.DriveNormal;
+import frc.robot.commands.drive.DriveTurbo;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.gameplay.automations.armTrajectory;
@@ -104,12 +108,13 @@ public class RobotContainer {
     // Operator Controls
     JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake,m_Intake));
     JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
-    
+    JoystickButtons.oplWing.onTrue(new InstantCommand(m_Arm::resetArmEncoders, m_Arm));
     JoystickButtons.opB.whileTrue(new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
     JoystickButtons.opY.whileTrue(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
     JoystickButtons.opX.whileTrue(new armTrajectory(Constants.armConstants.MID_POSITION, m_Arm));
     JoystickButtons.opA.whileTrue(new armTrajectory(Constants.armConstants.LOW_LYING_CONE_POSITION, m_Arm));
     JoystickButtons.opDpadD.whileTrue(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
+    JoystickButtons.opDpadU.whileTrue(new armTrajectory(Constants.armConstants.FEEDER_POSITION, m_Arm));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

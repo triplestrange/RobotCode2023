@@ -13,7 +13,7 @@ import frc.robot.subsystems.SwerveDrive;
 
 public class DriveTurbo extends CommandBase {
   SwerveDrive m_swerveDrive;
-  Timer timer;
+  // Timer timer = new Timer();
 
   /*
    * Combines Arm and Swerve and Vision for robot to
@@ -32,13 +32,14 @@ public class DriveTurbo extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.reset();
+    // timer.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = Constants.SwerveConstants.kMaxSpeedMetersPerSecond * timer.get()/0.1 + 1;
+    // double speed = (Constants.SwerveConstants.kMaxSpeedMetersPerSecond - 1) * timer.get()/0.1 + 1;
+    double speed = Constants.SwerveConstants.kMaxSpeedMetersPerSecond;
     speed = MathUtil.clamp(speed, -Constants.SwerveConstants.kMaxSpeedMetersPerSecond, Constants.SwerveConstants.kMaxSpeedMetersPerSecond);
     m_swerveDrive.drive(
       JoystickButtons.m_driverController.getLeftY() * speed,
