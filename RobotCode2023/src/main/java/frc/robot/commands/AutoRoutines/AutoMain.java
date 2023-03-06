@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.armTrajectory;
@@ -40,7 +41,8 @@ public class AutoMain extends CommandBase   {
     // Base Commands
     public final Command scoreHigh()  {
         return (new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm)
-        .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(3))
+        .andThen(new WaitCommand(1.5))
+        .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
         .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
         .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
 
@@ -48,7 +50,7 @@ public class AutoMain extends CommandBase   {
 
     public final Command scoreMiddle()  {
         return (new armTrajectory(Constants.armConstants.MID_POSITION, m_Arm)
-        .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(3))
+        .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
         .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
         .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
     }
@@ -63,7 +65,7 @@ public class AutoMain extends CommandBase   {
         return (new Balance(m_Drive));
     }
     public Command topOneConeLeaveCommand()  {
-        PathPlannerTrajectory TopOneConeLeave = PathPlanner.loadPath("top1ConeLeave", new PathConstraints(3, 1));
+        PathPlannerTrajectory TopOneConeLeave = PathPlanner.loadPath("top1ConeLeave", new PathConstraints(3, 1.5));
 
         return scoreHigh()
         .andThen(new FollowPathWithEvents(
@@ -75,9 +77,24 @@ public class AutoMain extends CommandBase   {
     }
 
     public Command middleOneConeBalanceCommand()  {
-        PathPlannerTrajectory MiddleOneConeBalance = PathPlanner.loadPath("middle1ConeBalance", new PathConstraints(.1, 0.02));
+        PathPlannerTrajectory MiddleOneConeBalance = PathPlanner.loadPath("middleOneConeBalance", new PathConstraints(1.5, 0.75));
 
 
+        // return scoreHigh()
+        return scoreHigh()
+        .andThen(new FollowPathWithEvents(
+        m_Drive.followTrajectoryCommand(MiddleOneConeBalance, true),
+        MiddleOneConeBalance.getMarkers(),
+        Constants.AutoConstants.eventMap))
+        .andThen(balance());
+
+    }
+
+    public Command middleOneConeBalanceLeaveCommand()  {
+        PathPlannerTrajectory MiddleOneConeBalance = PathPlanner.loadPath("midPreloadBalance", new PathConstraints(1.5, 0.75));
+
+
+        // return scoreHigh()
         return scoreHigh()
         .andThen(new FollowPathWithEvents(
         m_Drive.followTrajectoryCommand(MiddleOneConeBalance, true),
@@ -88,13 +105,26 @@ public class AutoMain extends CommandBase   {
     }
 
     public Command bottomOneConeLeaveCommand()  {
-        PathPlannerTrajectory BottomOneConeLeave = PathPlanner.loadPath("bottom1ConeLeave", new PathConstraints(3, 1));
+        PathPlannerTrajectory BottomOneConeLeave = PathPlanner.loadPath("bottom1ConeLeave", new PathConstraints(3,1.5));
 
         return scoreHigh()
         .andThen(new FollowPathWithEvents(
         m_Drive.followTrajectoryCommand(BottomOneConeLeave, true),
         BottomOneConeLeave.getMarkers(),
         Constants.AutoConstants.eventMap)
+        );
+
+    }
+
+    public Command bottomOneConeLeaveAutoCommand()  {
+        PathPlannerTrajectory BottomOneConeLeaveAuto = PathPlanner.loadPath("bottom1ConeLeaveAuto", new PathConstraints(3,1.5));
+
+        return scoreHigh()
+        .andThen(new FollowPathWithEvents(
+        m_Drive.followTrajectoryCommand(BottomOneConeLeaveAuto, true),
+        BottomOneConeLeaveAuto.getMarkers(),
+        Constants.AutoConstants.eventMap)
+        .andThen(new Balance(m_Drive))
         );
 
     }

@@ -61,9 +61,9 @@ public class Arm extends SubsystemBase {
     shoulderJoint.setInverted(true);
 
     // encoder to determine offset angle
-    shoulderEncoder = new AbsoluteEncoder(7, 152.678402, true);
-    elbowEncoder = new AbsoluteEncoder(6, 226.560079);
-    wristEncoder = new AbsoluteEncoder(5, 158.522452);
+    shoulderEncoder = new AbsoluteEncoder(7, 0, true);
+    elbowEncoder = new AbsoluteEncoder(6, 183);
+    wristEncoder = new AbsoluteEncoder(5, 26);
 
     shoulderRelativeEncoder = shoulderJoint.getEncoder();
     elbowRelativeEncoder = elbowJoint.getEncoder();
