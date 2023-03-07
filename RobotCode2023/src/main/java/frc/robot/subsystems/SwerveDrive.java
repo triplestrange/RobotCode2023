@@ -26,6 +26,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -319,9 +320,12 @@ public class SwerveDrive extends SubsystemBase {
     }
 
   int tv = (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getInteger(0);
+  System.out.println("tv: " + tv);
+  System.out.println("robotPose length: " + robotPose.length);
   if (tv == 1 && robotPose.length == 6)  {
     Pose2d visionPose = new Pose2d(robotPose[0], robotPose[1], Rotation2d.fromDegrees(robotPose[5]));
-    m_odometry.addVisionMeasurement(visionPose, WPIUtilJNI.now() * 1.0e-6);
+    System.out.println("Vision Pose: " + visionPose.toString());
+    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
   }
   // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
   }
