@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -39,7 +41,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData(choose);
     m_robotContainer = new RobotContainer(this, choose);
     m_robotContainer.m_robotDrive.zeroHeading();
-
+    m_robotContainer.m_robotDrive.resetOdometry(new Pose2d(0,0, new Rotation2d(0)));
+  
   }
 
   /**
@@ -55,7 +58,6 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.\
-    m_robotContainer.m_robotDrive.updateOdometry();
     CommandScheduler.getInstance().run();
     i++;
     if (i%10 == 0) {

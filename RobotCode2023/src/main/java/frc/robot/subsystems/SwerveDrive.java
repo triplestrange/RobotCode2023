@@ -8,12 +8,15 @@
 package frc.robot.subsystems;
 
 
+import com.fasterxml.jackson.core.StreamWriteCapability;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,6 +25,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -50,6 +55,13 @@ public class SwerveDrive extends SubsystemBase {
   public double xAutoSpeed = 0;
   public double yAutoSpeed = 0;
   public double rAutoSpeed = 0;
+  public double tv = 0;
+  Pose2d visionPose = new Pose2d();
+  double[] tempRobotPose;
+
+  private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
+  private static final Vector<N3> visionMeasuurementStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
+
 
   // Robot swerve modules
   private final SwerveModule m_frontLeft = new SwerveModule(Electrical.FL_DRIVE,
@@ -102,7 +114,9 @@ public class SwerveDrive extends SubsystemBase {
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-          }, new Pose2d());
+          }, new Pose2d(0, 0, new Rotation2d(0)),
+          stateStdDevs,
+          visionMeasuurementStdDevs);
 
   /**
    * Creates a new DriveSubsystem.
@@ -134,6 +148,7 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
+    tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
     m_odometry.update(
         getAngle(),
         new SwerveModulePosition[] {
@@ -142,6 +157,10 @@ public class SwerveDrive extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
         });
+    updateOdometry();
+
+
+
     
   //  System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n rSpeed: " + rAutoSpeed);
   }
@@ -310,22 +329,20 @@ public class SwerveDrive extends SubsystemBase {
 
   public void updateOdometry()  {
 
-    double[] robotPose;
 
     if (m_Robot.allianceColor == Alliance.Blue) {
-      robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue").getDoubleArray(new double[6]);
+      tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue").getDoubleArray(new double[6]);
     }
     else  {
-      robotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired").getDoubleArray(new double[6]);
+      tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired").getDoubleArray(new double[6]);
     }
 
-  int tv = (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getInteger(0);
-  System.out.println("tv: " + tv);
-  System.out.println("robotPose length: " + robotPose.length);
-  if (tv == 1 && robotPose.length == 6)  {
-    Pose2d visionPose = new Pose2d(robotPose[0], robotPose[1], Rotation2d.fromDegrees(robotPose[5]));
-    System.out.println("Vision Pose: " + visionPose.toString());
-    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
+  double tl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);
+  double cl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0);
+  
+  if (tv > 0.5 && tempRobotPose.length == 6)  {
+    visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
+    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()/* - (tl/1000.0) - (cl/1000.0)*/);
   }
   // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
   }
@@ -404,13 +421,19 @@ public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFir
     SmartDashboard.putNumber("TurnRate", getTurnRate());
     SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
     .getTable("limelight").getEntry("getpipe").getDouble(0));
-
+    SmartDashboard.putNumber("Has Target?",tv);
     SmartDashboard.putNumber("xSpeed", xAutoSpeed);
     SmartDashboard.putNumber("ySpeed", yAutoSpeed);
     SmartDashboard.putNumber("rSpeed", rAutoSpeed);
     SmartDashboard.putNumber("pitch", navX.getPitch());
     SmartDashboard.putNumber("roll", navX.getRoll());
     SmartDashboard.putNumber("yaw", navX.getYaw());
+    SmartDashboard.putString("Alliance Color",m_Robot.allianceColor.toString());
+    SmartDashboard.putNumber("Vision x", tempRobotPose[0]);
+    SmartDashboard.putNumber("Vision y", tempRobotPose[1]);
+    SmartDashboard.putNumber("Vision r", tempRobotPose[5]);
+
+
 
 }
 }
