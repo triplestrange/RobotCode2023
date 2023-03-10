@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveDrive;
 
-
 public class Balance extends CommandBase {
   /** Creates a new Balance. */
   /*
@@ -22,20 +21,20 @@ public class Balance extends CommandBase {
    */
   private final SwerveDrive m_SwerveDrive;
   PIDController robotGyro = new PIDController(0.04, 0, 0.015);
-  Pose2d balancePos = new Pose2d(); 
-  private Timer lastUnbalancedTime =  new Timer();
+  Pose2d balancePos = new Pose2d();
+  private Timer lastUnbalancedTime = new Timer();
 
   public Balance(SwerveDrive swerveDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrive);
     this.m_SwerveDrive = swerveDrive;
-    
+
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
-
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -45,16 +44,18 @@ public class Balance extends CommandBase {
     if (Math.abs(tilt) < 5) {
       tilt = 0;
     }
-    
 
-    
-    if (Math.abs(tilt) > 2.5) {lastUnbalancedTime.reset();}
+    if (Math.abs(tilt) > 2.5) {
+      lastUnbalancedTime.reset();
+    }
     double ySpeed = -robotGyro.calculate(tilt, 0);
 
-    //FIXME fix the speed param for field orient
-    //FIXME Change the logic to work with field orient
-    ySpeed = MathUtil.clamp(ySpeed, -SwerveConstants.climbMaxSpeedMetersPerSecond, SwerveConstants.climbMaxSpeedMetersPerSecond);
-    balancePos = new Pose2d(balancePos.getX() + ySpeed/25, balancePos.getY(), new Rotation2d(balancePos.getRotation().getRadians()));
+    // FIXME fix the speed param for field orient
+    // FIXME Change the logic to work with field orient
+    ySpeed = MathUtil.clamp(ySpeed, -SwerveConstants.climbMaxSpeedMetersPerSecond,
+        SwerveConstants.climbMaxSpeedMetersPerSecond);
+    balancePos = new Pose2d(balancePos.getX() + ySpeed / 25, balancePos.getY(),
+        new Rotation2d(balancePos.getRotation().getRadians()));
     m_SwerveDrive.drive(ySpeed, 0, 0, false);
   }
 

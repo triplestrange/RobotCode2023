@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -55,7 +54,7 @@ public class SwerveDrive extends SubsystemBase {
   private final Robot m_Robot;
   public PIDController transformX = new PIDController(0.05, 0, 0);
   public PIDController transformY = new PIDController(0.05, 0, 0);
-  public PIDController rotation = new PIDController(0.05,0,0);
+  public PIDController rotation = new PIDController(0.05, 0, 0);
   public double xAutoSpeed = 0;
   public double yAutoSpeed = 0;
   public double rAutoSpeed = 0;
@@ -95,8 +94,8 @@ public class SwerveDrive extends SubsystemBase {
   public ChassisSpeeds currentMovement;
 
   // The gyro sensor
-  public final double navXPitch()  {
-  return navX.getPitch();
+  public final double navXPitch() {
+    return navX.getPitch();
 
   }
 
@@ -108,17 +107,15 @@ public class SwerveDrive extends SubsystemBase {
   boolean gyroReset;
 
   // Odometry class for tracking robot pose with vision
-  public SwerveDrivePoseEstimator m_odometry =
-      new SwerveDrivePoseEstimator(
-          SwerveConstants.kDriveKinematics,
-          getAngle(),
-          new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-          }, new Pose2d(0, 0, new Rotation2d(0))
-      );
+  public SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
+      SwerveConstants.kDriveKinematics,
+      getAngle(),
+      new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition()
+      }, new Pose2d(0, 0, new Rotation2d(0)));
 
   /**
    * Creates a new DriveSubsystem.
@@ -162,17 +159,15 @@ public class SwerveDrive extends SubsystemBase {
     m_odometry.update(
         getAngle(),
         new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition()
         });
     updateOdometry();
 
-
-
-    
-  //  System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n rSpeed: " + rAutoSpeed);
+    // System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n
+    // rSpeed: " + rAutoSpeed);
   }
 
   /**
@@ -184,7 +179,6 @@ public class SwerveDrive extends SubsystemBase {
     return m_odometry.getEstimatedPosition();
   }
 
-  
   /**
    * Resets the odometry to the specified pose.
    *
@@ -192,16 +186,16 @@ public class SwerveDrive extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-      getAngle(),
-      new SwerveModulePosition[] {
-        m_frontLeft.getPosition(),
-        m_frontRight.getPosition(),
-        m_rearLeft.getPosition(),
-        m_rearRight.getPosition()
-      },
-      pose);
+        getAngle(),
+        new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition()
+        },
+        pose);
   }
-  
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -264,104 +258,103 @@ public class SwerveDrive extends SubsystemBase {
     navX.reset();
     gyroReset = true;
   }
+
   // Calculates closest Apriltag for use in autoAlignCube
   public int optimalID() {
     Pose2d robotPose = getPose();
-    if (m_Robot.allianceColor == Alliance.Red)  {
+    if (m_Robot.allianceColor == Alliance.Red) {
       if (robotPose.getX() > 8.27) {
         return 5;
-      }
-      else  {
+      } else {
         return robotPose.getY() <= 4 + 2.098 ? 1 : robotPose.getY() <= 4 + 0.422 ? 2 : 3;
       }
     }
 
-
-    else  {
+    else {
       if (robotPose.getX() > 8.27) {
         return 4;
-      }
-      else  {
+      } else {
         return robotPose.getY() <= 4 - 2.098 ? 8 : robotPose.getY() <= 4 - 0.422 ? 7 : 6;
       }
-      }
-      
+    }
 
-      
   }
 
-  
   public void autoAlignCube(double offset, int ID) {
 
-  
-    Pose2d tagPose = visionConstants.tagPose[ID - 1];  
+    Pose2d tagPose = visionConstants.tagPose[ID - 1];
 
     if (m_Robot.allianceColor == Alliance.Blue) {
       tagPose = new Pose2d(tagPose.getX() + 8.27, tagPose.getY() + 4, tagPose.getRotation());
-    }  
-    else  {
-    tagPose = new Pose2d(8.27 - tagPose.getX(), 4 - tagPose.getY(), tagPose.getRotation().rotateBy(new Rotation2d(Math.PI)));
+    } else {
+      tagPose = new Pose2d(8.27 - tagPose.getX(), 4 - tagPose.getY(),
+          tagPose.getRotation().rotateBy(new Rotation2d(Math.PI)));
     }
-  
+
     System.out.print("xSpeed " + xAutoSpeed + "; ySpeed " + yAutoSpeed + "; rSpeed " + rAutoSpeed);
-    
-    driveTo(new Pose2d(tagPose.getX(), tagPose.getY() + offset * tagPose.getRotation().getCos(), tagPose.getRotation()));
-    }
-    public void driveTo(Pose2d targetPose2d)  {
-    double xAutoSpeed = transformX.calculate(getPose().getX(),targetPose2d.getX());
+
+    driveTo(
+        new Pose2d(tagPose.getX(), tagPose.getY() + offset * tagPose.getRotation().getCos(), tagPose.getRotation()));
+  }
+
+  public void driveTo(Pose2d targetPose2d) {
+    double xAutoSpeed = transformX.calculate(getPose().getX(), targetPose2d.getX());
     double yAutoSpeed = transformY.calculate(getPose().getY(), targetPose2d.getY());
     double rAutoSpeed = rotation.calculate(getAngle().getRadians(), targetPose2d.getRotation().getRadians());
 
     // Max Speeds
-    xAutoSpeed = MathUtil.clamp(xAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond, SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
-    yAutoSpeed = MathUtil.clamp(yAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond, SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
+    xAutoSpeed = MathUtil.clamp(xAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond,
+        SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
+    yAutoSpeed = MathUtil.clamp(yAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond,
+        SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
 
-      drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
-    }
-    
+    drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
+  }
 
- public void autoAlignConeOrFeeder(double offset) {
+  public void autoAlignConeOrFeeder(double offset) {
     // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
-    // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-    // double thor = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
+    // double tx =
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    // double thor =
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
     // double xSpeed = transformX.calculate(tx,0);
     // double ySpeed = transformY.calculate(thor,0);
     // double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
     int ID = optimalID();
 
-    double finalOffset = ID == 5 || ID == 4 ? Constants.visionConstants.FEEDER_OFFSET_LEFT.getY() : Constants.visionConstants.CONE_OFFSET_LEFT;
-
+    double finalOffset = ID == 5 || ID == 4 ? Constants.visionConstants.FEEDER_OFFSET_LEFT.getY()
+        : Constants.visionConstants.CONE_OFFSET_LEFT;
 
     autoAlignCube(finalOffset * offset, optimalID());
     // drive(xSpeed, ySpeed, rSpeed, false);
   }
 
-
-  public void updateOdometry()  {
-
+  public void updateOdometry() {
 
     if (m_Robot.allianceColor == Alliance.Blue) {
-      tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue").getDoubleArray(new double[6]);
-    }
-    else  {
-      tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired").getDoubleArray(new double[6]);
+      tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue")
+          .getDoubleArray(new double[6]);
+    } else {
+      tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired")
+          .getDoubleArray(new double[6]);
     }
 
-  double tl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);
-  double cl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0);
-  
-  if (tv > 0.5 && tempRobotPose.length >= 6)  {
-    visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
-    try {
-      logWriter.write("visionPose update: " + visionPose.toString());
-      logWriter.write("wheel odometry: " + m_odometry.getEstimatedPosition().toString());
-    } catch (IOException e) {
-      e.printStackTrace();
+    double tl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);
+    double cl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0);
+
+    if (tv > 0.5 && tempRobotPose.length >= 6) {
+      visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
+      try {
+        logWriter.write("visionPose update: " + visionPose.toString());
+        logWriter.write("wheel odometry: " + m_odometry.getEstimatedPosition().toString());
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()/*- (tl/1000.0) - (cl/1000.0)*/);
     }
-    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()/*- (tl/1000.0) - (cl/1000.0)*/);
+    // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
   }
-  // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
-  }
+
   /**
    * Returns the heading of the robot.
    *
@@ -387,34 +380,38 @@ public class SwerveDrive extends SubsystemBase {
     m_frontRight.resetWheel();
     m_rearRight.resetWheel();
   }
-  
-  // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-   return new SequentialCommandGroup(
+
+  // Assuming this method is part of a drivetrain subsystem that provides the
+  // necessary methods
+  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+    return new SequentialCommandGroup(
         new InstantCommand(() -> {
           // Reset odometry for the first path you run during auto
-          if(isFirstPath){
-            PathPlannerState state = PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(), m_Robot.allianceColor);
-              this.resetOdometry(new Pose2d(state.poseMeters.getTranslation(), state.holonomicRotation));
+          if (isFirstPath) {
+            PathPlannerState state = PathPlannerTrajectory.transformStateForAlliance(traj.getInitialState(),
+                m_Robot.allianceColor);
+            this.resetOdometry(new Pose2d(state.poseMeters.getTranslation(), state.holonomicRotation));
           }
         }),
         new PPSwerveControllerCommand(
-            traj, 
+            traj,
             this::getPose, // Pose supplier
             SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
-            new PIDController(1, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(1, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use
+                                        // feedforwards.
             new PIDController(1, 0, 0), // Y controller (usually the same values as X controller)
-            new PIDController(1, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(1, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will
+                                        // only use feedforwards.
             this::setModuleStates, // Module states consumer
-            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+            true, // Should the path be automatically mirrored depending on alliance color.
+                  // Optional, defaults to true
             this // Requires this drive subsystem
-        )
-    );
-    
-    }
+        ));
 
-    public void updateSmartDashBoard()  {
-      SmartDashboard.putNumber("FLSteering", m_frontLeft.m_absoluteEncoder.getAngle());
+  }
+
+  public void updateSmartDashBoard() {
+    SmartDashboard.putNumber("FLSteering", m_frontLeft.m_absoluteEncoder.getAngle());
     SmartDashboard.putNumber("FRSteering", m_frontRight.m_absoluteEncoder.getAngle());
     SmartDashboard.putNumber("BLSteering", m_rearLeft.m_absoluteEncoder.getAngle());
     SmartDashboard.putNumber("BRSteering", m_rearRight.m_absoluteEncoder.getAngle());
@@ -436,20 +433,20 @@ public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFir
     SmartDashboard.putNumber("GYRO ANGLE", navX.getAngle());
     SmartDashboard.putNumber("TurnRate", getTurnRate());
     SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
-    .getTable("limelight").getEntry("getpipe").getDouble(0));
-    SmartDashboard.putNumber("Has Target?",tv);
+        .getTable("limelight").getEntry("getpipe").getDouble(0));
+    SmartDashboard.putNumber("Has Target?", tv);
     SmartDashboard.putNumber("xSpeed", xAutoSpeed);
     SmartDashboard.putNumber("ySpeed", yAutoSpeed);
     SmartDashboard.putNumber("rSpeed", rAutoSpeed);
     SmartDashboard.putNumber("pitch", navX.getPitch());
     SmartDashboard.putNumber("roll", navX.getRoll());
     SmartDashboard.putNumber("yaw", navX.getYaw());
-    SmartDashboard.putString("Alliance Color",m_Robot.allianceColor.toString());
+    SmartDashboard.putString("Alliance Color", m_Robot.allianceColor.toString());
     SmartDashboard.putNumber("Vision x", tempRobotPose[0]);
     SmartDashboard.putNumber("Vision y", tempRobotPose[1]);
     SmartDashboard.putNumber("Vision r", tempRobotPose[5]);
 
     SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
 
-}
+  }
 }

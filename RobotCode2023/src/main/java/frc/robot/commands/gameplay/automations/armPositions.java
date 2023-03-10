@@ -14,6 +14,7 @@ public class armPositions extends CommandBase {
   private double sAngle;
   private double eAngle;
   private double wAngle;
+
   public armPositions(JointAngles jointAngles, Arm arm) {
     addRequirements(arm);
     this.arm = arm;
@@ -33,23 +34,23 @@ public class armPositions extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs(sAngle - arm.getShoulder()) < Constants.armConstants.ERROR_IN_RADIANS && 
-    Math.abs(eAngle - arm.getElbow()) < Constants.armConstants.ERROR_IN_RADIANS && 
-    Math.abs(wAngle - arm.getWrist()) < Constants.armConstants.ERROR_IN_RADIANS)  {
+    if (Math.abs(sAngle - arm.getShoulder()) < Constants.armConstants.ERROR_IN_RADIANS &&
+        Math.abs(eAngle - arm.getElbow()) < Constants.armConstants.ERROR_IN_RADIANS &&
+        Math.abs(wAngle - arm.getWrist()) < Constants.armConstants.ERROR_IN_RADIANS) {
       return true;
     }
     return false;
   }
-
 
 }

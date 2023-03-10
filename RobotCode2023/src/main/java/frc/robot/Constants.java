@@ -63,7 +63,7 @@ public final class Constants {
 
     // encoder's aren't reversed
     public static final boolean frontLeftSteerEncoderReversed = false;
-    public static final boolean backLeftSteerEncoderReversed = false;    
+    public static final boolean backLeftSteerEncoderReversed = false;
     public static final boolean frontRightSteerEncoderReversed = false;
     public static final boolean backRightSteerEncoderReversed = false;
 
@@ -100,62 +100,64 @@ public final class Constants {
     public static final int FR_ENCODER = 3;
     public static final int BL_ENCODER = 1;
     public static final int BR_ENCODER = 0;
-    public final static double FL_ENC_OFFSET = 143; // 183 
+    public final static double FL_ENC_OFFSET = 143; // 183
     public final static double FR_ENC_OFFSET = 330; // 179 141
-    public final static double BL_ENC_OFFSET = 0; // 221 
+    public final static double BL_ENC_OFFSET = 0; // 221
     public final static double BR_ENC_OFFSET = 103; // 241
   }
+
   public static final class visionConstants {
     // Only for the Red Alliance Wall
-    public final static Translation2d SCORING_OFFSET = new Translation2d(-0.762,0);
-    public final static Translation2d FEEDER_OFFSET_LEFT = new Translation2d(-0.41275,0.5334);
+    public final static Translation2d SCORING_OFFSET = new Translation2d(-0.762, 0);
+    public final static Translation2d FEEDER_OFFSET_LEFT = new Translation2d(-0.41275, 0.5334);
     public final static double CONE_OFFSET_LEFT = 0.5588;
     // This is for both
     public final static Pose2d[] tagPose = new Pose2d[] {
-      new Pose2d(7.24310 + SCORING_OFFSET.getX(), -2.93659, new Rotation2d(0)),
-      new Pose2d(7.24310 + SCORING_OFFSET.getX(), 1.26019, new Rotation2d(0)),
-      new Pose2d(7.24310 + SCORING_OFFSET.getX(), 0.41621, new Rotation2d(0)),
-      new Pose2d(7.90832 + FEEDER_OFFSET_LEFT.getX(), 2.74161, new Rotation2d(0)),
-      new Pose2d(-7.90832 - FEEDER_OFFSET_LEFT.getX(), 2.74161, new Rotation2d(Math.PI)),
-      new Pose2d(-7.24310 - SCORING_OFFSET.getX(), 0.41621, new Rotation2d(Math.PI)),
-      new Pose2d(-7.24310 - SCORING_OFFSET.getX(), -1.26019, new Rotation2d(Math.PI)),
-      new Pose2d(-7.24310 - SCORING_OFFSET.getX(), -2.93659, new Rotation2d(Math.PI))
-      
+        new Pose2d(7.24310 + SCORING_OFFSET.getX(), -2.93659, new Rotation2d(0)),
+        new Pose2d(7.24310 + SCORING_OFFSET.getX(), 1.26019, new Rotation2d(0)),
+        new Pose2d(7.24310 + SCORING_OFFSET.getX(), 0.41621, new Rotation2d(0)),
+        new Pose2d(7.90832 + FEEDER_OFFSET_LEFT.getX(), 2.74161, new Rotation2d(0)),
+        new Pose2d(-7.90832 - FEEDER_OFFSET_LEFT.getX(), 2.74161, new Rotation2d(Math.PI)),
+        new Pose2d(-7.24310 - SCORING_OFFSET.getX(), 0.41621, new Rotation2d(Math.PI)),
+        new Pose2d(-7.24310 - SCORING_OFFSET.getX(), -1.26019, new Rotation2d(Math.PI)),
+        new Pose2d(-7.24310 - SCORING_OFFSET.getX(), -2.93659, new Rotation2d(Math.PI))
+
     };
 
     public static final Vector<N3> STATE_STD_DEVS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
-    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));  
+    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
 
   }
-  public static final class armConstants  {
+
+  public static final class armConstants {
 
     // FIXME Change the offsets to current encoder values
     public final static double SHOULDER_OFFSET = 0;
     public final static double ELBOW_OFFSET = 0;
     public final static double WRIST_OFFSET = 0;
     // Gear ratios
-    public final static double GR_SHOULDER = 75 * (64.0/14);
-    public final static double GR_ELBOW = 75 * (80.0/48);
+    public final static double GR_SHOULDER = 75 * (64.0 / 14);
+    public final static double GR_ELBOW = 75 * (80.0 / 48);
     public final static double GR_WRIST = 160;
 
-    public final static double ENC_GR_SHOULDER = (14.0/64);
-    public final static double ENC_GR_ELBOW = (48.0/80);
+    public final static double ENC_GR_SHOULDER = (14.0 / 64);
+    public final static double ENC_GR_ELBOW = (48.0 / 80);
 
     // JOINT FREE SPEEDS IN RADIANS
     // USING EXPERIMENTAL DATA
-    public final static double FREE_SPEED_SHOULDER = (5820 / 60 * 2 * Math.PI)/GR_SHOULDER;
-    public final static double FREE_SPEED_ELBOW = (5820 / 60 * 2 * Math.PI)/GR_SHOULDER;
-    public final static double FREE_SPEED_WRIST = (11710 / 60 * 2 * Math.PI)/GR_WRIST;
+    public final static double FREE_SPEED_SHOULDER = (5820 / 60 * 2 * Math.PI) / GR_SHOULDER;
+    public final static double FREE_SPEED_ELBOW = (5820 / 60 * 2 * Math.PI) / GR_SHOULDER;
+    public final static double FREE_SPEED_WRIST = (11710 / 60 * 2 * Math.PI) / GR_WRIST;
 
     // ARM LENGTHS
     public final static double SHOULDER_LENGTH = Units.inchesToMeters(32);
     public final static double ELBOW_LENGTH = Units.inchesToMeters(24);
 
     // ACCEPTABLE PERCENT ERROR
-    public final static double ERROR_IN_RADIANS = Math.PI/180;
+    public final static double ERROR_IN_RADIANS = Math.PI / 180;
 
     // SCORING PRESETS
-    public final static double CONE_SCORING_OFFSET = 205/16;
+    public final static double CONE_SCORING_OFFSET = 205 / 16;
 
     public final static Pose2d DEFAULT_POSITION = new Pose2d(0.163746, 0.036551, Rotation2d.fromDegrees(0));
     public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
@@ -171,6 +173,7 @@ public final class Constants {
     // Trajectory config
     public final static TrajectoryConfig config = new TrajectoryConfig(3, 1);
   }
+
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 1.5;
     public static final double kMaxAccelerationMetersPerSecondSquared = 2;
@@ -185,27 +188,26 @@ public final class Constants {
     public static final double kPThetaController = 3;
 
     // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-        new TrapezoidProfile.Constraints(
-            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     // HashMap for PathPlanner
-    //bottom is limelight side, top is opposite
+    // bottom is limelight side, top is opposite
     public static HashMap<String, Command> eventMap = new HashMap<>();
-    public void eventMapEvents (SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
-    eventMap.put("scoreObject", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-    eventMap.put("pickupObject", new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
-    eventMap.put("intakeOn", new RunCommand(m_Intake::runIntake, m_Intake));
-    eventMap.put("intakeOut", new RunCommand(m_Intake::runOutake, m_Intake));
-    eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
-    eventMap.put("retractArm", new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
-    eventMap.put("lowerArm", new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+
+    public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
+      eventMap.put("scoreObject", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+      eventMap.put("pickupObject", new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+      eventMap.put("intakeOn", new RunCommand(m_Intake::runIntake, m_Intake));
+      eventMap.put("intakeOut", new RunCommand(m_Intake::runOutake, m_Intake));
+      eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
+      eventMap.put("retractArm", new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
+      eventMap.put("lowerArm", new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
 
     };
 
   }
 
-  
   public static final class Electrical {
     // Swerve Motor Controller CAN ID's
     public static final int FL_DRIVE = 13;
