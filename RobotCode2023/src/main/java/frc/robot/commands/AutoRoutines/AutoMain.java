@@ -105,7 +105,7 @@ public class AutoMain extends CommandBase {
     }
 
     public Command bottomOneConeLeaveCommand() {
-        PathPlannerTrajectory BottomOneConeLeave = PathPlanner.loadPath("bottom1ConeLeave",
+        PathPlannerTrajectory BottomOneConeLeave = PathPlanner.loadPath("bottomOneConeLeave",
                 new PathConstraints(3, 1.5));
 
         return scoreHigh()
@@ -116,14 +116,14 @@ public class AutoMain extends CommandBase {
 
     }
 
-    public Command bottomOneConeLeaveAutoCommand() {
-        PathPlannerTrajectory BottomOneConeLeaveAuto = PathPlanner.loadPath("bottom1ConeLeaveAuto",
+    public Command bottomOneConeBalanceCommand() {
+        PathPlannerTrajectory bottomOneConeBalance = PathPlanner.loadPath("bottomOneConeBalance",
                 new PathConstraints(3, 1.5));
 
         return scoreHigh()
                 .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(BottomOneConeLeaveAuto, true),
-                        BottomOneConeLeaveAuto.getMarkers(),
+                        m_Drive.followTrajectoryCommand(bottomOneConeBalance, true),
+                        bottomOneConeBalance.getMarkers(),
                         Constants.AutoConstants.eventMap)
                         .andThen(new Balance(m_Drive)));
 
