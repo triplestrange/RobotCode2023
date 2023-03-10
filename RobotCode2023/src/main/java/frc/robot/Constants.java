@@ -6,10 +6,13 @@ package frc.robot;
 
 import java.util.HashMap;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -104,22 +107,24 @@ public final class Constants {
   }
   public static final class visionConstants {
     // Only for the Red Alliance Wall
-    public final static Translation2d scoringOffset = new Translation2d(-0.762,0);
-    public final static Translation2d feederOffsetLeft = new Translation2d(-0.41275,0.5334);
-    public final static double coneOffsetLeft = 0.5588;
+    public final static Translation2d SCORING_OFFSET = new Translation2d(-0.762,0);
+    public final static Translation2d FEEDER_OFFSET_LEFT = new Translation2d(-0.41275,0.5334);
+    public final static double CONE_OFFSET_LEFT = 0.5588;
     // This is for both
     public final static Pose2d[] tagPose = new Pose2d[] {
-      new Pose2d(7.24310 + scoringOffset.getX(), -2.93659, new Rotation2d(0)),
-      new Pose2d(7.24310 + scoringOffset.getX(), 1.26019, new Rotation2d(0)),
-      new Pose2d(7.24310 + scoringOffset.getX(), 0.41621, new Rotation2d(0)),
-      new Pose2d(7.90832 + feederOffsetLeft.getX(), 2.74161, new Rotation2d(0)),
-      new Pose2d(-7.90832 - feederOffsetLeft.getX(), 2.74161, new Rotation2d(Math.PI)),
-      new Pose2d(-7.24310 - scoringOffset.getX(), 0.41621, new Rotation2d(Math.PI)),
-      new Pose2d(-7.24310 - scoringOffset.getX(), -1.26019, new Rotation2d(Math.PI)),
-      new Pose2d(-7.24310 - scoringOffset.getX(), -2.93659, new Rotation2d(Math.PI))
+      new Pose2d(7.24310 + SCORING_OFFSET.getX(), -2.93659, new Rotation2d(0)),
+      new Pose2d(7.24310 + SCORING_OFFSET.getX(), 1.26019, new Rotation2d(0)),
+      new Pose2d(7.24310 + SCORING_OFFSET.getX(), 0.41621, new Rotation2d(0)),
+      new Pose2d(7.90832 + FEEDER_OFFSET_LEFT.getX(), 2.74161, new Rotation2d(0)),
+      new Pose2d(-7.90832 - FEEDER_OFFSET_LEFT.getX(), 2.74161, new Rotation2d(Math.PI)),
+      new Pose2d(-7.24310 - SCORING_OFFSET.getX(), 0.41621, new Rotation2d(Math.PI)),
+      new Pose2d(-7.24310 - SCORING_OFFSET.getX(), -1.26019, new Rotation2d(Math.PI)),
+      new Pose2d(-7.24310 - SCORING_OFFSET.getX(), -2.93659, new Rotation2d(Math.PI))
       
     };
 
+    public static final Vector<N3> STATE_STD_DEVS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
+    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));  
 
   }
   public static final class armConstants  {
@@ -143,8 +148,8 @@ public final class Constants {
     public final static double FREE_SPEED_WRIST = (11710 / 60 * 2 * Math.PI)/GR_WRIST;
 
     // ARM LENGTHS
-    public final static double SHOULDER_LENGTH = 38 * 0.0254;
-    public final static double ELBOW_LENGTH = 37.125 * 0.0254;
+    public final static double SHOULDER_LENGTH = Units.inchesToMeters(32);
+    public final static double ELBOW_LENGTH = Units.inchesToMeters(24);
 
     // ACCEPTABLE PERCENT ERROR
     public final static double ERROR_IN_RADIANS = Math.PI/180;
