@@ -8,6 +8,10 @@
 package frc.robot.subsystems;
 
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.StreamWriteCapability;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -59,9 +63,8 @@ public class SwerveDrive extends SubsystemBase {
   Pose2d visionPose = new Pose2d();
   double[] tempRobotPose;
 
-  private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
-  private static final Vector<N3> visionMeasuurementStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
-
+  File logFile = new File("log.txt");
+  FileWriter logWriter;
 
   // Robot swerve modules
   private final SwerveModule m_frontLeft = new SwerveModule(Electrical.FL_DRIVE,
@@ -114,9 +117,8 @@ public class SwerveDrive extends SubsystemBase {
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-          }, new Pose2d(0, 0, new Rotation2d(0)),
-          stateStdDevs,
-          visionMeasuurementStdDevs);
+          }, new Pose2d(0, 0, new Rotation2d(0))
+      );
 
   /**
    * Creates a new DriveSubsystem.
@@ -125,6 +127,14 @@ public class SwerveDrive extends SubsystemBase {
     resetEncoders();
     m_Robot = m_robot;
     rotation.enableContinuousInput(-Math.PI, Math.PI);
+
+    try {
+      logFile.createNewFile();
+      logWriter = new FileWriter(logFile);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
   }
 
   /**
@@ -319,7 +329,7 @@ public class SwerveDrive extends SubsystemBase {
     // double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
     int ID = optimalID();
 
-    double finalOffset = ID == 5 || ID == 4 ? Constants.visionConstants.feederOffsetLeft.getY() : Constants.visionConstants.coneOffsetLeft;
+    double finalOffset = ID == 5 || ID == 4 ? Constants.visionConstants.FEEDER_OFFSET_LEFT.getY() : Constants.visionConstants.CONE_OFFSET_LEFT;
 
 
     autoAlignCube(finalOffset * offset, optimalID());
@@ -340,9 +350,15 @@ public class SwerveDrive extends SubsystemBase {
   double tl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);
   double cl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0);
   
-  if (tv > 0.5 && tempRobotPose.length == 6)  {
+  if (tv > 0.5 && tempRobotPose.length >= 6)  {
     visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
-    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()/* - (tl/1000.0) - (cl/1000.0)*/);
+    try {
+      logWriter.write("visionPose update: " + visionPose.toString());
+      logWriter.write("wheel odometry: " + m_odometry.getEstimatedPosition().toString());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()/*- (tl/1000.0) - (cl/1000.0)*/);
   }
   // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
   }
@@ -433,7 +449,7 @@ public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFir
     SmartDashboard.putNumber("Vision y", tempRobotPose[1]);
     SmartDashboard.putNumber("Vision r", tempRobotPose[5]);
 
-
+    SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
 
 }
 }
