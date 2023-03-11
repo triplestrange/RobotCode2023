@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.gameplay.automations.Balance;
-import frc.robot.commands.gameplay.automations.armTrajectory;
+import frc.robot.commands.gameplay.automations.ArmTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
@@ -39,26 +39,26 @@ public class AutoMain extends CommandBase {
 
     // Base Commands
     public final Command scoreHigh() {
-        return (new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm)
+        return (new ArmTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm)
                 .andThen(new WaitCommand(1.5))
                 .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
                 .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
-                .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
+                .andThen(new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
 
     }
 
     public final Command scoreMiddle() {
-        return (new armTrajectory(Constants.armConstants.MID_POSITION, m_Arm)
+        return (new ArmTrajectory(Constants.armConstants.MID_POSITION, m_Arm)
                 .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
                 .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
-                .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
+                .andThen(new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
     }
 
     public final Command scoreLow() {
-        return (new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm)
+        return (new ArmTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm)
                 .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
                 .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
-                .andThen(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
+                .andThen(new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
     }
 
     public final Command balance() {
@@ -115,13 +115,13 @@ public class AutoMain extends CommandBase {
     }
 
     public Command bottomOneConeLeaveCommand() {
-        PathPlannerTrajectory BottomOneConeLeave = PathPlanner.loadPath("bottomOneConeLeave",
+        PathPlannerTrajectory bottomOneConeLeave = PathPlanner.loadPath("bottomOneConeLeave",
                 new PathConstraints(3, 1.5));
 
         return scoreHigh()
                 .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(BottomOneConeLeave, true),
-                        BottomOneConeLeave.getMarkers(),
+                        m_Drive.followTrajectoryCommand(bottomOneConeLeave, true),
+                        bottomOneConeLeave.getMarkers(),
                         Constants.AutoConstants.eventMap));
 
     }

@@ -9,13 +9,13 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.JointAngles;
 
-public class armPositions extends CommandBase {
+public class ArmPositions extends CommandBase {
   private final Arm arm;
   private double sAngle;
   private double eAngle;
   private double wAngle;
 
-  public armPositions(JointAngles jointAngles, Arm arm) {
+  public ArmPositions(JointAngles jointAngles, Arm arm) {
     addRequirements(arm);
     this.arm = arm;
     sAngle = jointAngles.shoulderAngle;

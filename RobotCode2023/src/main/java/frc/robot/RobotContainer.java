@@ -18,7 +18,7 @@ import frc.robot.commands.drive.DriveNormal;
 import frc.robot.commands.drive.DriveTurbo;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.drive.*;
-import frc.robot.commands.gameplay.automations.armTrajectory;
+import frc.robot.commands.gameplay.automations.ArmTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
@@ -121,12 +121,12 @@ public class RobotContainer {
     JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake, m_Intake));
     JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
     JoystickButtons.oplWing.onTrue(new InstantCommand(m_Arm::resetArmEncoders, m_Arm));
-    JoystickButtons.opB.whileTrue(new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
-    JoystickButtons.opY.whileTrue(new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-    JoystickButtons.opX.whileTrue(new armTrajectory(Constants.armConstants.MID_POSITION, m_Arm));
-    JoystickButtons.opA.whileTrue(new armTrajectory(Constants.armConstants.LOW_LYING_CONE_POSITION, m_Arm));
-    JoystickButtons.opDpadD.whileTrue(new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
-    JoystickButtons.opDpadU.whileTrue(new armTrajectory(Constants.armConstants.FEEDER_POSITION, m_Arm));
+    JoystickButtons.opB.whileTrue(new ArmTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+    JoystickButtons.opY.whileTrue(new ArmTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+    JoystickButtons.opX.whileTrue(new ArmTrajectory(Constants.armConstants.MID_POSITION, m_Arm));
+    JoystickButtons.opA.whileTrue(new ArmTrajectory(Constants.armConstants.LOW_LYING_CONE_POSITION, m_Arm));
+    JoystickButtons.opDpadD.whileTrue(new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
+    JoystickButtons.opDpadU.whileTrue(new ArmTrajectory(Constants.armConstants.FEEDER_POSITION, m_Arm));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

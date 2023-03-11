@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.commands.gameplay.automations.armTrajectory;
+import frc.robot.commands.gameplay.automations.ArmTrajectory;
 import frc.robot.subsystems.Arm;
 
 /**
@@ -196,13 +196,13 @@ public final class Constants {
     public static HashMap<String, Command> eventMap = new HashMap<>();
 
     public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
-      eventMap.put("scoreObject", new armTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-      eventMap.put("pickupObject", new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+      eventMap.put("scoreObject", new ArmTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
+      eventMap.put("pickupObject", new ArmTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
       eventMap.put("intakeOn", new RunCommand(m_Intake::runIntake, m_Intake));
       eventMap.put("intakeOut", new RunCommand(m_Intake::runOutake, m_Intake));
       eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
-      eventMap.put("retractArm", new armTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
-      eventMap.put("lowerArm", new armTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+      eventMap.put("retractArm", new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
+      eventMap.put("lowerArm", new ArmTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
 
     };
 

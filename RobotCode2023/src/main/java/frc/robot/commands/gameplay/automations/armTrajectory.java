@@ -19,7 +19,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.JointAngles;
 
-public class armTrajectory extends CommandBase {
+public class ArmTrajectory extends CommandBase {
     private final Arm arm;
     private final Pose2d targetPose2d;
     private Trajectory trajectory;
@@ -28,7 +28,7 @@ public class armTrajectory extends CommandBase {
     private double finalWristAngle;
     private Boolean exception;
 
-    public armTrajectory(Pose2d targetPose2d, Arm arm) {
+    public ArmTrajectory(Pose2d targetPose2d, Arm arm) {
         addRequirements(arm);
         this.arm = arm;
         this.targetPose2d = targetPose2d;
