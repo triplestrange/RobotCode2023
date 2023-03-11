@@ -50,10 +50,14 @@ public class RobotContainer {
     this.choose = choose;
 
     choose.addOption("Top One Cone Leave", m_Autos.topOneConeLeaveCommand());
-    choose.addOption("Bottom One Cone Leave", m_Autos.bottomOneConeLeaveCommand());
+    choose.addOption("Top One Cone Balance", m_Autos.topOneConeBalanceCommand());
+
+    choose.addOption("Middle One Cone Leave", m_Autos.middleOneConeLeaveCommand());
     choose.addOption("Middle One Cone Balance", m_Autos.middleOneConeBalanceCommand());
-    choose.addOption("Bottom One Cone Leave Balance ;)", m_Autos.bottomOneConeBalanceCommand());
-    choose.addOption("Middle One Cone Balance Leave", m_Autos.middleOneConeBalanceLeaveCommand());
+
+    choose.addOption("Bottom One Cone Leave", m_Autos.bottomOneConeLeaveCommand());
+    choose.addOption("Bottom One Cone Balance", m_Autos.bottomOneConeBalanceCommand());
+
     // Configure the button bindings
     configureButtonBindings();
 

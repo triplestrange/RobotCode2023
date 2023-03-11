@@ -66,39 +66,49 @@ public class AutoMain extends CommandBase {
     }
 
     public Command topOneConeLeaveCommand() {
-        PathPlannerTrajectory TopOneConeLeave = PathPlanner.loadPath("top1ConeLeave", new PathConstraints(3, 1.5));
+        PathPlannerTrajectory topOneConeLeave = PathPlanner.loadPath("topOneConeLeave", new PathConstraints(3, 1.5));
 
         return scoreHigh()
                 .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(TopOneConeLeave, true),
-                        TopOneConeLeave.getMarkers(),
+                        m_Drive.followTrajectoryCommand(topOneConeLeave, true),
+                        topOneConeLeave.getMarkers(),
                         Constants.AutoConstants.eventMap));
+    }
 
+    public Command topOneConeBalanceCommand() {
+        PathPlannerTrajectory topOneConeBalance = PathPlanner.loadPath("topOneConeBalance",
+                new PathConstraints(3, 1.5));
+
+        return scoreHigh()
+                .andThen(new FollowPathWithEvents(
+                        m_Drive.followTrajectoryCommand(topOneConeBalance, true),
+                        topOneConeBalance.getMarkers(),
+                        Constants.AutoConstants.eventMap))
+                .andThen(balance());
+    }
+
+    public Command middleOneConeLeaveCommand() {
+        PathPlannerTrajectory middleOneConeLeave = PathPlanner.loadPath("middleOneConeLeave",
+                new PathConstraints(1.5, 0.75));
+
+        // return scoreHigh()
+        return scoreHigh()
+                .andThen(new FollowPathWithEvents(
+                        m_Drive.followTrajectoryCommand(middleOneConeLeave, true),
+                        middleOneConeLeave.getMarkers(),
+                        Constants.AutoConstants.eventMap))
+                .andThen(balance());
     }
 
     public Command middleOneConeBalanceCommand() {
-        PathPlannerTrajectory MiddleOneConeBalance = PathPlanner.loadPath("middleOneConeBalance",
+        PathPlannerTrajectory middleOneConeBalance = PathPlanner.loadPath("middleOneConeBalance",
                 new PathConstraints(1.5, 0.75));
 
         // return scoreHigh()
         return scoreHigh()
                 .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(MiddleOneConeBalance, true),
-                        MiddleOneConeBalance.getMarkers(),
-                        Constants.AutoConstants.eventMap))
-                .andThen(balance());
-
-    }
-
-    public Command middleOneConeBalanceLeaveCommand() {
-        PathPlannerTrajectory MiddleOneConeBalance = PathPlanner.loadPath("midPreloadBalance",
-                new PathConstraints(1.5, 0.75));
-
-        // return scoreHigh()
-        return scoreHigh()
-                .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(MiddleOneConeBalance, true),
-                        MiddleOneConeBalance.getMarkers(),
+                        m_Drive.followTrajectoryCommand(middleOneConeBalance, true),
+                        middleOneConeBalance.getMarkers(),
                         Constants.AutoConstants.eventMap))
                 .andThen(balance());
 
