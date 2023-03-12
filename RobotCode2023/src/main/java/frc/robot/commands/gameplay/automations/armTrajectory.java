@@ -85,7 +85,7 @@ public class ArmTrajectory extends CommandBase {
                     List.of(),
                     // End 3 meters straight ahead of where we started, facing forward
                     new Pose2d(targetPose2d.getX(), targetPose2d.getY(), new Rotation2d(endingAngle)),
-                    Constants.armConstants.config);
+                    Constants.ArmConstants.config);
         } catch (TrajectoryGenerationException trajExcep) {
 
             exception = true;

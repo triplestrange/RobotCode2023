@@ -15,9 +15,13 @@ import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -28,25 +32,25 @@ public class Arm extends SubsystemBase {
   private final CANSparkMax elbowJoint;
   private final CANSparkMax wristJoint;
 
-  private final AbsoluteEncoder shoulderEncoder;
-  private final AbsoluteEncoder elbowEncoder;
-  private final AbsoluteEncoder wristEncoder;
+  private final DutyCycleEncoder shoulderEncoder;
+  private final DutyCycleEncoder elbowEncoder;
+  private final DutyCycleEncoder wristEncoder;
 
-  private final RelativeEncoder shoulderRelativeEncoder;
-  private final RelativeEncoder elbowRelativeEncoder;
-  private final RelativeEncoder wristRelativeEncoder;
+  private final ProfiledPIDController shoulderPID;
+  private final ProfiledPIDController elbowPID;
+  private final ProfiledPIDController wristPID;
 
-  private final SparkMaxPIDController shoulderPID;
-  private final SparkMaxPIDController elbowPID;
-  private final SparkMaxPIDController wristPID;
+  private double shoulderSetpoint;
+  private double elbowSetpoint;
+  private double wristSetpoint;
 
-  private double lastShoulderAngle;
-  private double lastElbowAngle;
-  private double lastWristAngle;
+  private double shoulderPower;
+  private double elbowPower;
+  private double wristPower;
 
-  private double shoulderInit;
-  private double elbowInit;
-  private double wristInit;
+  private boolean shoulderPIDEnabled;
+  private boolean elbowPIDEnabled;
+  private boolean wristPIDEnabled;
 
   /** Creates a new Arm. */
   public Arm() {
@@ -59,55 +63,35 @@ public class Arm extends SubsystemBase {
     // wristJoint.restoreFactoryDefaults();
 
     shoulderJoint.setInverted(true);
+    elbowJoint.setInverted(true);
+    wristJoint.setInverted(true);
 
     // encoder to determine offset angle
-    shoulderEncoder = new AbsoluteEncoder(7, 0, true);
-    elbowEncoder = new AbsoluteEncoder(6, 183);
-    wristEncoder = new AbsoluteEncoder(5, 26);
-
-    shoulderRelativeEncoder = shoulderJoint.getEncoder();
-    elbowRelativeEncoder = elbowJoint.getEncoder();
-    wristRelativeEncoder = wristJoint.getEncoder();
-
-    shoulderRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_SHOULDER);
-    elbowRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_ELBOW);
-    wristRelativeEncoder.setPositionConversionFactor(2 * Math.PI / Constants.armConstants.GR_WRIST);
+    shoulderEncoder = new DutyCycleEncoder(0);
+    elbowEncoder = new DutyCycleEncoder(1);
+    wristEncoder = new DutyCycleEncoder(2);
 
     // Old method without abs encoders
     // shoulderInit = Math.PI / 2;
     // elbowInit = Math.toRadians(-71.657202);
     // wristInit = 0;
 
-    // With abs encoders
-    shoulderInit = (Math.PI / 2)
-        + MathUtil.angleModulus(shoulderEncoder.getAngle()) * Constants.armConstants.ENC_GR_SHOULDER;
-    elbowInit = Math.toRadians(-71.657202)
-        + MathUtil.angleModulus(elbowEncoder.getAngle()) * Constants.armConstants.ENC_GR_SHOULDER;
-    wristInit = 0;
-
-    shoulderRelativeEncoder.setPosition(shoulderInit);
-    elbowRelativeEncoder.setPosition(elbowInit);
-    wristRelativeEncoder.setPosition(wristInit - shoulderInit * 38 / 26 + elbowInit * 38 / 26);
-
     shoulderJoint.setSmartCurrentLimit(40);
     elbowJoint.setSmartCurrentLimit(40);
     wristJoint.setSmartCurrentLimit(20);
 
-    shoulderPID = shoulderJoint.getPIDController();
-    elbowPID = elbowJoint.getPIDController();
-    wristPID = wristJoint.getPIDController();
+    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(0.50, .25));
+    elbowPID = new ProfiledPIDController(1, 0, 0, new Constraints(.50, .25));
+    wristPID = new ProfiledPIDController(1, 0, 0, new Constraints(.50, .25));
 
     shoulderJoint.setIdleMode(IdleMode.kBrake);
     elbowJoint.setIdleMode(IdleMode.kBrake);
     wristJoint.setIdleMode(IdleMode.kBrake);
 
-    initializePID(shoulderPID);
-    initializePID(elbowPID);
-    initializePID(wristPID);
-
     shoulderJoint.burnFlash();
     elbowJoint.burnFlash();
     wristJoint.burnFlash();
+
   }
 
   public void moveArm(double motorPowerShoulder, double motorPowerElbow, double motorPowerWrist) {
@@ -129,38 +113,45 @@ public class Arm extends SubsystemBase {
     }
 
     if (Math.abs(motorPowerShoulder) < 0.05) {
-      shoulderPID.setReference(lastShoulderAngle, ControlType.kPosition);
+      shoulderPIDEnabled = true;
     } else {
-      shoulderJoint.set(motorPowerShoulder);
-      lastShoulderAngle = getShoulder();
+      shoulderPower = motorPowerShoulder;
+      shoulderJoint.set(shoulderPower);
+      shoulderSetpoint = getShoulder();
+      shoulderPID.reset(shoulderSetpoint);
+      shoulderPIDEnabled = false;
     }
 
     if (Math.abs(motorPowerElbow) < 0.05) {
-      elbowPID.setReference(lastElbowAngle, ControlType.kPosition);
+      elbowPIDEnabled = true;
     } else {
-      elbowJoint.set(motorPowerElbow + 0.05 * Math.cos(getElbow()));
-      lastElbowAngle = getElbow();
+      elbowPower = motorPowerElbow + 0.05 * Math.cos(getShoulder() + getElbow() + Math.PI / 2);
+      elbowJoint.set(elbowPower);
+      elbowSetpoint = getElbow();
+      elbowPID.reset(elbowSetpoint);
+      elbowPIDEnabled = false;
     }
 
     if (Math.abs(motorPowerWrist) < 0.05) {
-      // wristPID.setReference(lastWristAngle, ControlType.kPosition);
-      setWrist(lastWristAngle, 0);
+      wristPIDEnabled = true;
     } else {
-      wristJoint.set(motorPowerWrist);
-      lastWristAngle = getWrist();
+      wristPower = motorPowerWrist;
+      wristJoint.set(wristPower);
+      wristSetpoint = getWrist();
+      wristPID.reset(wristSetpoint);
+      wristPIDEnabled = false;
     }
 
   }
 
   public void setShoulder(double angle, double ffSpeed) {
-    shoulderPID.setReference(angle, ControlType.kPosition,
-        0, ffSpeed / Constants.armConstants.FREE_SPEED_SHOULDER);
-    lastShoulderAngle = angle;
-
+    shoulderPIDEnabled = true;
+    shoulderSetpoint = angle;
   }
 
   public double getShoulder() {
-    return shoulderRelativeEncoder.getPosition();
+    return MathUtil
+        .angleModulus(2 * Math.PI * shoulderEncoder.getAbsolutePosition() - Constants.ArmConstants.SHOULDER_OFFSET);
   }
 
   /*
@@ -168,13 +159,13 @@ public class Arm extends SubsystemBase {
    * Angle 0 = radius is on top of humerus
    */
   public void setElbow(double angle, double ffSpeed) {
-    elbowPID.setReference(angle, ControlType.kPosition,
-        0, ffSpeed / Constants.armConstants.FREE_SPEED_ELBOW);
-    lastElbowAngle = angle;
+    elbowPIDEnabled = true;
+    elbowSetpoint = angle;
   }
 
   public double getElbow() {
-    return elbowRelativeEncoder.getPosition();
+    return MathUtil
+        .angleModulus(2 * Math.PI * elbowEncoder.getAbsolutePosition() - Constants.ArmConstants.ELBOW_OFFSET);
   }
 
   /*
@@ -182,26 +173,13 @@ public class Arm extends SubsystemBase {
    * Angle 0 = metacarpals is on top of radius
    */
   public void setWrist(double angle, double ffSpeed) {
-    wristPID.setReference(angle - getShoulder() * 38 / 26 + getElbow() * 38 / 26, ControlType.kPosition,
-        0, ffSpeed / Constants.armConstants.FREE_SPEED_WRIST);
-    lastWristAngle = angle;
+    wristPIDEnabled = true;
+    wristSetpoint = angle;
   }
 
   public double getWrist() {
-    return wristRelativeEncoder.getPosition() + getShoulder() * 38 / 26 - getElbow() * 38 / 26;
-  }
-
-  public void initializePID(SparkMaxPIDController controller) {
-    int kP = 7;
-    int kI = 0;
-    int kD = 0;
-    double kMinOutput = -0.5;
-    double kMaxOutput = 0.5;
-
-    controller.setP(kP);
-    controller.setI(kI);
-    controller.setD(kD);
-    controller.setOutputRange(kMinOutput, kMaxOutput);
+    return MathUtil
+        .angleModulus(2 * Math.PI * wristEncoder.getAbsolutePosition() - Constants.ArmConstants.WRIST_OFFSET);
   }
 
   /*
@@ -233,8 +211,8 @@ public class Arm extends SubsystemBase {
     public static JointAngles anglesFrom2D(double width, double height, double wristAngle) {
       // math checked with CAD
       // Proof: https://imgur.com/3QSfHY5
-      double a = Constants.armConstants.SHOULDER_LENGTH;
-      double b = Constants.armConstants.ELBOW_LENGTH;
+      double a = Constants.ArmConstants.SHOULDER_LENGTH;
+      double b = Constants.ArmConstants.ELBOW_LENGTH;
       double c = Math.hypot(width, height);
 
       double angle1 = Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b));
@@ -258,13 +236,13 @@ public class Arm extends SubsystemBase {
   }
 
   public Vector<N2> angleVelocity(Vector<N2> velocity) {
-    double sAngle = shoulderRelativeEncoder.getPosition();
-    double eAngle = elbowRelativeEncoder.getPosition();
+    double sAngle = shoulderEncoder.getAbsolutePosition();
+    double eAngle = elbowEncoder.getAbsolutePosition();
     Matrix<N2, N2> MAngularToLinear = new MatBuilder<>(N2.instance, N2.instance).fill(
-        -Constants.armConstants.SHOULDER_LENGTH * Math.sin(sAngle),
-        -Constants.armConstants.ELBOW_LENGTH * Math.sin(eAngle),
-        Constants.armConstants.SHOULDER_LENGTH * Math.cos(sAngle),
-        Constants.armConstants.ELBOW_LENGTH * Math.cos(eAngle)
+        -Constants.ArmConstants.SHOULDER_LENGTH * Math.sin(sAngle),
+        -Constants.ArmConstants.ELBOW_LENGTH * Math.sin(eAngle),
+        Constants.ArmConstants.SHOULDER_LENGTH * Math.cos(sAngle),
+        Constants.ArmConstants.ELBOW_LENGTH * Math.cos(eAngle)
 
     );
 
@@ -272,59 +250,67 @@ public class Arm extends SubsystemBase {
   }
 
   public Translation2d getArmPosition() {
-    double sAngle = shoulderRelativeEncoder.getPosition();
-    double eAngle = elbowRelativeEncoder.getPosition();
+    double sAngle = shoulderEncoder.getAbsolutePosition();
+    double eAngle = elbowEncoder.getAbsolutePosition();
 
-    double intakeX = Constants.armConstants.ELBOW_LENGTH * Math.cos(eAngle)
-        + Constants.armConstants.SHOULDER_LENGTH * Math.cos(sAngle);
-    double intakeY = Constants.armConstants.ELBOW_LENGTH * Math.sin(eAngle)
-        + Constants.armConstants.SHOULDER_LENGTH * Math.sin(sAngle);
+    double intakeX = Constants.ArmConstants.ELBOW_LENGTH * Math.cos(eAngle)
+        + Constants.ArmConstants.SHOULDER_LENGTH * Math.cos(sAngle);
+    double intakeY = Constants.ArmConstants.ELBOW_LENGTH * Math.sin(eAngle)
+        + Constants.ArmConstants.SHOULDER_LENGTH * Math.sin(sAngle);
 
     return new Translation2d(intakeX, intakeY);
   }
 
-  public void setArmAngles() {
-
-    lastShoulderAngle = getShoulder();
-    lastElbowAngle = getElbow();
-    lastWristAngle = getWrist();
-  }
-
-  public void resetArmEncoders() {
-    shoulderRelativeEncoder.setPosition(shoulderInit);
-    elbowRelativeEncoder.setPosition(elbowInit);
-    wristRelativeEncoder.setPosition(wristInit - shoulderInit * 38 / 26 + elbowInit * 38 / 26);
-
-    lastShoulderAngle = shoulderInit;
-    lastElbowAngle = elbowInit;
-    lastWristAngle = wristInit;
+  public void resetPIDs() {
+    shoulderSetpoint = getShoulder();
+    elbowSetpoint = getElbow();
+    wristSetpoint = getWrist();
+    shoulderPID.reset(shoulderSetpoint);
+    elbowPID.reset(elbowSetpoint);
+    wristPID.reset(wristSetpoint);
+    shoulderPIDEnabled = true;
+    elbowPIDEnabled = true;
+    wristPIDEnabled = true;
   }
 
   public void updateSmartDashBoard() {
     SmartDashboard.putNumber("shoulderDeg", Math.toDegrees(getShoulder()));
     SmartDashboard.putNumber("elbowDeg", Math.toDegrees(getElbow()));
     SmartDashboard.putNumber("wristDeg", Math.toDegrees(getWrist()));
-    Translation2d currentPos = getArmPosition();
-    SmartDashboard.putNumber("armX", currentPos.getX());
-    SmartDashboard.putNumber("armY", currentPos.getY());
 
-    SmartDashboard.putNumber("lastShoulderAngle", lastShoulderAngle);
-    SmartDashboard.putNumber("lastElbowAngle", lastElbowAngle);
-    SmartDashboard.putNumber("lastWristAngle", lastWristAngle);
+    SmartDashboard.putNumber("lastShoulderAngle", Math.toDegrees(shoulderSetpoint));
+    SmartDashboard.putNumber("lastElbowAngle", Math.toDegrees(elbowSetpoint));
+    SmartDashboard.putNumber("lastWristAngle", Math.toDegrees(wristSetpoint));
 
-    SmartDashboard.putNumber("shoulderPositionOffset", Units.radiansToDegrees(shoulderEncoder.getAngle()));
-    SmartDashboard.putNumber("elbowPositionOffset", Units.radiansToDegrees(elbowEncoder.getAngle()));
-    SmartDashboard.putNumber("wristPositionOffset", Units.radiansToDegrees(wristEncoder.getAngle()));
+    SmartDashboard.putBoolean("shoulderEnabled", shoulderPIDEnabled);
+    SmartDashboard.putBoolean("elbowEnabled", elbowPIDEnabled);
+    SmartDashboard.putBoolean("wristEnabled", wristPIDEnabled);
 
-    SmartDashboard.putNumber("Shoulder", shoulderInit);
-    SmartDashboard.putNumber("Elbow Angle", elbowInit);
-    SmartDashboard.putNumber("Wrist", wristInit);
+    SmartDashboard.putNumber("shoulderPower", shoulderPower);
+    SmartDashboard.putNumber("elbowPower", elbowPower);
+    SmartDashboard.putNumber("wristPower", wristPower);
 
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (shoulderPIDEnabled) {
+      shoulderPower = MathUtil.clamp(shoulderPID.calculate(getShoulder(), shoulderSetpoint), -.2, .2);
+      shoulderJoint.set(shoulderPower);
+      // shoulderJoint.set(0);
+    }
+    if (elbowPIDEnabled) {
+      elbowPower = MathUtil.clamp(elbowPID.calculate(getElbow(), elbowSetpoint), -.2, .2);
+      elbowJoint.set(elbowPower);
+      // elbowJoint.set(0);
+    }
+    if (wristPIDEnabled) {
+      wristPower = wristPID.calculate(getWrist(), wristSetpoint);
+      wristJoint.set(wristPower);
+      // wristJoint.set(0);
+    }
 
   }
+
 }

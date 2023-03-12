@@ -129,12 +129,12 @@ public final class Constants {
 
   }
 
-  public static final class armConstants {
+  public static final class ArmConstants {
 
     // FIXME Change the offsets to current encoder values
-    public final static double SHOULDER_OFFSET = 0;
-    public final static double ELBOW_OFFSET = 0;
-    public final static double WRIST_OFFSET = 0;
+    public final static double SHOULDER_OFFSET = Units.degreesToRadians(98.6);
+    public final static double ELBOW_OFFSET = Units.degreesToRadians(90);
+    public final static double WRIST_OFFSET = Units.degreesToRadians(118.4);
     // Gear ratios
     public final static double GR_SHOULDER = 75 * (64.0 / 14);
     public final static double GR_ELBOW = 75 * (80.0 / 48);
@@ -196,13 +196,13 @@ public final class Constants {
     public static HashMap<String, Command> eventMap = new HashMap<>();
 
     public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
-      eventMap.put("scoreObject", new ArmTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-      eventMap.put("pickupObject", new ArmTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+      eventMap.put("scoreObject", new ArmTrajectory(Constants.ArmConstants.HIGH_POSITION, m_Arm));
+      eventMap.put("pickupObject", new ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
       eventMap.put("intakeOn", new RunCommand(m_Intake::runIntake, m_Intake));
       eventMap.put("intakeOut", new RunCommand(m_Intake::runOutake, m_Intake));
       eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
-      eventMap.put("retractArm", new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
-      eventMap.put("lowerArm", new ArmTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+      eventMap.put("retractArm", new ArmTrajectory(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
+      eventMap.put("lowerArm", new ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
 
     };
 

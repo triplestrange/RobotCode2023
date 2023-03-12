@@ -19,124 +19,130 @@ import frc.robot.subsystems.SwerveDrive;
 
 public class AutoMain extends CommandBase {
 
-    SwerveDrive m_Drive;
-    Arm m_Arm;
-    Intake m_Intake;
+        SwerveDrive m_Drive;
+        Arm m_Arm;
+        Intake m_Intake;
 
-    // Commands for AutoRoutines
-    // Command scoreHigh;
-    // Command scoreMiddle;
-    // Command scoreLow;
+        // Commands for AutoRoutines
+        // Command scoreHigh;
+        // Command scoreMiddle;
+        // Command scoreLow;
 
-    // Command balance;
+        // Command balance;
 
-    public AutoMain(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
-        // Class Variables
-        this.m_Drive = m_Drive;
-        this.m_Arm = m_Arm;
-        this.m_Intake = m_Intake;
-    }
+        public AutoMain(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
+                // Class Variables
+                this.m_Drive = m_Drive;
+                this.m_Arm = m_Arm;
+                this.m_Intake = m_Intake;
+        }
 
-    // Base Commands
-    public final Command scoreHigh() {
-        return (new ArmTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm)
-                .andThen(new WaitCommand(1.5))
-                .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
-                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
-                .andThen(new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
+        // Base Commands
+        public final Command scoreHigh() {
+                return (new ArmTrajectory(Constants.ArmConstants.HIGH_POSITION, m_Arm)
+                                .andThen(new WaitCommand(1.5))
+                                .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
+                                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
+                                .andThen(new ArmTrajectory(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
-    }
+        }
 
-    public final Command scoreMiddle() {
-        return (new ArmTrajectory(Constants.armConstants.MID_POSITION, m_Arm)
-                .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
-                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
-                .andThen(new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
-    }
+        public final Command scoreMiddle() {
+                return (new ArmTrajectory(Constants.ArmConstants.MID_POSITION, m_Arm)
+                                .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
+                                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
+                                .andThen(new ArmTrajectory(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
+        }
 
-    public final Command scoreLow() {
-        return (new ArmTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm)
-                .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
-                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
-                .andThen(new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm)));
-    }
+        public final Command scoreLow() {
+                return (new ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm)
+                                .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
+                                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
+                                .andThen(new ArmTrajectory(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
+        }
 
-    public final Command balance() {
-        return (new Balance(m_Drive));
-    }
+        public final Command balance() {
+                return (new Balance(m_Drive));
+        }
 
-    public Command topOneConeLeaveCommand() {
-        PathPlannerTrajectory topOneConeLeave = PathPlanner.loadPath("topOneConeLeave", new PathConstraints(3, 1.5));
+        public Command topOneConeLeaveCommand() {
+                PathPlannerTrajectory topOneConeLeave = PathPlanner.loadPath("topOneConeLeave",
+                                new PathConstraints(3, 1.5));
 
-        return scoreHigh()
-                .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(topOneConeLeave, true),
-                        topOneConeLeave.getMarkers(),
-                        Constants.AutoConstants.eventMap));
-    }
+                return scoreHigh()
+                                .andThen(new FollowPathWithEvents(
+                                                m_Drive.followTrajectoryCommand(topOneConeLeave, true),
+                                                topOneConeLeave.getMarkers(),
+                                                Constants.AutoConstants.eventMap));
+        }
 
-    public Command topOneConeBalanceCommand() {
-        PathPlannerTrajectory topOneConeBalance = PathPlanner.loadPath("topOneConeBalance",
-                new PathConstraints(3, 1.5));
-
-        return scoreHigh()
-                .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(topOneConeBalance, true),
-                        topOneConeBalance.getMarkers(),
-                        Constants.AutoConstants.eventMap))
-                .andThen(balance());
-    }
-
-    public Command middleOneConeLeaveCommand() {
-        PathPlannerTrajectory middleOneConeLeave = PathPlanner.loadPath("middleOneConeLeave",
-                new PathConstraints(1.5, 0.75));
+        // public Command topOneConeBalanceCommand() {
+        // PathPlannerTrajectory topOneConeBalance =
+        // PathPlanner.loadPath("topOneConeBalance",
+        // new PathConstraints(3, 1.5));
 
         // return scoreHigh()
-        return scoreHigh()
-                .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(middleOneConeLeave, true),
-                        middleOneConeLeave.getMarkers(),
-                        Constants.AutoConstants.eventMap))
-                .andThen(balance());
-    }
+        // .andThen(new FollowPathWithEvents(
+        // m_Drive.followTrajectoryCommand(topOneConeBalance, true),
+        // topOneConeBalance.getMarkers(),
+        // Constants.AutoConstants.eventMap))
+        // .andThen(balance());
+        // }
 
-    public Command middleOneConeBalanceCommand() {
-        PathPlannerTrajectory middleOneConeBalance = PathPlanner.loadPath("middleOneConeBalance",
-                new PathConstraints(1.5, 0.75));
+        // public Command middleOneConeLeaveCommand() {
+        // PathPlannerTrajectory middleOneConeLeave =
+        // PathPlanner.loadPath("middleOneConeLeave",
+        // new PathConstraints(1.5, 0.75));
+
+        // // return scoreHigh()
+        // return scoreHigh()
+        // .andThen(new FollowPathWithEvents(
+        // m_Drive.followTrajectoryCommand(middleOneConeLeave, true),
+        // middleOneConeLeave.getMarkers(),
+        // Constants.AutoConstants.eventMap))
+        // .andThen(balance());
+        // }
+
+        // public Command middleOneConeBalanceCommand() {
+        // PathPlannerTrajectory middleOneConeBalance =
+        // PathPlanner.loadPath("middleOneConeBalance",
+        // new PathConstraints(1.5, 0.75));
+
+        // // return scoreHigh()
+        // return scoreHigh()
+        // .andThen(new FollowPathWithEvents(
+        // m_Drive.followTrajectoryCommand(middleOneConeBalance, true),
+        // middleOneConeBalance.getMarkers(),
+        // Constants.AutoConstants.eventMap))
+        // .andThen(balance());
+
+        // }
+
+        // public Command bottomOneConeLeaveCommand() {
+        // PathPlannerTrajectory bottomOneConeLeave =
+        // PathPlanner.loadPath("bottomOneConeLeave",
+        // new PathConstraints(3, 1.5));
 
         // return scoreHigh()
-        return scoreHigh()
-                .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(middleOneConeBalance, true),
-                        middleOneConeBalance.getMarkers(),
-                        Constants.AutoConstants.eventMap))
-                .andThen(balance());
+        // .andThen(new FollowPathWithEvents(
+        // m_Drive.followTrajectoryCommand(bottomOneConeLeave, true),
+        // bottomOneConeLeave.getMarkers(),
+        // Constants.AutoConstants.eventMap));
 
-    }
+        // }
 
-    public Command bottomOneConeLeaveCommand() {
-        PathPlannerTrajectory bottomOneConeLeave = PathPlanner.loadPath("bottomOneConeLeave",
-                new PathConstraints(3, 1.5));
+        // public Command bottomOneConeBalanceCommand() {
+        // PathPlannerTrajectory bottomOneConeBalance =
+        // PathPlanner.loadPath("bottomOneConeBalance",
+        // new PathConstraints(3, 1.5));
 
-        return scoreHigh()
-                .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(bottomOneConeLeave, true),
-                        bottomOneConeLeave.getMarkers(),
-                        Constants.AutoConstants.eventMap));
+        // return scoreHigh()
+        // .andThen(new FollowPathWithEvents(
+        // m_Drive.followTrajectoryCommand(bottomOneConeBalance, true),
+        // bottomOneConeBalance.getMarkers(),
+        // Constants.AutoConstants.eventMap)
+        // .andThen(new Balance(m_Drive)));
 
-    }
-
-    public Command bottomOneConeBalanceCommand() {
-        PathPlannerTrajectory bottomOneConeBalance = PathPlanner.loadPath("bottomOneConeBalance",
-                new PathConstraints(3, 1.5));
-
-        return scoreHigh()
-                .andThen(new FollowPathWithEvents(
-                        m_Drive.followTrajectoryCommand(bottomOneConeBalance, true),
-                        bottomOneConeBalance.getMarkers(),
-                        Constants.AutoConstants.eventMap)
-                        .andThen(new Balance(m_Drive)));
-
-    }
+        // }
 
 }

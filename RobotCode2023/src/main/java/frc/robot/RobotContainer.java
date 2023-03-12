@@ -49,14 +49,18 @@ public class RobotContainer {
 
     this.choose = choose;
 
-    choose.addOption("Top One Cone Leave", m_Autos.topOneConeLeaveCommand());
-    choose.addOption("Top One Cone Balance", m_Autos.topOneConeBalanceCommand());
+    // choose.addOption("Top One Cone Leave", m_Autos.topOneConeLeaveCommand());
+    // choose.addOption("Top One Cone Balance", m_Autos.topOneConeBalanceCommand());
 
-    choose.addOption("Middle One Cone Leave", m_Autos.middleOneConeLeaveCommand());
-    choose.addOption("Middle One Cone Balance", m_Autos.middleOneConeBalanceCommand());
+    // choose.addOption("Middle One Cone Leave",
+    // m_Autos.middleOneConeLeaveCommand());
+    // choose.addOption("Middle One Cone Balance",
+    // m_Autos.middleOneConeBalanceCommand());
 
-    choose.addOption("Bottom One Cone Leave", m_Autos.bottomOneConeLeaveCommand());
-    choose.addOption("Bottom One Cone Balance", m_Autos.bottomOneConeBalanceCommand());
+    // choose.addOption("Bottom One Cone Leave",
+    // m_Autos.bottomOneConeLeaveCommand());
+    // choose.addOption("Bottom One Cone Balance",
+    // m_Autos.bottomOneConeBalanceCommand());
 
     // Configure the button bindings
     configureButtonBindings();
@@ -120,13 +124,12 @@ public class RobotContainer {
     // Operator Controls
     JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake, m_Intake));
     JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
-    JoystickButtons.oplWing.onTrue(new InstantCommand(m_Arm::resetArmEncoders, m_Arm));
-    JoystickButtons.opB.whileTrue(new ArmTrajectory(Constants.armConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
-    JoystickButtons.opY.whileTrue(new ArmTrajectory(Constants.armConstants.HIGH_POSITION, m_Arm));
-    JoystickButtons.opX.whileTrue(new ArmTrajectory(Constants.armConstants.MID_POSITION, m_Arm));
-    JoystickButtons.opA.whileTrue(new ArmTrajectory(Constants.armConstants.LOW_LYING_CONE_POSITION, m_Arm));
-    JoystickButtons.opDpadD.whileTrue(new ArmTrajectory(Constants.armConstants.DEFAULT_POSITION, m_Arm));
-    JoystickButtons.opDpadU.whileTrue(new ArmTrajectory(Constants.armConstants.FEEDER_POSITION, m_Arm));
+    JoystickButtons.opB.whileTrue(new ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+    JoystickButtons.opY.whileTrue(new ArmTrajectory(Constants.ArmConstants.HIGH_POSITION, m_Arm));
+    JoystickButtons.opX.whileTrue(new ArmTrajectory(Constants.ArmConstants.MID_POSITION, m_Arm));
+    JoystickButtons.opA.whileTrue(new ArmTrajectory(Constants.ArmConstants.LOW_LYING_CONE_POSITION, m_Arm));
+    JoystickButtons.opDpadD.whileTrue(new ArmTrajectory(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
+    JoystickButtons.opDpadU.whileTrue(new ArmTrajectory(Constants.ArmConstants.FEEDER_POSITION, m_Arm));
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

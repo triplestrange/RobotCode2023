@@ -62,9 +62,6 @@ public class SwerveDrive extends SubsystemBase {
   Pose2d visionPose = new Pose2d();
   double[] tempRobotPose;
 
-  File logFile = new File("log.txt");
-  FileWriter logWriter;
-
   // Robot swerve modules
   private final SwerveModule m_frontLeft = new SwerveModule(Electrical.FL_DRIVE,
       Electrical.FL_STEER,
@@ -124,13 +121,6 @@ public class SwerveDrive extends SubsystemBase {
     resetEncoders();
     m_Robot = m_robot;
     rotation.enableContinuousInput(-Math.PI, Math.PI);
-
-    try {
-      logFile.createNewFile();
-      logWriter = new FileWriter(logFile);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
   }
 
@@ -344,12 +334,7 @@ public class SwerveDrive extends SubsystemBase {
 
     if (tv > 0.5 && tempRobotPose.length >= 6) {
       visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
-      try {
-        logWriter.write("visionPose update: " + visionPose.toString());
-        logWriter.write("wheel odometry: " + m_odometry.getEstimatedPosition().toString());
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+
       m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()/*- (tl/1000.0) - (cl/1000.0)*/);
     }
     // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
