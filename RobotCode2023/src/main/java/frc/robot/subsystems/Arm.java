@@ -91,9 +91,15 @@ public class Arm extends SubsystemBase {
     elbowJoint.setSmartCurrentLimit(40);
     wristJoint.setSmartCurrentLimit(20);
 
+<<<<<<< Updated upstream
     shoulderPID = shoulderJoint.getPIDController();
     elbowPID = elbowJoint.getPIDController();
     wristPID = wristJoint.getPIDController();
+=======
+    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(2, 1.5));
+    elbowPID = new ProfiledPIDController(0.4, 0, 0, new Constraints(2.5, 1.5));
+    wristPID = new ProfiledPIDController(0.5, 0, 0, new Constraints(2, 1.5));
+>>>>>>> Stashed changes
 
     shoulderJoint.setIdleMode(IdleMode.kBrake);
     elbowJoint.setIdleMode(IdleMode.kBrake);
@@ -314,6 +320,34 @@ public void updateSmartDashBoard()  {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+<<<<<<< Updated upstream
    
+=======
+    if (shoulderPIDEnabled) {
+      shoulderPower = shoulderPID.calculate(getShoulder(), shoulderSetpoint);
+      if (!shoulderEncoder.isConnected()) {
+        shoulderPower = 0;
+      }
+      shoulderJoint.set(shoulderPower);
+      // shoulderJoint.set(0);
+    }
+    if (elbowPIDEnabled) {
+      elbowPower = elbowPID.calculate(getElbow(), elbowSetpoint);
+      if (!elbowEncoder.isConnected()) {
+        elbowPower = 0;
+      }
+      elbowJoint.set(elbowPower);
+      // elbowJoint.set(0);
+    }
+    if (wristPIDEnabled) {
+      wristPower = wristPID.calculate(getWrist(), wristSetpoint);
+      if (!wristEncoder.isConnected()) {
+        wristPower = 0;
+      }
+      wristJoint.set(wristPower);
+      // wristJoint.set(0);
+    }
+
+>>>>>>> Stashed changes
   }
 }

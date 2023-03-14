@@ -5,7 +5,9 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.JoystickButtons;
@@ -40,6 +42,7 @@ public class DriveTurbo extends CommandBase {
   public void execute() {
     // double speed = (Constants.SwerveConstants.kMaxSpeedMetersPerSecond - 1) * timer.get()/0.1 + 1;
     double speed = Constants.SwerveConstants.kMaxSpeedMetersPerSecond;
+<<<<<<< Updated upstream
     speed = MathUtil.clamp(speed, -Constants.SwerveConstants.kMaxSpeedMetersPerSecond, Constants.SwerveConstants.kMaxSpeedMetersPerSecond);
     m_swerveDrive.drive(
       JoystickButtons.m_driverController.getLeftY() * speed,
@@ -47,6 +50,34 @@ public class DriveTurbo extends CommandBase {
       -JoystickButtons.m_driverController.getRawAxis(2) * 4,
       true
     );
+=======
+    speed = MathUtil.clamp(speed, -Constants.SwerveConstants.kMaxSpeedMetersPerSecond,
+        Constants.SwerveConstants.kMaxSpeedMetersPerSecond);
+
+    double speedY = JoystickButtons.m_driverController.getLeftY() * speed;
+    double speedX = JoystickButtons.m_driverController.getLeftX() * speed;
+    double speedR = JoystickButtons.m_driverController.getRightX() * -4;
+
+    if (Math.abs(JoystickButtons.m_driverController.getLeftY()) <= .1) {
+      speedY = 0;
+    }
+    if (Math.abs(JoystickButtons.m_driverController.getLeftX()) <= .1) {
+      speedX = 0;
+    }
+    if (Math.abs(JoystickButtons.m_driverController.getRightX()) <= .1) {
+      speedR = 0;
+    }
+
+    SmartDashboard.putNumber("left Y", JoystickButtons.m_driverController.getLeftY());
+    SmartDashboard.putNumber("left X", JoystickButtons.m_driverController.getLeftX());
+    SmartDashboard.putNumber("right X", JoystickButtons.m_driverController.getRightX());
+
+    m_swerveDrive.drive(
+        speedY,
+        speedX,
+        speedR,
+        true);
+>>>>>>> Stashed changes
   }
 
   // Called once the command ends or is interrupted.
