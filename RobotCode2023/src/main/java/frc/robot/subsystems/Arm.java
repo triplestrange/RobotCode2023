@@ -80,9 +80,9 @@ public class Arm extends SubsystemBase {
     elbowJoint.setSmartCurrentLimit(40);
     wristJoint.setSmartCurrentLimit(20);
 
-    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(0.50, .25));
-    elbowPID = new ProfiledPIDController(1, 0, 0, new Constraints(.50, .25));
-    wristPID = new ProfiledPIDController(1, 0, 0, new Constraints(.50, .25));
+    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(2, 1.5));
+    elbowPID = new ProfiledPIDController(0.4, 0, 0, new Constraints(2.5, 1.5));
+    wristPID = new ProfiledPIDController(0.5, 0, 0, new Constraints(2, 1.5));
 
     shoulderJoint.setIdleMode(IdleMode.kBrake);
     elbowJoint.setIdleMode(IdleMode.kBrake);
@@ -296,17 +296,26 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (shoulderPIDEnabled) {
-      shoulderPower = MathUtil.clamp(shoulderPID.calculate(getShoulder(), shoulderSetpoint), -.2, .2);
+      shoulderPower = shoulderPID.calculate(getShoulder(), shoulderSetpoint);
+      if (!shoulderEncoder.isConnected()) {
+        shoulderPower = 0;
+      }
       shoulderJoint.set(shoulderPower);
       // shoulderJoint.set(0);
     }
     if (elbowPIDEnabled) {
-      elbowPower = MathUtil.clamp(elbowPID.calculate(getElbow(), elbowSetpoint), -.2, .2);
+      elbowPower = elbowPID.calculate(getElbow(), elbowSetpoint);
+      if (!elbowEncoder.isConnected()) {
+        elbowPower = 0;
+      }
       elbowJoint.set(elbowPower);
       // elbowJoint.set(0);
     }
     if (wristPIDEnabled) {
       wristPower = wristPID.calculate(getWrist(), wristSetpoint);
+      if (!wristEncoder.isConnected()) {
+        wristPower = 0;
+      }
       wristJoint.set(wristPower);
       // wristJoint.set(0);
     }

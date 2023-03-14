@@ -10,7 +10,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.subsystems.SwerveDrive;
 
-public class DriveNormal extends CommandBase {
+public class DriveSlow extends CommandBase {
   SwerveDrive m_swerveDrive;
   Timer timer = new Timer();
   double time;
@@ -24,7 +24,7 @@ public class DriveNormal extends CommandBase {
    * - stow arm into robot
    */
   /** Creates a new Grab. */
-  public DriveNormal(SwerveDrive m_SwerveDrive) {
+  public DriveSlow(SwerveDrive m_SwerveDrive) {
     addRequirements(m_SwerveDrive);
     this.m_swerveDrive = m_SwerveDrive;
   }
@@ -38,7 +38,7 @@ public class DriveNormal extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = 2.5;
+    double speed = .75;
     double speedY = JoystickButtons.m_driverController.getLeftY() * speed;
     double speedX = JoystickButtons.m_driverController.getLeftX() * speed;
     double speedR = JoystickButtons.m_driverController.getRightX() * -4;
