@@ -42,15 +42,6 @@ public class DriveTurbo extends CommandBase {
   public void execute() {
     // double speed = (Constants.SwerveConstants.kMaxSpeedMetersPerSecond - 1) * timer.get()/0.1 + 1;
     double speed = Constants.SwerveConstants.kMaxSpeedMetersPerSecond;
-<<<<<<< Updated upstream
-    speed = MathUtil.clamp(speed, -Constants.SwerveConstants.kMaxSpeedMetersPerSecond, Constants.SwerveConstants.kMaxSpeedMetersPerSecond);
-    m_swerveDrive.drive(
-      JoystickButtons.m_driverController.getLeftY() * speed,
-      JoystickButtons.m_driverController.getLeftX() * speed,
-      -JoystickButtons.m_driverController.getRawAxis(2) * 4,
-      true
-    );
-=======
     speed = MathUtil.clamp(speed, -Constants.SwerveConstants.kMaxSpeedMetersPerSecond,
         Constants.SwerveConstants.kMaxSpeedMetersPerSecond);
 
@@ -77,7 +68,6 @@ public class DriveTurbo extends CommandBase {
         speedX,
         speedR,
         true);
->>>>>>> Stashed changes
   }
 
   // Called once the command ends or is interrupted.

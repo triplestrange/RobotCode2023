@@ -38,14 +38,10 @@ public class DriveNormal extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-<<<<<<< Updated upstream
-    
-=======
     double speed = 2.5;
     double speedY = JoystickButtons.m_driverController.getLeftY() * speed;
     double speedX = JoystickButtons.m_driverController.getLeftX() * speed;
     double speedR = JoystickButtons.m_driverController.getRightX() * -4;
->>>>>>> Stashed changes
 
     if (Math.abs(JoystickButtons.m_driverController.getLeftY()) <= 0.05) {
       speedY = 0;
@@ -57,18 +53,10 @@ public class DriveNormal extends CommandBase {
       speedR = 0;
     }
     m_swerveDrive.drive(
-<<<<<<< Updated upstream
-      JoystickButtons.m_driverController.getLeftY() * speed,
-      JoystickButtons.m_driverController.getLeftX() * speed,
-      -JoystickButtons.m_driverController.getRightX() * 4,
-      true
-    );
-=======
         speedY,
         speedX,
         speedR,
         true);
->>>>>>> Stashed changes
   }
 
   // Called once the command ends or is interrupted.
