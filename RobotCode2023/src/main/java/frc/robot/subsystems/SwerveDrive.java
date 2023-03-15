@@ -47,7 +47,7 @@ import frc.robot.Robot;
 // import frc.robot.Constants.ModuleConstants;
 // import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.visionConstants;
+import frc.robot.Constants.VisionConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class SwerveDrive extends SubsystemBase {
@@ -272,7 +272,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public void autoAlignCube(double offset, int ID) {
 
-    Pose2d tagPose = visionConstants.tagPose[ID - 1];
+    Pose2d tagPose = VisionConstants.tagPose[ID - 1];
 
     if (m_Robot.allianceColor == Alliance.Blue) {
       tagPose = new Pose2d(tagPose.getX() + 8.27, tagPose.getY() + 4, tagPose.getRotation());
@@ -312,8 +312,8 @@ public class SwerveDrive extends SubsystemBase {
     // double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
     int ID = optimalID();
 
-    double finalOffset = ID == 5 || ID == 4 ? Constants.visionConstants.FEEDER_OFFSET_LEFT.getY()
-        : Constants.visionConstants.CONE_OFFSET_LEFT;
+    double finalOffset = ID == 5 || ID == 4 ? Constants.VisionConstants.FEEDER_OFFSET_LEFT.getY()
+        : Constants.VisionConstants.CONE_OFFSET_LEFT;
 
     autoAlignCube(finalOffset * offset, optimalID());
     // drive(xSpeed, ySpeed, rSpeed, false);
@@ -323,19 +323,19 @@ public class SwerveDrive extends SubsystemBase {
 
     if (m_Robot.allianceColor == Alliance.Blue) {
       tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue")
-          .getDoubleArray(new double[6]);
+          .getDoubleArray(new double[7]);
     } else {
       tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired")
-          .getDoubleArray(new double[6]);
+          .getDoubleArray(new double[7]);
     }
 
     double tl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);
     double cl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0);
 
-    if (tv > 0.5 && tempRobotPose.length >= 6) {
+    if (tv > 0.5 && tempRobotPose.length >= 7) {
       visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
-
-      m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()/*- (tl/1000.0) - (cl/1000.0)*/);
+      m_odometry.addVisionMeasurement(visionPose,
+          Timer.getFPGATimestamp() - tempRobotPose[6]/*- (tl/1000.0) - (cl/1000.0)*/);
     }
     // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
   }
