@@ -134,8 +134,8 @@ public class RobotContainer {
                 // JoystickButtons.dDpadL.toggleOnTrue(new DriveDir(m_robotDrive, 0));
                 // JoystickButtons.dDpadD.toggleOnTrue(new DriveDir(m_robotDrive, 90));
 
-                JoystickButtons.dDpadL.whileTrue(new DriveDir(m_robotDrive, 90));
-                JoystickButtons.dDpadD.whileTrue(new DriveDir(m_robotDrive, 0));
+                JoystickButtons.dDpadL.onTrue(new DriveDir(m_robotDrive, 0));
+                JoystickButtons.dDpadD.onTrue(new DriveDir(m_robotDrive, 180));
 
 
                 // ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));

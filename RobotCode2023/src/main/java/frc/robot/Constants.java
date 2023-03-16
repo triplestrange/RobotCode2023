@@ -166,8 +166,8 @@ public final class Constants {
         Math.toRadians(137.6));
     public final static JointAngles HIGH_POSITION = new JointAngles(Math.toRadians(38), Math.toRadians(5.56),
         Math.toRadians(58.28));
-    public final static JointAngles MID_POSITION = new JointAngles(Math.toRadians(20.8), Math.toRadians(46.5),
-        Math.toRadians(102));
+    public final static JointAngles MID_POSITION = new JointAngles(Math.toRadians(16.2), Math.toRadians(59.6),
+        Math.toRadians(104.2));
 
     public final static JointAngles LOW_UPRIGHT_CONE_POSITION = new JointAngles(Math.toRadians(-34.69),
         Math.toRadians(-139.75),

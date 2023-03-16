@@ -80,8 +80,8 @@ public class Arm extends SubsystemBase {
     elbowJoint.setSmartCurrentLimit(40);
     wristJoint.setSmartCurrentLimit(20);
 
-    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(2, 1.5));
-    elbowPID = new ProfiledPIDController(0.4, 0, 0, new Constraints(2.5, 1.5));
+    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(2, 2));
+    elbowPID = new ProfiledPIDController(0.4, 0, 0, new Constraints(2.5, 2));
     wristPID = new ProfiledPIDController(0.5, 0, 0, new Constraints(2, 1.5));
 
     shoulderJoint.setIdleMode(IdleMode.kBrake);

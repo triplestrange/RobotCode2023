@@ -52,9 +52,9 @@ public class DriveDir extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // if (Math.abs(JoystickButtons.m_operatorController.getRightX()) > 0.05) {
-    //   return true;
-    // }
+    if (Math.abs(JoystickButtons.m_operatorController.getRightX()) > 0.05) {
+      return true;
+    }
     return false;
   }
 }
