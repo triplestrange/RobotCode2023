@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import javax.management.ObjectInstance;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,7 +15,6 @@ import frc.robot.commands.AutoRoutines.AutoMain;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.gameplay.automations.ArmPositions;
-import frc.robot.commands.gameplay.automations.ArmTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
@@ -49,9 +46,9 @@ public class RobotContainer {
 
                 this.choose = choose;
                 // One Cone Top
-                choose.addOption("Top One Cone Leave", 
+                choose.addOption("Top One Cone Leave",
                                 m_Autos.topOneConeLeaveCommand());
-                choose.addOption("Top One Cone Balance", 
+                choose.addOption("Top One Cone Balance",
                                 m_Autos.topOneConeBalanceCommand());
                 // One Cone Mid
                 choose.addOption("Middle One Cone Leave Bottom",
@@ -66,7 +63,7 @@ public class RobotContainer {
                 choose.addOption("Bottom One Cone Balance",
                                 m_Autos.bottomOneConeBalanceCommand());
                 // Two Game Piece Top
-                choose.addOption("Top One Cone One Cube", 
+                choose.addOption("Top One Cone One Cube",
                                 m_Autos.topOneConeOneCube());
 
                 // Configure the button bindings
@@ -76,7 +73,6 @@ public class RobotContainer {
                 m_robotDrive.setDefaultCommand(
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                // TODO fine tune motor speeds
                                 new DriveTurbo(m_robotDrive));
                 // m_robotDrive.setDefaultCommand(new FilteredDrive(m_robotDrive,
                 // XBOX

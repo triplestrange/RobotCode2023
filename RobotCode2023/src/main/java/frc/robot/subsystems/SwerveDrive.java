@@ -7,19 +7,12 @@
 
 package frc.robot.subsystems;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.StreamWriteCapability;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -28,10 +21,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
@@ -328,9 +318,6 @@ public class SwerveDrive extends SubsystemBase {
       tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired")
           .getDoubleArray(new double[6]);
     }
-
-    double tl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tl").getDouble(0);
-    double cl = NetworkTableInstance.getDefault().getTable("limelight").getEntry("cl").getDouble(0);
 
     if (tv > 0.5 && tempRobotPose.length >= 6) {
       visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
