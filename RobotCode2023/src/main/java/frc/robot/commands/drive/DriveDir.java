@@ -34,8 +34,11 @@ public class DriveDir extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double cur_heading = m_swerve.getHeading();
-    double rot = rotation_controller.calculate(cur_heading, desired_heading);
+    double diff = m_swerve.getHeading() - desired_heading;
+    if (Math.abs(diff) > 4.0) {
+      diff = 0;
+    }
+    double rot = rotation_controller.calculate(diff, 0);
     rot = MathUtil.clamp(rot, -1, 1);
 
     m_swerve.drive(JoystickButtons.m_driverController.getLeftY(), 
