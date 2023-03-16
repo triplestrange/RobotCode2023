@@ -16,6 +16,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -106,7 +108,8 @@ public final class Constants {
     public final static double BR_ENC_OFFSET = 103; // 241
   }
 
-  public static final class visionConstants {
+  public static final class VisionConstants {
+    public final static String TABLE_NAME = "table";
     // Only for the Red Alliance Wall
     public final static Translation2d SCORING_OFFSET = new Translation2d(-0.762, 0);
     public final static Translation2d FEEDER_OFFSET_LEFT = new Translation2d(-0.41275, 0.5334);
