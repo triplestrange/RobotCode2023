@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Arm.JointAngles;
+import frc.robot.commands.gameplay.automations.ArmPositions;
 import frc.robot.commands.gameplay.automations.ArmTrajectory;
 import frc.robot.subsystems.Arm;
 
@@ -154,19 +156,26 @@ public final class Constants {
     public final static double ELBOW_LENGTH = Units.inchesToMeters(24);
 
     // ACCEPTABLE PERCENT ERROR
-    public final static double ERROR_IN_RADIANS = Math.PI / 180;
+    public final static double ERROR_IN_RADIANS = Math.toRadians(5);
 
     // SCORING PRESETS
     public final static double CONE_SCORING_OFFSET = 205 / 16;
 
-    public final static Pose2d DEFAULT_POSITION = new Pose2d(0.163746, 0.036551, Rotation2d.fromDegrees(0));
-    public final static Pose2d INTERMEDIATE_MID_POSITION = new Pose2d();
-    public final static Pose2d INTERMEDIATE_LOW_POSITION = new Pose2d();
-    public final static Pose2d HIGH_POSITION = new Pose2d(1.143193, 1.516619, Rotation2d.fromDegrees(-87.735142));
-    public final static Pose2d MID_POSITION = new Pose2d(1.06, 1.33, Rotation2d.fromDegrees(-121));
+    public final static JointAngles DEFAULT_POSITION = new JointAngles(Math.toRadians(-0.6), Math.toRadians(-162.5),
+        Math.toRadians(137.6));
+    public final static JointAngles HIGH_POSITION = new JointAngles(Math.toRadians(38), Math.toRadians(5.56),
+        Math.toRadians(58.28));
+    public final static JointAngles MID_POSITION = new JointAngles(Math.toRadians(20.8), Math.toRadians(46.5),
+        Math.toRadians(102));
 
-    public final static Pose2d LOW_UPRIGHT_CONE_POSITION = new Pose2d(0.817959, 0.160288, Rotation2d.fromDegrees(-21));
-    public final static Pose2d LOW_LYING_CONE_POSITION = new Pose2d(0.767, -0.068, Rotation2d.fromDegrees(1.66));
+    public final static JointAngles LOW_UPRIGHT_CONE_POSITION = new JointAngles(Math.toRadians(-34.69),
+        Math.toRadians(-139.75),
+        Math.toRadians(37.55));
+    public final static JointAngles LOW_LYING_CONE_POSITION = new JointAngles(Math.toRadians(-56.45),
+        Math.toRadians(-139.75),
+        Math.toRadians(95.84));
+    public final static JointAngles LOW_CUBE_POSITION = new JointAngles(Math.toRadians(-42.7), Math.toRadians(-133.7),
+        Math.toRadians(37.55));
 
     public final static Pose2d FEEDER_POSITION = new Pose2d(1.240994, 1.362817, Rotation2d.fromDegrees(-38));
 
@@ -196,13 +205,13 @@ public final class Constants {
     public static HashMap<String, Command> eventMap = new HashMap<>();
 
     public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
-      eventMap.put("scoreObject", new ArmTrajectory(Constants.ArmConstants.HIGH_POSITION, m_Arm));
-      eventMap.put("pickupObject", new ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+      eventMap.put("scoreObject", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm));
+      eventMap.put("pickupObject", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
       eventMap.put("intakeOn", new RunCommand(m_Intake::runIntake, m_Intake));
       eventMap.put("intakeOut", new RunCommand(m_Intake::runOutake, m_Intake));
       eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
-      eventMap.put("retractArm", new ArmTrajectory(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
-      eventMap.put("lowerArm", new ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+      eventMap.put("retractArm", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
+      eventMap.put("lowerArm", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
 
     };
 
