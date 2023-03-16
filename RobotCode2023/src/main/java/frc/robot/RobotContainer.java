@@ -131,6 +131,8 @@ public class RobotContainer {
                 // Operator Controls
                 JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake, m_Intake));
                 JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
+                JoystickButtons.dDpadL.whileTrue(new DriveDir(m_robotDrive, 0));
+                JoystickButtons.dDpadD.whileTrue(new DriveDir(m_robotDrive, 90));
                 // JoystickButtons.opB.whileTrue(new
                 // ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 // Y | high: 29.25, 29.11, 34

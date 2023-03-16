@@ -1,0 +1,9 @@
+[
+  {
+    "type": "java",
+    "name": "frcJava",
+    "port": 8349,
+    "target": "10.15.33.2",
+    "project": "RobotCode2023"
+  }
+]

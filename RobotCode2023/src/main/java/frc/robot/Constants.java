@@ -206,20 +206,19 @@ public final class Constants {
     public static HashMap<String, Command> eventMap = new HashMap<>();
 
     public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
-      //scoring
+      // scoring
       eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm));
       eventMap.put("mid", new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm));
       eventMap.put("low", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
       eventMap.put("default", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
-      //pickup
+      // pickup
       eventMap.put("pickupConeUp", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
       eventMap.put("pickupConeDown", new ArmPositions(Constants.ArmConstants.LOW_LYING_CONE_POSITION, m_Arm));
       eventMap.put("pickupCube", new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm));
-      //intake
+      // intake
       eventMap.put("intake", new InstantCommand(m_Intake::runIntake, m_Intake));
       eventMap.put("outtake", new InstantCommand(m_Intake::runOutake, m_Intake));
       eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
-
 
     };
 
@@ -272,6 +271,10 @@ public final class Constants {
     public static final JoystickButton drWing = new JoystickButton(m_driverController, 8);
     public static final JoystickButton dlJoy = new JoystickButton(m_driverController, 9);
     public static final JoystickButton drJoy = new JoystickButton(m_driverController, 10);
+    public static final POVButton dDpadD = new POVButton(m_driverController, 180);
+    public static final POVButton dDpadU = new POVButton(m_driverController, 0);
+    public static final POVButton dDpadL = new POVButton(m_driverController, 270);
+    public static final POVButton dDpadR = new POVButton(m_driverController, 90);
   }
 
 }
