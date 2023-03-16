@@ -21,7 +21,7 @@ public class DriveDir extends CommandBase {
     this.m_swerve = m_swerve;
     this.desired_heading = desired_heading;
 
-    rotation_controller = new PIDController(0.05, 0, 0);
+    rotation_controller = new PIDController(0.15, 0, 0);
     rotation_controller.enableContinuousInput(0, 360);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -37,12 +37,11 @@ public class DriveDir extends CommandBase {
     double cur_heading = m_swerve.getHeading();
     double rot = rotation_controller.calculate(cur_heading, desired_heading);
     rot = MathUtil.clamp(rot, -1, 1);
-    System.out.println(rot);
 
-    m_swerve.drive(JoystickButtons.m_driverController.getLeftX(),
-        JoystickButtons.m_driverController.getLeftY(),
+    m_swerve.drive(JoystickButtons.m_driverController.getLeftY(), 
+                   JoystickButtons.m_driverController.getLeftX(), 
         rot,
-        true);
+                   true);
   }
 
   // Called once the command ends or is interrupted.
@@ -53,6 +52,9 @@ public class DriveDir extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    // if (Math.abs(JoystickButtons.m_operatorController.getRightX()) > 0.05) {
+    //   return true;
+    // }
     return false;
   }
 }
