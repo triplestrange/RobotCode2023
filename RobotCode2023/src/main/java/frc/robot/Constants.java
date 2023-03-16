@@ -19,14 +19,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Arm.JointAngles;
 import frc.robot.commands.gameplay.automations.ArmPositions;
-import frc.robot.commands.gameplay.automations.ArmTrajectory;
 import frc.robot.subsystems.Arm;
 
 /**
@@ -205,13 +203,20 @@ public final class Constants {
     public static HashMap<String, Command> eventMap = new HashMap<>();
 
     public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
-      eventMap.put("scoreObject", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm));
-      eventMap.put("pickupObject", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
-      eventMap.put("intakeOn", new RunCommand(m_Intake::runIntake, m_Intake));
-      eventMap.put("intakeOut", new RunCommand(m_Intake::runOutake, m_Intake));
+      //scoring
+      eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm));
+      eventMap.put("mid", new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm));
+      eventMap.put("low", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+      eventMap.put("default", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
+      //pickup
+      eventMap.put("pickupConeUp", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+      eventMap.put("pickupConeDown", new ArmPositions(Constants.ArmConstants.LOW_LYING_CONE_POSITION, m_Arm));
+      eventMap.put("pickupCube", new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm));
+      //intake
+      eventMap.put("intake", new InstantCommand(m_Intake::runIntake, m_Intake));
+      eventMap.put("outtake", new InstantCommand(m_Intake::runOutake, m_Intake));
       eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
-      eventMap.put("retractArm", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
-      eventMap.put("lowerArm", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+
 
     };
 

@@ -48,21 +48,26 @@ public class RobotContainer {
                 this.m_Autos = new AutoMain(m_robotDrive, m_Arm, m_Intake);
 
                 this.choose = choose;
-
-                choose.addOption("Top One Cone Leave", m_Autos.topOneConeLeaveCommand());
-                choose.addOption("Top One Cone Balance", m_Autos.topOneConeBalanceCommand());
+                // One Cone Top
+                choose.addOption("Top One Cone Leave", 
+                                m_Autos.topOneConeLeaveCommand());
+                choose.addOption("Top One Cone Balance", 
+                                m_Autos.topOneConeBalanceCommand());
+                // One Cone Mid
                 choose.addOption("Middle One Cone Leave Bottom",
                                 m_Autos.middleOneConeLeaveBottomCommand());
                 choose.addOption("Middle One Cone Leave Top",
                                 m_Autos.middleOneConeLeaveTopCommand());
                 choose.addOption("Middle One Cone Balance",
                                 m_Autos.middleOneConeBalanceCommand());
+                // One Cone Bottom
                 choose.addOption("Bottom One Cone Leave",
                                 m_Autos.bottomOneConeLeaveCommand());
                 choose.addOption("Bottom One Cone Balance",
                                 m_Autos.bottomOneConeBalanceCommand());
-
-                choose.addOption("Top Two Cone Leave", m_Autos.topTwoConeCommand());
+                // Two Game Piece Top
+                choose.addOption("Top One Cone One Cube", 
+                                m_Autos.topOneConeOneCube());
 
                 // Configure the button bindings
                 configureButtonBindings();

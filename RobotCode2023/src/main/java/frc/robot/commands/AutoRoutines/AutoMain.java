@@ -1,8 +1,13 @@
 package frc.robot.commands.AutoRoutines;
 
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.StopEvent.WaitBehavior;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,9 +16,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.ArmPositions;
-import frc.robot.commands.gameplay.automations.ArmTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
@@ -23,6 +29,7 @@ public class AutoMain extends CommandBase {
         SwerveDrive m_Drive;
         Arm m_Arm;
         Intake m_Intake;
+        SwerveAutoBuilder autoBuilder;
 
         // Commands for AutoRoutines
         // Command scoreHigh;
@@ -36,30 +43,48 @@ public class AutoMain extends CommandBase {
                 this.m_Drive = m_Drive;
                 this.m_Arm = m_Arm;
                 this.m_Intake = m_Intake;
+                
+                autoBuilder = new SwerveAutoBuilder(
+                        m_Drive::getPose, // Pose2d supplier
+                        m_Drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+                        SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
+                        new PIDConstants(1, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+                        new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+                        m_Drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+                        AutoConstants.eventMap,
+                        true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                        m_Drive // The drive subsystem. Used to properly set the requirements of path following commands
+                        );
         }
 
         // Base Commands
         public final Command scoreHigh() {
                 return (new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                                .andThen(new WaitCommand(0))
-                                .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(0.3))
-                                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
+                                .andThen(runOutakeForTime(0.3))
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
         }
 
         public final Command scoreMiddle() {
                 return (new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm)
-                                .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
-                                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
+                                .andThen(runOutakeForTime(0.3))
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
         }
 
         public final Command scoreLow() {
                 return (new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm)
-                                .andThen(new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(1))
-                                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake))
+                                .andThen(runOutakeForTime(0.3))
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
+        }
+
+        public Command runIntakeForTime(double time) {
+                return new RunCommand(m_Intake::runIntake, m_Intake).withTimeout(time)
+                                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake));
+        }
+
+        public Command runOutakeForTime(double time) {
+                return new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(time)
+                                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake));
         }
 
         public final Command balance() {
@@ -157,21 +182,33 @@ public class AutoMain extends CommandBase {
 
         // Two Cone Autos
 
-        public Command topTwoConeCommand() {
-                PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topTwoCone",
+        public Command topOneConeOneCube() {
+                PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
                                 new PathConstraints(4, 3));
 
                 return scoreHigh()
-                                .andThen(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
                                 .andThen((new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(topTwoConeLeave, true),
                                                 topTwoConeLeave.getMarkers(),
                                                 Constants.AutoConstants.eventMap))
-                                                .alongWith(new RunCommand(m_Intake::runIntake, m_Intake)
-                                                                .withTimeout(4.3))
-                                                .andThen(new InstantCommand(m_Intake::intakeOff, m_Intake)))
+                                                .alongWith(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
+                                                .alongWith(runIntakeForTime(4.3)))
                                 .andThen(scoreHigh());
 
         }
+
+        public Command topOneConeOneCubeCommandWithMarkers()    {
+                List<PathPlannerTrajectory> pathGroup = 
+                        PathPlanner.loadPathGroup("topOneConeOneCube", new PathConstraints(4, 3));
+                
+                return new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
+                .andThen(runOutakeForTime(0.3))
+                .andThen(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
+                                .alongWith(new WaitCommand(1)
+                                .andThen(autoBuilder.fullAuto(pathGroup)))
+                                .andThen(scoreHigh());
+                
+
+        }       
 
 }
