@@ -203,20 +203,15 @@ public class AutoMain extends CommandBase {
 
         }
         public Command topOneConeOneCubeBalance() {
-                PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCubeBalance",
+                List<PathPlannerTrajectory> topTwoConeBalance = PathPlanner.loadPathGroup("topOneConeOneCubeBalance",
                                 new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond, 3.5));
 
                 return scoreHighReturnLowCube()
-                                .andThen((new FollowPathWithEvents(
-                                                m_Drive.followTrajectoryCommand(topTwoConeLeave, true),
-                                                topTwoConeLeave.getMarkers(),
-                                                Constants.AutoConstants.eventMap))
-                                                .alongWith(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
+                                .andThen((autoBuilder.fullAuto(topTwoConeBalance))
                                                 .alongWith(runIntakeForTime(4.3)))
-                                .andThen(new Balance(m_dri));
+                                .andThen(new Balance(m_Drive));
 
         }
-
         // public Command topOneConeOneCubeCommandWithMarkers()    {
         //         List<PathPlannerTrajectory> pathGroup = 
         //                 PathPlanner.loadPathGroup("topOneConeOneCube", new PathConstraints(4, 3));
