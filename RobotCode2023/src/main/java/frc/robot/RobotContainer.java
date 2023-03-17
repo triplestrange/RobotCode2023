@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.commands.AutoRoutines.AutoMain;
 import frc.robot.commands.gameplay.automations.Balance;
@@ -75,7 +76,7 @@ public class RobotContainer {
                 m_robotDrive.setDefaultCommand(
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                new DriveTurbo(m_robotDrive));
+                                new DefaultDrive(m_robotDrive, Constants.SwerveConstants.kMaxSpeedMetersPerSecond));
                 // m_robotDrive.setDefaultCommand(new FilteredDrive(m_robotDrive,
                 // XBOX
                 // () -> JoystickButtons.m_driverController.getLeftY() * 5,
@@ -124,18 +125,22 @@ public class RobotContainer {
                 JoystickButtons.dX
                                 .whileTrue(new RunCommand(() -> m_robotDrive.autoAlignConeOrFeeder(-1), m_robotDrive));
                 JoystickButtons.dB.whileTrue(new RunCommand(() -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
-                JoystickButtons.dlBump.whileTrue(new DriveNormal(m_robotDrive));
-                JoystickButtons.drBump.whileTrue(new DriveSlow(m_robotDrive));
+                // JoystickButtons.dlBump.whileTrue(new DriveNormal(m_robotDrive));
+                JoystickButtons.drBump.whileTrue(new DefaultDrive(m_robotDrive, 0.75));
                 JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
                 JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
                 JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
 
-                if (Math.abs(JoystickButtons.m_driverController.getLeftTriggerAxis()) > 0.05) {
-                        CommandScheduler.getInstance().schedule(new DriveDir(m_robotDrive, 180));
-                }
-                if (Math.abs(JoystickButtons.m_driverController.getRightTriggerAxis()) > 0.05) {
-                        CommandScheduler.getInstance().schedule(new DriveDir(m_robotDrive, 0));
-                }
+                new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getLeftTriggerAxis()) > 0.05)
+                        .onTrue(new InstantCommand(() -> {
+                                m_robotDrive.setPresetEnabled(true, 180);
+                        }));
+                        
+                new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getRightTriggerAxis()) > 0.05)
+                        .onTrue(new InstantCommand(() -> {
+                                m_robotDrive.setPresetEnabled(true, 0);
+                        }));
+
                 // JoystickButtons.dDpadL.onTrue(new DriveDir(m_robotDrive, 180));
                 // JoystickButtons.dDpadD.onTrue(new DriveDir(m_robotDrive, 0));
 

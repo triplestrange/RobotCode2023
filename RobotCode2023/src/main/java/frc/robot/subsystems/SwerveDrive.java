@@ -48,6 +48,8 @@ public class SwerveDrive extends SubsystemBase {
   public double xAutoSpeed = 0;
   public double yAutoSpeed = 0;
   public double rAutoSpeed = 0;
+  public double rotationPreset = 0;
+  public boolean presetEnabled = false;
   public double tv = 0;
   Pose2d visionPose = new Pose2d();
   double[] tempRobotPose;
@@ -382,13 +384,21 @@ public class SwerveDrive extends SubsystemBase {
 
   }
 
-  public void align() {
-    if (NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) != 0) {
-      double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+  public void setPresetEnabled(boolean enabled, double desiredHeading) {
+    presetEnabled = enabled;
+    rotationPreset = desiredHeading;
+  }
 
-      PIDController hor = new PIDController(0.05, 0, 0);
-    }
+  public void setPresetEnabled(boolean enabled) {
+    presetEnabled = enabled;
+  }
 
+  public boolean getPresetEnabled() {
+    return presetEnabled;
+  }
+
+  public double getRotationPreset() {
+    return rotationPreset;
   }
 
   public void updateSmartDashBoard() {
