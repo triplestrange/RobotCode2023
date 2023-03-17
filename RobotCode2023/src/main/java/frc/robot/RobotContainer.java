@@ -7,8 +7,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.commands.AutoRoutines.AutoMain;
@@ -128,14 +130,14 @@ public class RobotContainer {
                 JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
                 JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
 
-                // Operator Controls
-                JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake, m_Intake));
-                JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
-                // JoystickButtons.dDpadL.toggleOnTrue(new DriveDir(m_robotDrive, 0));
-                // JoystickButtons.dDpadD.toggleOnTrue(new DriveDir(m_robotDrive, 90));
-
-                JoystickButtons.dDpadL.onTrue(new DriveDir(m_robotDrive, 180));
-                JoystickButtons.dDpadD.onTrue(new DriveDir(m_robotDrive, 0));
+                if (Math.abs(JoystickButtons.m_driverController.getLeftTriggerAxis()) > 0.05) {
+                        CommandScheduler.getInstance().schedule(new DriveDir(m_robotDrive, 180));
+                }
+                if (Math.abs(JoystickButtons.m_driverController.getRightTriggerAxis()) > 0.05) {
+                        CommandScheduler.getInstance().schedule(new DriveDir(m_robotDrive, 0));
+                }
+                // JoystickButtons.dDpadL.onTrue(new DriveDir(m_robotDrive, 180));
+                // JoystickButtons.dDpadD.onTrue(new DriveDir(m_robotDrive, 0));
 
 
                 // ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
@@ -148,6 +150,10 @@ public class RobotContainer {
                 // A | default: -0.6, -169.63, 137.6
                 // dL| feed slide
 
+                // Operator Controls
+                JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake, m_Intake));
+                JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
+
                 JoystickButtons.opY.whileTrue(// high
                                 new ArmPositions(
                                                 Constants.ArmConstants.HIGH_POSITION,
@@ -156,6 +162,19 @@ public class RobotContainer {
                                 new ArmPositions(
                                                 Constants.ArmConstants.MID_POSITION,
                                                 m_Arm));
+                JoystickButtons.opA.whileTrue(// default
+                                new ArmPositions(
+                                                Constants.ArmConstants.DEFAULT_POSITION,
+                                                m_Arm));
+                JoystickButtons.opB.whileTrue(// feeder slope
+                                new ArmPositions(
+                                                new JointAngles(Math.toRadians(-2), Math.toRadians(-162.5),
+                                                                                Math.toRadians(115.2)),
+                                                                m_Arm));
+                JoystickButtons.opDpadD.whileTrue(// lying cone
+                                new ArmPositions(
+                                                Constants.ArmConstants.LOW_LYING_CONE_POSITION,
+                                                                m_Arm));
                 JoystickButtons.opDpadR.whileTrue(// cube
                                 new ArmPositions(
                                                 new JointAngles(Math.toRadians(-42.7), Math.toRadians(-133.7),
@@ -166,24 +185,14 @@ public class RobotContainer {
                                 new ArmPositions(
                                                 Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION,
                                                 m_Arm));
-                JoystickButtons.opB.whileTrue(// feeder slope
-                                new ArmPositions(
-                                                new JointAngles(Math.toRadians(-2), Math.toRadians(-162.5),
-                                                                Math.toRadians(115.2)),
-                                                m_Arm));
-                JoystickButtons.opDpadD.whileTrue(// lyingcone
-                                new ArmPositions(
-                                                Constants.ArmConstants.LOW_LYING_CONE_POSITION,
-                                                m_Arm));
-                JoystickButtons.opA.whileTrue(// default
-                                new ArmPositions(
-                                                Constants.ArmConstants.DEFAULT_POSITION,
-                                                m_Arm));
+                
                 JoystickButtons.opDpadL.whileTrue(// feeder slider
                                 new ArmPositions(
                                                 new JointAngles(Math.toRadians(-21.68), Math.toRadians(-33.43),
                                                                 Math.toRadians(-88.5)),
                                                 m_Arm));
+                JoystickButtons.oplWing.whileTrue(new DriveDir(m_robotDrive, 0));
+                JoystickButtons.oprWing.whileTrue(new ConeAlign(m_robotDrive));
         }
         /**
          * 

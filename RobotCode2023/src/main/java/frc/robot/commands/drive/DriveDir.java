@@ -35,7 +35,7 @@ public class DriveDir extends CommandBase {
   @Override
   public void execute() {
     double diff = m_swerve.getHeading() - desired_heading;
-    if (Math.abs(diff) > 4.0) {
+    if (Math.abs(diff) < 4.0) {
       diff = 0;
     }
     double rot = rotation_controller.calculate(diff, 0);
@@ -55,7 +55,7 @@ public class DriveDir extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs(JoystickButtons.m_operatorController.getRightX()) > 0.05) {
+    if (Math.abs(JoystickButtons.m_driverController.getRightX()) > 0.05 || Math.abs(JoystickButtons.m_driverController.getRightY()) > 0.05) {
       return true;
     }
     return false;

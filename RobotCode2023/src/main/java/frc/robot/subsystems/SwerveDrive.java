@@ -382,6 +382,15 @@ public class SwerveDrive extends SubsystemBase {
 
   }
 
+  public void align() {
+    if (NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) != 0) {
+      double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+
+      PIDController hor = new PIDController(0.05, 0, 0);
+    }
+
+  }
+
   public void updateSmartDashBoard() {
     SmartDashboard.putNumber("FLSteering", m_frontLeft.m_absoluteEncoder.getAngle());
     SmartDashboard.putNumber("FRSteering", m_frontRight.m_absoluteEncoder.getAngle());
