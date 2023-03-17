@@ -64,6 +64,12 @@ public class AutoMain extends CommandBase {
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
         }
+        public final Command scoreHighReturnLowCube() {
+                return (new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
+                                .andThen(runOutakeForTime(0.3))
+                                .andThen(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm)));
+
+        }
 
         public final Command scoreMiddle() {
                 return (new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm)
@@ -186,7 +192,7 @@ public class AutoMain extends CommandBase {
                 PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
                                 new PathConstraints(4, 3));
 
-                return scoreHigh()
+                return scoreHighReturnLowCube()
                                 .andThen((new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(topTwoConeLeave, true),
                                                 topTwoConeLeave.getMarkers(),
