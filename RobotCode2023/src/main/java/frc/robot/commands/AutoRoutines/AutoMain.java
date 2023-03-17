@@ -190,7 +190,7 @@ public class AutoMain extends CommandBase {
 
         public Command topOneConeOneCube() {
                 PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
-                                new PathConstraints(4, 3));
+                                new PathConstraints(4.25, 3.25));
 
                 return scoreHighReturnLowCube()
                                 .andThen((new FollowPathWithEvents(
@@ -202,19 +202,33 @@ public class AutoMain extends CommandBase {
                                 .andThen(scoreHigh());
 
         }
+        public Command topOneConeOneCubeBalance() {
+                PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCubeBalance",
+                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond, 3.5));
 
-        public Command topOneConeOneCubeCommandWithMarkers()    {
-                List<PathPlannerTrajectory> pathGroup = 
-                        PathPlanner.loadPathGroup("topOneConeOneCube", new PathConstraints(4, 3));
+                return scoreHighReturnLowCube()
+                                .andThen((new FollowPathWithEvents(
+                                                m_Drive.followTrajectoryCommand(topTwoConeLeave, true),
+                                                topTwoConeLeave.getMarkers(),
+                                                Constants.AutoConstants.eventMap))
+                                                .alongWith(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
+                                                .alongWith(runIntakeForTime(4.3)))
+                                .andThen(new Balance(m_dri));
+
+        }
+
+        // public Command topOneConeOneCubeCommandWithMarkers()    {
+        //         List<PathPlannerTrajectory> pathGroup = 
+        //                 PathPlanner.loadPathGroup("topOneConeOneCube", new PathConstraints(4, 3));
                 
-                return new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                .andThen(runOutakeForTime(0.3))
-                .andThen(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
-                                .alongWith(new WaitCommand(1)
-                                .andThen(autoBuilder.fullAuto(pathGroup)))
-                                .andThen(scoreHigh());
+        //         return new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
+        //         .andThen(runOutakeForTime(0.3))
+        //         .andThen(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
+        //                         .alongWith(new WaitCommand(1)
+        //                         .andThen(autoBuilder.fullAuto(pathGroup)))
+        //                         .andThen(scoreHigh());
                 
 
-        }       
+        // }       
 
 }
