@@ -60,6 +60,7 @@ public class AutoMain extends CommandBase {
         // Base Commands
         public final Command scoreHigh() {
                 return (new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
+                                .andThen(new WaitCommand(0.05))
                                 .andThen(runOutakeForTime(0.3))
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
@@ -149,7 +150,7 @@ public class AutoMain extends CommandBase {
 
         public Command middleOneConeBalanceCommand() {
                 PathPlannerTrajectory middleOneConeBalance = PathPlanner.loadPath("middleOneConeBalance",
-                                new PathConstraints(1.5, 0.75));
+                                new PathConstraints(0.5, 0.25));
 
                 // return scoreHigh()
                 return scoreHigh()

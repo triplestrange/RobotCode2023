@@ -36,9 +36,9 @@ public class Arm extends SubsystemBase {
   private final DutyCycleEncoder elbowEncoder;
   private final DutyCycleEncoder wristEncoder;
 
-  private final ProfiledPIDController shoulderPID;
-  private final ProfiledPIDController elbowPID;
-  private final ProfiledPIDController wristPID;
+  public final ProfiledPIDController shoulderPID;
+  public final ProfiledPIDController elbowPID;
+  public final ProfiledPIDController wristPID;
 
   private double shoulderSetpoint;
   private double elbowSetpoint;
@@ -80,9 +80,9 @@ public class Arm extends SubsystemBase {
     elbowJoint.setSmartCurrentLimit(40);
     wristJoint.setSmartCurrentLimit(20);
 
-    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(2, 2));
-    elbowPID = new ProfiledPIDController(0.4, 0, 0, new Constraints(2.5, 2));
-    wristPID = new ProfiledPIDController(0.5, 0, 0, new Constraints(2, 1.5));
+    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(3.5, 2.75));
+    elbowPID = new ProfiledPIDController(0.4, 0, 0.03, new Constraints(3.5, 3));
+    wristPID = new ProfiledPIDController(0.5, 0, 0, new Constraints(2.25, 2));
 
     shoulderJoint.setIdleMode(IdleMode.kBrake);
     elbowJoint.setIdleMode(IdleMode.kBrake);
