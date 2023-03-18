@@ -35,7 +35,7 @@ public class DefaultDrive extends CommandBase {
     speed = MathUtil.clamp(speed, -Constants.SwerveConstants.kMaxSpeedMetersPerSecond,
         Constants.SwerveConstants.kMaxSpeedMetersPerSecond);
     deadzone = 0.05;
-    rotation_controller = new PIDController(0.05, 0, 0.0025);
+    rotation_controller = new PIDController(0.075, 0, 0.0);
     rotation_controller.enableContinuousInput(0, 360);
   }
 
@@ -50,7 +50,7 @@ public class DefaultDrive extends CommandBase {
   public void execute() {
     double speedR;
 
-    if (Math.abs(JoystickButtons.m_driverController.getRightX()) > 0.05) {
+    if (Math.abs(JoystickButtons.m_driverController.getRightX()) > 0.075) {
       m_swerve.setPresetEnabled(false);
       if (Math.abs(JoystickButtons.m_driverController.getRightX()) <= deadzone) {
         speedR = 0;
@@ -59,19 +59,19 @@ public class DefaultDrive extends CommandBase {
 
     double rot = rotation_controller.calculate(m_swerve.getAngle().getDegrees(), m_swerve.getRotationPreset());
     // rot = MathUtil.clamp(rot, -1, 1);
-    System.out.println("rotation PID: " + rot);
+    // System.out.println("rotation PID: " + rot);
 
-    System.out.println("gyro: " + m_swerve.getAngle().getDegrees());
-    System.out.println("desiredHeading: " + m_swerve.getRotationPreset());
+    // System.out.println("gyro: " + m_swerve.getAngle().getDegrees());
+    // System.out.println("desiredHeading: " + m_swerve.getRotationPreset());
     double speedY = JoystickButtons.m_driverController.getLeftY() * speed;
     double speedX = JoystickButtons.m_driverController.getLeftX() * speed;
 
     if (m_swerve.getPresetEnabled()) {
-      
+
       speedR = rot;
     } else {
       // rotation was reversed
-      speedR = JoystickButtons.m_driverController.getRightX() * 4;
+      speedR = JoystickButtons.m_driverController.getRightX() * -4;
     }
 
     if (speed == Constants.SwerveConstants.kMaxSpeedMetersPerSecond) {

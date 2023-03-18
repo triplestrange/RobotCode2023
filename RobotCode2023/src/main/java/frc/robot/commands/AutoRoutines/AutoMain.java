@@ -67,7 +67,7 @@ public class AutoMain extends CommandBase {
         // Base Commands
         public final Command scoreHigh() {
                 return (new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                                .andThen(new WaitCommand(0.05))
+                                .andThen(new WaitCommand(0.1))
                                 .andThen(runOutakeForTime(0.3))
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
@@ -158,7 +158,7 @@ public class AutoMain extends CommandBase {
 
         public Command middleOneConeBalanceCommand() {
                 PathPlannerTrajectory middleOneConeBalance = PathPlanner.loadPath("middleOneConeBalance",
-                                new PathConstraints(0.5, 0.25));
+                                new PathConstraints(2, 1.5));
 
                 // return scoreHigh()
                 return scoreHigh()
@@ -199,8 +199,8 @@ public class AutoMain extends CommandBase {
 
         public Command topOneConeOneCube() {
                 PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
-                                new PathConstraints(1,
-                                                1));
+                                new PathConstraints(4,
+                                                3));
 
                 return scoreHighReturnLowCube()
                                 .andThen((new FollowPathWithEvents(
@@ -214,8 +214,8 @@ public class AutoMain extends CommandBase {
 
         public Command bottomOneConeOneCube() {
                 PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
-                                new PathConstraints(1,
-                                                1));
+                                new PathConstraints(4,
+                                                3));
 
                 return scoreHighReturnLowCube()
                                 .andThen((new FollowPathWithEvents(
@@ -227,31 +227,36 @@ public class AutoMain extends CommandBase {
 
         }
 
-        public Command topOneConeOneCubeBalance() {
-                List<PathPlannerTrajectory> topOneConeOneCubeBalance = PathPlanner.loadPathGroup(
-                                "topOneConeOneCubeBalance",
-                                new PathConstraints(1, 1));
+        // public Command topOneConeOneCubeBalance() {
+        // List<PathPlannerTrajectory> topOneConeOneCubeBalance =
+        // PathPlanner.loadPathGroup(
+        // "topOneConeOneCubeBalance",
+        // new PathConstraints(1, 1));
 
-                return autoBuilder.fullAuto(topOneConeOneCubeBalance)
-                                .andThen(new Balance(m_Drive));
+        // return autoBuilder.fullAuto(topOneConeOneCubeBalance)
+        // .andThen(new Balance(m_Drive));
 
-        }
+        // }
 
-        public Command bottomOneConeOneCubeBalance() {
-                List<PathPlannerTrajectory> bottomOneConeOneCubeBalance = PathPlanner.loadPathGroup(
-                                "bottomOneConeOneCubeBalance",
-                                new PathConstraints(1, 1));
+        // public Command bottomOneConeOneCubeBalance() {
+        // List<PathPlannerTrajectory> bottomOneConeOneCubeBalance =
+        // PathPlanner.loadPathGroup(
+        // "bottomOneConeOneCubeBalance",
+        // new PathConstraints(1, 1));
 
-                return autoBuilder.fullAuto(bottomOneConeOneCubeBalance)
-                                .andThen(balance());
-        }
+        // return autoBuilder.fullAuto(bottomOneConeOneCubeBalance)
+        // .andThen(balance());
+        // }
 
         public Command testSimultaneousMovement() {
-                List<PathPlannerTrajectory> testSimultaneousMovement = PathPlanner.loadPathGroup(
+                PathPlannerTrajectory testSimultaneousMovement = PathPlanner.loadPath(
                                 "testSimultaneousMovement",
                                 new PathConstraints(1, 1));
 
-                return autoBuilder.fullAuto(testSimultaneousMovement);
+                return new FollowPathWithEvents(
+                                m_Drive.followTrajectoryCommand(testSimultaneousMovement, true),
+                                testSimultaneousMovement.getMarkers(),
+                                Constants.AutoConstants.eventMap);
 
         }
 

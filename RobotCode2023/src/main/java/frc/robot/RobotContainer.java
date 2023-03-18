@@ -50,9 +50,9 @@ public class RobotContainer {
                 this.choose = choose;
                 // Working Consistently
                 // One Cone Top
-                choose.addOption("Top One Cone Leave",
+                choose.addOption("Feeder One Cone Leave",
                                 m_Autos.topOneConeLeaveCommand());
-                choose.addOption("Top One Cone Balance",
+                choose.addOption("Feeder One Cone Balance",
                                 m_Autos.topOneConeBalanceCommand());
                 // One Cone Mid
                 choose.addOption("Middle One Cone Leave Bottom",
@@ -62,22 +62,22 @@ public class RobotContainer {
                 choose.addOption("Middle One Cone Balance",
                                 m_Autos.middleOneConeBalanceCommand());
                 // One Cone Bottom
-                choose.addOption("Bottom One Cone Leave",
+                choose.addOption("!Feeder One Cone Leave",
                                 m_Autos.bottomOneConeLeaveCommand());
-                choose.addOption("Bottom One Cone Balance",
+                choose.addOption("!Feeder One Cone Balance",
                                 m_Autos.bottomOneConeBalanceCommand());
 
                 // Not Working Consistently
                 // Two Game Piece Top
-                choose.addOption("Top One Cone One Cube",
+                choose.addOption("Feeder One Cone One Cube",
                                 m_Autos.topOneConeOneCube());
-                choose.addOption("Top One Cone One Cube Balance",
-                                m_Autos.topOneConeOneCubeBalance());
+                // choose.addOption("Feeder One Cone One Cube Balance",
+                // m_Autos.topOneConeOneCubeBalance());
                 // Two Game Piece Bottom
-                choose.addOption("Bottom One Cone One Cube",
+                choose.addOption("!Feeder One Cone One Cube",
                                 m_Autos.bottomOneConeOneCube());
-                choose.addOption("Bottom One Cone One Cube Balance",
-                                m_Autos.bottomOneConeOneCubeBalance());
+                // choose.addOption("!Feeder One Cone One Cube Balance",
+                // m_Autos.bottomOneConeOneCubeBalance());
                 // Testing
                 choose.addOption("Simultaneous Movement Test",
                                 m_Autos.testSimultaneousMovement());
@@ -88,7 +88,7 @@ public class RobotContainer {
                 m_robotDrive.setDefaultCommand(
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                new DefaultDrive(m_robotDrive, Constants.SwerveConstants.kMaxSpeedMetersPerSecond));
+                                new DefaultDrive(m_robotDrive, 2.5));
                 // m_robotDrive.setDefaultCommand(new FilteredDrive(m_robotDrive,
                 // XBOX
                 // () -> JoystickButtons.m_driverController.getLeftY() * 5,
@@ -139,6 +139,9 @@ public class RobotContainer {
                 JoystickButtons.dB.whileTrue(new RunCommand(() -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
                 // JoystickButtons.dlBump.whileTrue(new DriveNormal(m_robotDrive));
                 JoystickButtons.drBump.whileTrue(new DefaultDrive(m_robotDrive, 0.75));
+                JoystickButtons.dlBump.whileTrue(
+                                new DefaultDrive(m_robotDrive, Constants.SwerveConstants.kMaxSpeedMetersPerSecond));
+
                 JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
                 JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
                 JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
@@ -208,8 +211,11 @@ public class RobotContainer {
                                                 new JointAngles(Math.toRadians(-21.68), Math.toRadians(-33.43),
                                                                 Math.toRadians(-88.5)),
                                                 m_Arm));
-                JoystickButtons.oplWing.whileTrue(new DriveDir(m_robotDrive, 0));
-                JoystickButtons.oprWing.whileTrue(new ConeAlign(m_robotDrive));
+                JoystickButtons.oplWing.whileTrue(new InstantCommand(() -> {
+                        m_robotDrive.setPresetEnabled(true, 0);
+
+                }));
+                // JoystickButtons.oprWing.whileTrue(new ConeAlign(m_robotDrive));
         }
         /**
          * 
