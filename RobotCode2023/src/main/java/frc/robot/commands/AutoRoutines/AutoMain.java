@@ -199,8 +199,8 @@ public class AutoMain extends CommandBase {
 
         public Command topOneConeOneCube() {
                 PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
-                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond,
-                                                Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 1.5));
+                                new PathConstraints(1,
+                                                1));
 
                 return scoreHighReturnLowCube()
                                 .andThen((new FollowPathWithEvents(
@@ -214,8 +214,8 @@ public class AutoMain extends CommandBase {
 
         public Command bottomOneConeOneCube() {
                 PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
-                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond,
-                                                Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 1.5));
+                                new PathConstraints(1,
+                                                1));
 
                 return scoreHighReturnLowCube()
                                 .andThen((new FollowPathWithEvents(

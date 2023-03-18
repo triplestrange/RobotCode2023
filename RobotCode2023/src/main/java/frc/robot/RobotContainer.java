@@ -48,6 +48,7 @@ public class RobotContainer {
                 this.m_Autos = new AutoMain(m_robotDrive, m_Arm, m_Intake);
 
                 this.choose = choose;
+                // Working Consistently
                 // One Cone Top
                 choose.addOption("Top One Cone Leave",
                                 m_Autos.topOneConeLeaveCommand());
@@ -65,13 +66,21 @@ public class RobotContainer {
                                 m_Autos.bottomOneConeLeaveCommand());
                 choose.addOption("Bottom One Cone Balance",
                                 m_Autos.bottomOneConeBalanceCommand());
+
+                // Not Working Consistently
                 // Two Game Piece Top
                 choose.addOption("Top One Cone One Cube",
                                 m_Autos.topOneConeOneCube());
+                choose.addOption("Top One Cone One Cube Balance",
+                                m_Autos.topOneConeOneCubeBalance());
+                // Two Game Piece Bottom
                 choose.addOption("Bottom One Cone One Cube",
                                 m_Autos.bottomOneConeOneCube());
                 choose.addOption("Bottom One Cone One Cube Balance",
                                 m_Autos.bottomOneConeOneCubeBalance());
+                // Testing
+                choose.addOption("Simultaneous Movement Test",
+                                m_Autos.testSimultaneousMovement());
                 // Configure the button bindings
                 configureButtonBindings();
 
