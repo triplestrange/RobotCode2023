@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.gameplay.automations.Balance;
@@ -190,28 +191,49 @@ public class AutoMain extends CommandBase {
 
         public Command topOneConeOneCube() {
                 PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
-                                new PathConstraints(4.25, 3.25));
+                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond, Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 1.5));
 
                 return scoreHighReturnLowCube()
                                 .andThen((new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(topTwoConeLeave, true),
                                                 topTwoConeLeave.getMarkers(),
                                                 Constants.AutoConstants.eventMap))
-                                                .alongWith(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
+                                                .alongWith(runIntakeForTime(4.3)))
+                                .andThen(scoreHigh());
+
+        }
+        public Command bottomOneConeOneCube() {
+                PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
+                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond, Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 1.5));
+
+                return scoreHighReturnLowCube()
+                                .andThen((new FollowPathWithEvents(
+                                                m_Drive.followTrajectoryCommand(topTwoConeLeave, true),
+                                                topTwoConeLeave.getMarkers(),
+                                                Constants.AutoConstants.eventMap))
                                                 .alongWith(runIntakeForTime(4.3)))
                                 .andThen(scoreHigh());
 
         }
         public Command topOneConeOneCubeBalance() {
-                List<PathPlannerTrajectory> topTwoConeBalance = PathPlanner.loadPathGroup("topOneConeOneCubeBalance",
-                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond, 3.5));
+                List<PathPlannerTrajectory> topOneConeOneCubeBalance = PathPlanner.loadPathGroup("topOneConeOneCubeBalance",
+                                new PathConstraints(1, 1));
 
-                return scoreHighReturnLowCube()
-                                .andThen((autoBuilder.fullAuto(topTwoConeBalance))
-                                                .alongWith(runIntakeForTime(4.3)))
-                                .andThen(new Balance(m_Drive));
+                return autoBuilder.fullAuto(topOneConeOneCubeBalance)
+                        .andThen(new Balance(m_Drive));
 
         }
+        public Command bottomOneConeOneCubeBalance() {
+                List<PathPlannerTrajectory> bottomOneConeOneCubeBalance = PathPlanner.loadPathGroup("bottomOneConeOneCubeBalance",
+                                new PathConstraints(1, 1));
+
+                return autoBuilder.fullAuto(bottomOneConeOneCubeBalance)
+                        .andThen(balance());
+                // return scoreHighReturnLowCube()
+                //                 .andThen(autoBuilder.fullAuto(bottomOneConeOneCubeBalance))
+                //                 .andThen(new Balance(m_Drive));
+        }
+        
         // public Command topOneConeOneCubeCommandWithMarkers()    {
         //         List<PathPlannerTrajectory> pathGroup = 
         //                 PathPlanner.loadPathGroup("topOneConeOneCube", new PathConstraints(4, 3));

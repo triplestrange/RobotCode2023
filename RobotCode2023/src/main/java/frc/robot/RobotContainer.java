@@ -68,7 +68,10 @@ public class RobotContainer {
                 // Two Game Piece Top
                 choose.addOption("Top One Cone One Cube",
                                 m_Autos.topOneConeOneCube());
-
+                choose.addOption("Bottom One Cone One Cube",
+                                m_Autos.bottomOneConeOneCube());
+                choose.addOption("Bottom One Cone One Cube Balance",
+                                m_Autos.bottomOneConeOneCubeBalance());
                 // Configure the button bindings
                 configureButtonBindings();
 
