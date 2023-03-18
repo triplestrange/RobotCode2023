@@ -21,6 +21,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.ArmPositions;
+import frc.robot.commands.gameplay.automations.ArmTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
@@ -213,16 +214,21 @@ public class AutoMain extends CommandBase {
         }
 
         public Command bottomOneConeOneCube() {
-                PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
+                PathPlannerTrajectory bottomOneConeOneCubeLeave = PathPlanner.loadPath("bottomOneConeOneCube",
                                 new PathConstraints(4,
                                                 3));
 
-                return scoreHighReturnLowCube()
-                                .andThen((new FollowPathWithEvents(
-                                                m_Drive.followTrajectoryCommand(topTwoConeLeave, true),
-                                                topTwoConeLeave.getMarkers(),
-                                                Constants.AutoConstants.eventMap))
-                                                .alongWith(runIntakeForTime(4.3)))
+                return new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
+                                .andThen(runOutakeForTime(0.3))
+                                .andThen((new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
+                                                .alongWith(new WaitCommand(1)
+                                                                .andThen(new FollowPathWithEvents(
+                                                                                m_Drive.followTrajectoryCommand(
+                                                                                                bottomOneConeOneCubeLeave,
+                                                                                                true),
+                                                                                bottomOneConeOneCubeLeave.getMarkers(),
+                                                                                Constants.AutoConstants.eventMap))
+                                                                .alongWith(runIntakeForTime(4.3))))
                                 .andThen(scoreHigh());
 
         }
