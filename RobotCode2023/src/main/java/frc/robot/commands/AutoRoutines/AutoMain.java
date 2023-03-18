@@ -44,18 +44,24 @@ public class AutoMain extends CommandBase {
                 this.m_Drive = m_Drive;
                 this.m_Arm = m_Arm;
                 this.m_Intake = m_Intake;
-                
+
                 autoBuilder = new SwerveAutoBuilder(
-                        m_Drive::getPose, // Pose2d supplier
-                        m_Drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-                        SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
-                        new PIDConstants(1, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-                        new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-                        m_Drive::setModuleStates, // Module states consumer used to output to the drive subsystem
-                        AutoConstants.eventMap,
-                        true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-                        m_Drive // The drive subsystem. Used to properly set the requirements of path following commands
-                        );
+                                m_Drive::getPose, // Pose2d supplier
+                                m_Drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of
+                                                        // auto
+                                SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
+                                new PIDConstants(1, 0.0, 0.0), // PID constants to correct for translation error (used
+                                                               // to create the X and Y PID controllers)
+                                new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to
+                                                               // create the rotation controller)
+                                m_Drive::setModuleStates, // Module states consumer used to output to the drive
+                                                          // subsystem
+                                AutoConstants.eventMap,
+                                true, // Should the path be automatically mirrored depending on alliance color.
+                                      // Optional, defaults to true
+                                m_Drive // The drive subsystem. Used to properly set the requirements of path following
+                                        // commands
+                );
         }
 
         // Base Commands
@@ -66,6 +72,7 @@ public class AutoMain extends CommandBase {
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
         }
+
         public final Command scoreHighReturnLowCube() {
                 return (new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
                                 .andThen(runOutakeForTime(0.3))
@@ -192,7 +199,8 @@ public class AutoMain extends CommandBase {
 
         public Command topOneConeOneCube() {
                 PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
-                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond, Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 1.5));
+                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond,
+                                                Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 1.5));
 
                 return scoreHighReturnLowCube()
                                 .andThen((new FollowPathWithEvents(
@@ -203,9 +211,11 @@ public class AutoMain extends CommandBase {
                                 .andThen(scoreHigh());
 
         }
+
         public Command bottomOneConeOneCube() {
                 PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
-                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond, Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 1.5));
+                                new PathConstraints(Constants.SwerveConstants.kMaxSpeedMetersPerSecond,
+                                                Constants.SwerveConstants.kMaxSpeedMetersPerSecond * 1.5));
 
                 return scoreHighReturnLowCube()
                                 .andThen((new FollowPathWithEvents(
@@ -216,37 +226,33 @@ public class AutoMain extends CommandBase {
                                 .andThen(scoreHigh());
 
         }
+
         public Command topOneConeOneCubeBalance() {
-                List<PathPlannerTrajectory> topOneConeOneCubeBalance = PathPlanner.loadPathGroup("topOneConeOneCubeBalance",
+                List<PathPlannerTrajectory> topOneConeOneCubeBalance = PathPlanner.loadPathGroup(
+                                "topOneConeOneCubeBalance",
                                 new PathConstraints(1, 1));
 
                 return autoBuilder.fullAuto(topOneConeOneCubeBalance)
-                        .andThen(new Balance(m_Drive));
+                                .andThen(new Balance(m_Drive));
 
         }
+
         public Command bottomOneConeOneCubeBalance() {
-                List<PathPlannerTrajectory> bottomOneConeOneCubeBalance = PathPlanner.loadPathGroup("bottomOneConeOneCubeBalance",
+                List<PathPlannerTrajectory> bottomOneConeOneCubeBalance = PathPlanner.loadPathGroup(
+                                "bottomOneConeOneCubeBalance",
                                 new PathConstraints(1, 1));
 
                 return autoBuilder.fullAuto(bottomOneConeOneCubeBalance)
-                        .andThen(balance());
-                // return scoreHighReturnLowCube()
-                //                 .andThen(autoBuilder.fullAuto(bottomOneConeOneCubeBalance))
-                //                 .andThen(new Balance(m_Drive));
+                                .andThen(balance());
         }
-        
-        // public Command topOneConeOneCubeCommandWithMarkers()    {
-        //         List<PathPlannerTrajectory> pathGroup = 
-        //                 PathPlanner.loadPathGroup("topOneConeOneCube", new PathConstraints(4, 3));
-                
-        //         return new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-        //         .andThen(runOutakeForTime(0.3))
-        //         .andThen(new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
-        //                         .alongWith(new WaitCommand(1)
-        //                         .andThen(autoBuilder.fullAuto(pathGroup)))
-        //                         .andThen(scoreHigh());
-                
 
-        // }       
+        public Command testSimultaneousMovement() {
+                List<PathPlannerTrajectory> testSimultaneousMovement = PathPlanner.loadPathGroup(
+                                "testSimultaneousMovement",
+                                new PathConstraints(1, 1));
+
+                return autoBuilder.fullAuto(testSimultaneousMovement);
+
+        }
 
 }
