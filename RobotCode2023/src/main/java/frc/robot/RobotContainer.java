@@ -135,18 +135,18 @@ public class RobotContainer {
                 JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
 
                 new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getLeftTriggerAxis()) > 0.05)
-                        .onTrue(new InstantCommand(() -> {
-                                m_robotDrive.setPresetEnabled(true, 180);
-                        }));
-                        
+                                .onTrue(new InstantCommand(() -> {
+                                        m_robotDrive.setPresetEnabled(true, -180.0);
+                                }));
+
                 new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getRightTriggerAxis()) > 0.05)
-                        .onTrue(new InstantCommand(() -> {
-                                m_robotDrive.setPresetEnabled(true, 0);
-                        }));
+                                .onTrue(new InstantCommand(() -> {
+                                        m_robotDrive.setPresetEnabled(true, 0);
+
+                                }));
 
                 // JoystickButtons.dDpadL.onTrue(new DriveDir(m_robotDrive, 180));
                 // JoystickButtons.dDpadD.onTrue(new DriveDir(m_robotDrive, 0));
-
 
                 // ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 // Y | high: 29.25, 29.11, 34
@@ -177,12 +177,12 @@ public class RobotContainer {
                 JoystickButtons.opB.whileTrue(// feeder slope
                                 new ArmPositions(
                                                 new JointAngles(Math.toRadians(-2), Math.toRadians(-162.5),
-                                                                                Math.toRadians(115.2)),
-                                                                m_Arm));
+                                                                Math.toRadians(115.2)),
+                                                m_Arm));
                 JoystickButtons.opDpadD.whileTrue(// lying cone
                                 new ArmPositions(
                                                 Constants.ArmConstants.LOW_LYING_CONE_POSITION,
-                                                                m_Arm));
+                                                m_Arm));
                 JoystickButtons.opDpadR.whileTrue(// cube
                                 new ArmPositions(
                                                 new JointAngles(Math.toRadians(-42.7), Math.toRadians(-133.7),
@@ -193,7 +193,7 @@ public class RobotContainer {
                                 new ArmPositions(
                                                 Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION,
                                                 m_Arm));
-                
+
                 JoystickButtons.opDpadL.whileTrue(// feeder slider
                                 new ArmPositions(
                                                 new JointAngles(Math.toRadians(-21.68), Math.toRadians(-33.43),
