@@ -16,8 +16,11 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "high",
+          "outtakeTimed"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -103,8 +106,62 @@
         "y": 4.407041231144074
       },
       "prevControl": {
-        "x": 2.2166822959238353,
-        "y": 4.407041231144074
+        "x": 1.715669391790761,
+        "y": 5.040449939656941
+      },
+      "nextControl": {
+        "x": 1.8438320429529418,
+        "y": 3.9861231510153874
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "high",
+          "outtakeTimed",
+          "default"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.998617952920934,
+        "y": 3.4399037892355446
+      },
+      "prevControl": {
+        "x": 1.912606335805892,
+        "y": 3.5427526937327887
+      },
+      "nextControl": {
+        "x": 2.246472302728642,
+        "y": 3.143530471216142
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.76808453122556,
+        "y": 3.2843528063468557
+      },
+      "prevControl": {
+        "x": 3.007942605751031,
+        "y": 3.267150482923847
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -120,26 +177,27 @@
       }
     }
   ],
-  "maxVelocity": 4.41,
-  "maxAcceleration": 3.5,
+  "maxVelocity": 4.4,
+  "maxAcceleration": 4.0,
   "isReversed": null,
   "markers": [
     {
-      "position": 1.9,
+      "position": 1.6608664772727275,
       "names": [
-        "intake"
+        "Intake"
       ]
     },
     {
-      "position": 2.1,
+      "position": 2.3,
       "names": [
-        "intakeOff"
+        "intakeOff",
+        "mid"
       ]
     },
     {
-      "position": 2.1,
+      "position": 0.02,
       "names": [
-        "default"
+        "pickupCube"
       ]
     }
   ]

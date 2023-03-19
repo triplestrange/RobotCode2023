@@ -21,6 +21,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.Intake;
@@ -200,7 +201,8 @@ public final class Constants {
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-
+    // Basic Commands
+    
     // HashMap for PathPlanner
     // bottom is limelight side, top is opposite
     public static HashMap<String, Command> eventMap = new HashMap<>();
@@ -217,6 +219,7 @@ public final class Constants {
       eventMap.put("pickupCube", new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm));
       // intake
       eventMap.put("intake", new InstantCommand(m_Intake::runIntake, m_Intake));
+      eventMap.put("outtakeTimed", new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(0.3));
       eventMap.put("outtake", new InstantCommand(m_Intake::runOutake, m_Intake));
       eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
 

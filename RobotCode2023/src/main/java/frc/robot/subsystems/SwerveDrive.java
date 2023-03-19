@@ -48,6 +48,8 @@ public class SwerveDrive extends SubsystemBase {
   public double xAutoSpeed = 0;
   public double yAutoSpeed = 0;
   public double rAutoSpeed = 0;
+  public double rotationPreset = 0;
+  public boolean presetEnabled = false;
   public double tv = 0;
   Pose2d visionPose = new Pose2d();
   double[] tempRobotPose;
@@ -380,6 +382,23 @@ public class SwerveDrive extends SubsystemBase {
             this // Requires this drive subsystem
         ));
 
+  }
+
+  public void setPresetEnabled(boolean enabled, double desiredHeading) {
+    presetEnabled = enabled;
+    rotationPreset = desiredHeading;
+  }
+
+  public void setPresetEnabled(boolean enabled) {
+    presetEnabled = enabled;
+  }
+
+  public boolean getPresetEnabled() {
+    return presetEnabled;
+  }
+
+  public double getRotationPreset() {
+    return rotationPreset;
   }
 
   public void updateSmartDashBoard() {

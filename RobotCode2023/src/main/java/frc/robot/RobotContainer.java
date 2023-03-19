@@ -7,9 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.commands.AutoRoutines.AutoMain;
 import frc.robot.commands.gameplay.automations.Balance;
@@ -45,10 +48,11 @@ public class RobotContainer {
                 this.m_Autos = new AutoMain(m_robotDrive, m_Arm, m_Intake);
 
                 this.choose = choose;
+                // Working Consistently
                 // One Cone Top
-                choose.addOption("Top One Cone Leave",
+                choose.addOption("Feeder One Cone Leave",
                                 m_Autos.topOneConeLeaveCommand());
-                choose.addOption("Top One Cone Balance",
+                choose.addOption("Feeder One Cone Balance",
                                 m_Autos.topOneConeBalanceCommand());
                 // One Cone Mid
                 choose.addOption("Middle One Cone Leave Bottom",
@@ -58,14 +62,25 @@ public class RobotContainer {
                 choose.addOption("Middle One Cone Balance",
                                 m_Autos.middleOneConeBalanceCommand());
                 // One Cone Bottom
-                choose.addOption("Bottom One Cone Leave",
+                choose.addOption("!Feeder One Cone Leave",
                                 m_Autos.bottomOneConeLeaveCommand());
-                choose.addOption("Bottom One Cone Balance",
+                choose.addOption("!Feeder One Cone Balance",
                                 m_Autos.bottomOneConeBalanceCommand());
-                // Two Game Piece Top
-                choose.addOption("Top One Cone One Cube",
-                                m_Autos.topOneConeOneCube());
 
+                // Not Working Consistently
+                // Two Game Piece Top
+                choose.addOption("Feeder One Cone One Cube",
+                                m_Autos.topOneConeOneCube());
+                // choose.addOption("Feeder One Cone One Cube Balance",
+                // m_Autos.topOneConeOneCubeBalance());
+                // Two Game Piece Bottom
+                choose.addOption("!Feeder One Cone One Cube",
+                                m_Autos.bottomOneConeOneCube());
+                // choose.addOption("!Feeder One Cone One Cube Balance",
+                // m_Autos.bottomOneConeOneCubeBalance());
+                // Testing
+                choose.addOption("Simultaneous Movement Test",
+                                m_Autos.testSimultaneousMovement());
                 // Configure the button bindings
                 configureButtonBindings();
 
@@ -73,7 +88,7 @@ public class RobotContainer {
                 m_robotDrive.setDefaultCommand(
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                new DriveTurbo(m_robotDrive));
+                                new DefaultDrive(m_robotDrive, 2.5));
                 // m_robotDrive.setDefaultCommand(new FilteredDrive(m_robotDrive,
                 // XBOX
                 // () -> JoystickButtons.m_driverController.getLeftY() * 5,
@@ -122,21 +137,28 @@ public class RobotContainer {
                 JoystickButtons.dX
                                 .whileTrue(new RunCommand(() -> m_robotDrive.autoAlignConeOrFeeder(-1), m_robotDrive));
                 JoystickButtons.dB.whileTrue(new RunCommand(() -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
-                JoystickButtons.dlBump.whileTrue(new DriveNormal(m_robotDrive));
-                JoystickButtons.drBump.whileTrue(new DriveSlow(m_robotDrive));
+                // JoystickButtons.dlBump.whileTrue(new DriveNormal(m_robotDrive));
+                JoystickButtons.drBump.whileTrue(new DefaultDrive(m_robotDrive, 0.75));
+                JoystickButtons.dlBump.whileTrue(
+                                new DefaultDrive(m_robotDrive, Constants.SwerveConstants.kMaxSpeedMetersPerSecond));
+
                 JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
                 JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
                 JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
 
-                // Operator Controls
-                JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake, m_Intake));
-                JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
-                // JoystickButtons.dDpadL.toggleOnTrue(new DriveDir(m_robotDrive, 0));
-                // JoystickButtons.dDpadD.toggleOnTrue(new DriveDir(m_robotDrive, 90));
+                new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getLeftTriggerAxis()) > 0.05)
+                                .onTrue(new InstantCommand(() -> {
+                                        m_robotDrive.setPresetEnabled(true, -180.0);
+                                }));
 
-                JoystickButtons.dDpadL.onTrue(new DriveDir(m_robotDrive, 0));
-                JoystickButtons.dDpadD.onTrue(new DriveDir(m_robotDrive, 180));
+                new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getRightTriggerAxis()) > 0.05)
+                                .onTrue(new InstantCommand(() -> {
+                                        m_robotDrive.setPresetEnabled(true, 0);
 
+                                }));
+
+                // JoystickButtons.dDpadL.onTrue(new DriveDir(m_robotDrive, 180));
+                // JoystickButtons.dDpadD.onTrue(new DriveDir(m_robotDrive, 0));
 
                 // ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 // Y | high: 29.25, 29.11, 34
@@ -148,6 +170,10 @@ public class RobotContainer {
                 // A | default: -0.6, -169.63, 137.6
                 // dL| feed slide
 
+                // Operator Controls
+                JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake, m_Intake));
+                JoystickButtons.oplBump.whileTrue(new RunCommand(m_Intake::runOutake, m_Intake));
+
                 JoystickButtons.opY.whileTrue(// high
                                 new ArmPositions(
                                                 Constants.ArmConstants.HIGH_POSITION,
@@ -155,6 +181,19 @@ public class RobotContainer {
                 JoystickButtons.opX.whileTrue(// mid
                                 new ArmPositions(
                                                 Constants.ArmConstants.MID_POSITION,
+                                                m_Arm));
+                JoystickButtons.opA.whileTrue(// default
+                                new ArmPositions(
+                                                Constants.ArmConstants.DEFAULT_POSITION,
+                                                m_Arm));
+                JoystickButtons.opB.whileTrue(// feeder slope
+                                new ArmPositions(
+                                                new JointAngles(Math.toRadians(-2), Math.toRadians(-162.5),
+                                                                Math.toRadians(115.2)),
+                                                m_Arm));
+                JoystickButtons.opDpadD.whileTrue(// lying cone
+                                new ArmPositions(
+                                                Constants.ArmConstants.LOW_LYING_CONE_POSITION,
                                                 m_Arm));
                 JoystickButtons.opDpadR.whileTrue(// cube
                                 new ArmPositions(
@@ -166,24 +205,17 @@ public class RobotContainer {
                                 new ArmPositions(
                                                 Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION,
                                                 m_Arm));
-                JoystickButtons.opB.whileTrue(// feeder slope
-                                new ArmPositions(
-                                                new JointAngles(Math.toRadians(-2), Math.toRadians(-162.5),
-                                                                Math.toRadians(115.2)),
-                                                m_Arm));
-                JoystickButtons.opDpadD.whileTrue(// lyingcone
-                                new ArmPositions(
-                                                Constants.ArmConstants.LOW_LYING_CONE_POSITION,
-                                                m_Arm));
-                JoystickButtons.opA.whileTrue(// default
-                                new ArmPositions(
-                                                Constants.ArmConstants.DEFAULT_POSITION,
-                                                m_Arm));
+
                 JoystickButtons.opDpadL.whileTrue(// feeder slider
                                 new ArmPositions(
                                                 new JointAngles(Math.toRadians(-21.68), Math.toRadians(-33.43),
                                                                 Math.toRadians(-88.5)),
                                                 m_Arm));
+                JoystickButtons.oplWing.whileTrue(new InstantCommand(() -> {
+                        m_robotDrive.setPresetEnabled(true, 0);
+
+                }));
+                // JoystickButtons.oprWing.whileTrue(new ConeAlign(m_robotDrive));
         }
         /**
          * 

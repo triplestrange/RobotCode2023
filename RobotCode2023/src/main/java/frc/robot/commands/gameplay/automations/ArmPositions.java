@@ -45,9 +45,9 @@ public class ArmPositions extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs(sAngle - arm.getShoulder()) < Constants.ArmConstants.ERROR_IN_RADIANS &&
-        Math.abs(eAngle - arm.getElbow()) < Constants.ArmConstants.ERROR_IN_RADIANS &&
-        Math.abs(wAngle - arm.getWrist()) < Constants.ArmConstants.ERROR_IN_RADIANS) {
+    if ((arm.shoulderPID.getSetpoint().equals(arm.shoulderPID.getGoal()) &&
+        arm.elbowPID.getSetpoint().equals(arm.elbowPID.getGoal()) &&
+        arm.wristPID.getSetpoint().equals(arm.wristPID.getGoal()))) {
       return true;
     }
     return false;
