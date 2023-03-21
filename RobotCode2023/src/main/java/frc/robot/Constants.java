@@ -202,7 +202,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     // Basic Commands
-    
+
     // HashMap for PathPlanner
     // bottom is limelight side, top is opposite
     public static HashMap<String, Command> eventMap = new HashMap<>();

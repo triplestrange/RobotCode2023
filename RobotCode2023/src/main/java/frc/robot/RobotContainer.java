@@ -208,9 +208,10 @@ public class RobotContainer {
 
                 JoystickButtons.opDpadL.whileTrue(// feeder slider
                                 new ArmPositions(
-                                                new JointAngles(Math.toRadians(-21.68), Math.toRadians(-33.43),
-                                                                Math.toRadians(-88.5)),
+                                                new JointAngles(Math.toRadians(12.02), Math.toRadians(61),
+                                                                Math.toRadians(37.5)),
                                                 m_Arm));
+
                 JoystickButtons.oplWing.whileTrue(new InstantCommand(() -> {
                         m_robotDrive.setPresetEnabled(true, 0);
 
