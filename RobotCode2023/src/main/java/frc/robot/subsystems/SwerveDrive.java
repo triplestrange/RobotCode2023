@@ -324,7 +324,7 @@ public class SwerveDrive extends SubsystemBase {
     if (tv > 0.5 && tempRobotPose.length >= 7) {
       visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
       m_odometry.addVisionMeasurement(visionPose,
-          Timer.getFPGATimestamp() - tempRobotPose[6] / 1000 /*- (tl/1000.0) - (cl/1000.0)*/);
+          Timer.getFPGATimestamp() - tempRobotPose[6] / 1000.0 /*- (tl/1000.0) - (cl/1000.0)*/);
     }
     // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
   }
