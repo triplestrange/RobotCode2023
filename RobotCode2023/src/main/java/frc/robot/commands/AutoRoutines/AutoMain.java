@@ -213,25 +213,26 @@ public class AutoMain extends CommandBase {
 
         }
 
-        public Command bottomOneConeOneCube() {
-                PathPlannerTrajectory bottomOneConeOneCubeLeave = PathPlanner.loadPath("bottomOneConeOneCube",
-                                new PathConstraints(4,
-                                                3));
+        // public Command bottomOneConeOneCube() {
+        // PathPlannerTrajectory bottomOneConeOneCubeLeave =
+        // PathPlanner.loadPath("bottomOneConeOneCube",
+        // new PathConstraints(4,
+        // 3));
 
-                return new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                                .andThen(runOutakeForTime(0.3))
-                                .andThen((new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
-                                                .alongWith(new WaitCommand(1)
-                                                                .andThen(new FollowPathWithEvents(
-                                                                                m_Drive.followTrajectoryCommand(
-                                                                                                bottomOneConeOneCubeLeave,
-                                                                                                true),
-                                                                                bottomOneConeOneCubeLeave.getMarkers(),
-                                                                                Constants.AutoConstants.eventMap))
-                                                                .alongWith(runIntakeForTime(4.3))))
-                                .andThen(scoreHigh());
+        // return new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
+        // .andThen(runOutakeForTime(0.3))
+        // .andThen((new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
+        // .alongWith(new WaitCommand(1)
+        // .andThen(new FollowPathWithEvents(
+        // m_Drive.followTrajectoryCommand(
+        // bottomOneConeOneCubeLeave,
+        // true),
+        // bottomOneConeOneCubeLeave.getMarkers(),
+        // Constants.AutoConstants.eventMap))
+        // .alongWith(runIntakeForTime(4.3))))
+        // .andThen(scoreHigh());
 
-        }
+        // }
 
         // public Command topOneConeOneCubeBalance() {
         // List<PathPlannerTrajectory> topOneConeOneCubeBalance =

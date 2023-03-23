@@ -177,7 +177,7 @@ public final class Constants {
         Math.toRadians(-139.75),
         Math.toRadians(95.84));
     public final static JointAngles LOW_CUBE_POSITION = new JointAngles(Math.toRadians(-42.7), Math.toRadians(-133.7),
-        Math.toRadians(37.55));
+        Math.toRadians(30.45));
 
     public final static Pose2d FEEDER_POSITION = new Pose2d(1.240994, 1.362817, Rotation2d.fromDegrees(-38));
 
@@ -202,7 +202,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     // Basic Commands
-    
+
     // HashMap for PathPlanner
     // bottom is limelight side, top is opposite
     public static HashMap<String, Command> eventMap = new HashMap<>();
