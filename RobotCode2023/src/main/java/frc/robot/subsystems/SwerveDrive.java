@@ -315,13 +315,13 @@ public class SwerveDrive extends SubsystemBase {
 
     if (m_Robot.allianceColor == Alliance.Blue) {
       tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue")
-          .getDoubleArray(new double[7]);
+          .getDoubleArray(new double[1]);
     } else {
       tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired")
-          .getDoubleArray(new double[7]);
+          .getDoubleArray(new double[1]);
     }
 
-    if (tv > 0.5 && tempRobotPose.length >= 7) {
+    if (tv > 0.5 && tempRobotPose.length > 1) {
       visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
       m_odometry.addVisionMeasurement(visionPose,
           Timer.getFPGATimestamp() - tempRobotPose[6]/*- (tl/1000.0) - (cl/1000.0)*/);
