@@ -46,20 +46,14 @@ public final class Constants {
   public static final int LIMELIGHT = 18;
 
   public static final class SwerveConstants {
-    // Port which the steering encoders are plugged into
-    public static final int FL_ENCODER = 0;
-    public static final int FR_ENCODER = 1;
-    public static final int BL_ENCODER = 2;
-    public static final int BR_ENCODER = 3;
 
     public static final int IL_ENC = 4;
     public static final int IR_ENC = 5;
 
-    // add offsets for absolute encoders
-    public static final int FL_OFFSET = 0;
-    public static final int FR_OFFSET = 0;
-    public static final int BL_OFFSET = 0;
-    public static final int BR_OFFSET = 0;
+    public static final int IL_PROX_ENC = 3;
+    public static final int IR_PROX_ENC = 4;
+    // centimeters
+    public static final double PROX_DIS = 8.5;
 
     public static final double kMaxSpeedMetersPerSecond = 4.42;
     public static final double climbMaxSpeedMetersPerSecond = 1;
@@ -138,6 +132,9 @@ public final class Constants {
 
   public static final class ArmConstants {
 
+    public final static int SHOULDER_ENC = 0;
+    public final static int ELBOW_ENC = 1;
+    public final static int WRIST_ENC = 2;
     // FIXME Change the offsets to current encoder values
     public final static double SHOULDER_OFFSET = Units.degreesToRadians(98.6);
     public final static double ELBOW_OFFSET = Units.degreesToRadians(90);

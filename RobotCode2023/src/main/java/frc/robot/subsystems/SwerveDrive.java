@@ -24,6 +24,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,12 +45,6 @@ import frc.robot.Constants.VisionConstants;
 @SuppressWarnings("PMD.ExcessiveImports")
 public class SwerveDrive extends SubsystemBase {
   private final Robot m_Robot;
-  public PIDController transformX = new PIDController(0.05, 0, 0);
-  public PIDController transformY = new PIDController(0.05, 0, 0);
-  public PIDController rotation = new PIDController(0.05, 0, 0);
-  public double xAutoSpeed = 0;
-  public double yAutoSpeed = 0;
-  public double rAutoSpeed = 0;
   public double rotationPreset = 0;
   public boolean presetEnabled = false;
   public double tv = 0;
@@ -57,6 +53,9 @@ public class SwerveDrive extends SubsystemBase {
 
   private AnalogInput intakeLeft;
   private AnalogInput intakeRight;
+
+  private DigitalInput intakeProxLeft;
+  private DigitalInput intakeProxRight;
 
   // Robot swerve modules
   private final SwerveModule m_frontLeft = new SwerveModule(Electrical.FL_DRIVE,
@@ -116,10 +115,12 @@ public class SwerveDrive extends SubsystemBase {
   public SwerveDrive(Robot m_robot) {
     resetEncoders();
     m_Robot = m_robot;
-    rotation.enableContinuousInput(-Math.PI, Math.PI);
 
     intakeLeft = new AnalogInput(Constants.SwerveConstants.IL_ENC);
     intakeRight = new AnalogInput(Constants.SwerveConstants.IR_ENC);
+
+    intakeProxLeft = new DigitalInput(Constants.SwerveConstants.IL_PROX_ENC);
+    intakeProxRight = new DigitalInput(Constants.SwerveConstants.IR_PROX_ENC);
 
   }
 
@@ -133,14 +134,31 @@ public class SwerveDrive extends SubsystemBase {
     return Rotation2d.fromDegrees((navX.getAngle() + 180) * (SwerveConstants.kGyroReversed ? 1.0 : -1.0));
   }
 
-  // FIXME Use correct math, I forgor
-  public double getDistanceFromSensor(double voltage) {
-    return (1 / (voltage * 1.0 / 1.3) - 0.42);
+  public Boolean getBlocked(DigitalInput proxInput) {
+    Boolean blocked = !proxInput.get();
+    return blocked;
+  }
+
+  public double getDistanceFromSensor(AnalogInput analogInput) {
+    return (1 / (analogInput.getVoltage() * 0.1 / 1.3) - 0.42);
   }
 
   public double getIntakeOffsetFromLeft() {
-    return ((Constants.ArmConstants.INTAKE_SIZE - (getDistanceFromSensor(intakeLeft.getVoltage())
-        + getDistanceFromSensor(intakeRight.getVoltage()))) / 2) + getDistanceFromSensor(intakeLeft.getVoltage());
+    return ((Constants.ArmConstants.INTAKE_SIZE - (getDistanceFromSensor(intakeLeft)
+        + getDistanceFromSensor(intakeRight))) / 2) + getDistanceFromSensor(intakeLeft);
+  }
+
+  public double getIntakeOffset() {
+    double distanceFromLeft = getDistanceFromSensor(intakeLeft);
+    double distanceFromRight = getDistanceFromSensor(intakeRight);
+
+    double gamepieceLength = Constants.ArmConstants.INTAKE_SIZE
+        - (distanceFromLeft + distanceFromRight);
+    if (distanceFromLeft > distanceFromRight) {
+      return distanceFromLeft + gamepieceLength / 2 - Constants.ArmConstants.INTAKE_SIZE / 2;
+    } else {
+      return -distanceFromRight - gamepieceLength / 2 + Constants.ArmConstants.INTAKE_SIZE / 2;
+    }
   }
 
   public boolean getGyroReset() {
@@ -279,55 +297,6 @@ public class SwerveDrive extends SubsystemBase {
 
   }
 
-  public void autoAlignCube(double offset, int ID) {
-
-    Pose2d tagPose = VisionConstants.tagPose[ID - 1];
-
-    if (m_Robot.allianceColor == Alliance.Blue) {
-      tagPose = new Pose2d(tagPose.getX() + 8.27, tagPose.getY() + 4, tagPose.getRotation());
-    } else {
-      tagPose = new Pose2d(8.27 - tagPose.getX(), 4 - tagPose.getY(),
-          tagPose.getRotation().rotateBy(new Rotation2d(Math.PI)));
-    }
-
-    System.out.print("xSpeed " + xAutoSpeed + "; ySpeed " + yAutoSpeed + "; rSpeed " + rAutoSpeed);
-
-    driveTo(
-        new Pose2d(tagPose.getX(), tagPose.getY() + offset * tagPose.getRotation().getCos(), tagPose.getRotation()));
-  }
-
-  public void driveTo(Pose2d targetPose2d) {
-    double xAutoSpeed = transformX.calculate(getPose().getX(), targetPose2d.getX());
-    double yAutoSpeed = transformY.calculate(getPose().getY(), targetPose2d.getY());
-    double rAutoSpeed = rotation.calculate(getAngle().getRadians(), targetPose2d.getRotation().getRadians());
-
-    // Max Speeds
-    xAutoSpeed = MathUtil.clamp(xAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond,
-        SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
-    yAutoSpeed = MathUtil.clamp(yAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond,
-        SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
-
-    drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
-  }
-
-  public void autoAlignConeOrFeeder(double offset) {
-    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
-    // double tx =
-    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-    // double thor =
-    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDouble(0);
-    // double xSpeed = transformX.calculate(tx,0);
-    // double ySpeed = transformY.calculate(thor,0);
-    // double rSpeed = rotation.calculate(getAngle().getRadians(), Math.PI);
-    int ID = optimalID();
-
-    double finalOffset = ID == 5 || ID == 4 ? Constants.VisionConstants.FEEDER_OFFSET_LEFT.getY()
-        : Constants.VisionConstants.CONE_OFFSET_LEFT;
-
-    autoAlignCube(finalOffset * offset, optimalID());
-    // drive(xSpeed, ySpeed, rSpeed, false);
-  }
-
   public void updateOdometry() {
 
     if (m_Robot.allianceColor == Alliance.Blue) {
@@ -443,9 +412,9 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
         .getTable("limelight").getEntry("getpipe").getDouble(0));
     SmartDashboard.putNumber("Has Target?", tv);
-    SmartDashboard.putNumber("xSpeed", xAutoSpeed);
-    SmartDashboard.putNumber("ySpeed", yAutoSpeed);
-    SmartDashboard.putNumber("rSpeed", rAutoSpeed);
+    // SmartDashboard.putNumber("xSpeed", xAutoSpeed);
+    // SmartDashboard.putNumber("ySpeed", yAutoSpeed);
+    // SmartDashboard.putNumber("rSpeed", rAutoSpeed);
     SmartDashboard.putNumber("pitch", navX.getPitch());
     SmartDashboard.putNumber("roll", navX.getRoll());
     SmartDashboard.putNumber("yaw", navX.getYaw());
@@ -455,7 +424,13 @@ public class SwerveDrive extends SubsystemBase {
       SmartDashboard.putNumber("Vision y", tempRobotPose[1]);
       SmartDashboard.putNumber("Vision r", tempRobotPose[5]);
     }
-
+    SmartDashboard.putNumber("Intake Left Voltage", intakeLeft.getVoltage());
+    SmartDashboard.putNumber("Intake Left Reading", getDistanceFromSensor(intakeLeft));
+    SmartDashboard.putNumber("Intake Right Voltage", intakeRight.getVoltage());
+    SmartDashboard.putNumber("Intake Right Reading", getDistanceFromSensor(intakeRight));
+    SmartDashboard.putBoolean("Prox Left Sensor", getBlocked(intakeProxLeft));
+    SmartDashboard.putBoolean("Prox Right Sensor", getBlocked(intakeProxRight));
+    SmartDashboard.putNumber("Intake Offset", getIntakeOffset());
     SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
 
   }

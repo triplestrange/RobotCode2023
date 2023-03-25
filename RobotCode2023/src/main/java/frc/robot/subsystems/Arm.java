@@ -67,9 +67,9 @@ public class Arm extends SubsystemBase {
     wristJoint.setInverted(true);
 
     // encoder to determine offset angle
-    shoulderEncoder = new DutyCycleEncoder(0);
-    elbowEncoder = new DutyCycleEncoder(1);
-    wristEncoder = new DutyCycleEncoder(2);
+    shoulderEncoder = new DutyCycleEncoder(Constants.ArmConstants.SHOULDER_ENC);
+    elbowEncoder = new DutyCycleEncoder(Constants.ArmConstants.ELBOW_ENC);
+    wristEncoder = new DutyCycleEncoder(Constants.ArmConstants.WRIST_ENC);
 
     // Old method without abs encoders
     // shoulderInit = Math.PI / 2;
