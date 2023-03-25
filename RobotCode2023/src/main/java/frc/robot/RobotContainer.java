@@ -131,12 +131,15 @@ public class RobotContainer {
 
                 // Driver Controls
                 //
-                JoystickButtons.dA
-                                .whileTrue(new RunCommand(() -> m_robotDrive.autoAlignCube(0, m_robotDrive.optimalID()),
-                                                m_robotDrive));
-                JoystickButtons.dX
-                                .whileTrue(new RunCommand(() -> m_robotDrive.autoAlignConeOrFeeder(-1), m_robotDrive));
-                JoystickButtons.dB.whileTrue(new RunCommand(() -> m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
+                // JoystickButtons.dA
+                // .whileTrue(new RunCommand(() -> m_robotDrive.autoAlignCube(0,
+                // m_robotDrive.optimalID()),
+                // m_robotDrive));
+                // JoystickButtons.dX
+                // .whileTrue(new RunCommand(() -> m_robotDrive.autoAlignConeOrFeeder(-1),
+                // m_robotDrive));
+                // JoystickButtons.dB.whileTrue(new RunCommand(() ->
+                // m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
                 // JoystickButtons.dlBump.whileTrue(new DriveNormal(m_robotDrive));
                 JoystickButtons.drBump.whileTrue(new DefaultDrive(m_robotDrive, 0.75));
                 JoystickButtons.dlBump.whileTrue(

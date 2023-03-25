@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import javax.lang.model.util.ElementScanner14;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
@@ -154,8 +156,19 @@ public class SwerveDrive extends SubsystemBase {
 
     double gamepieceLength = Constants.ArmConstants.INTAKE_SIZE
         - (distanceFromLeft + distanceFromRight);
-    if (distanceFromLeft > distanceFromRight) {
+    if (getBlocked(intakeProxLeft) && getBlocked(intakeProxRight)) {
+      return 0;
+    } else if ((distanceFromLeft + distanceFromRight) >= Constants.ArmConstants.INTAKE_SIZE) {
+      if (getBlocked(intakeProxRight)) {
+        return Constants.ArmConstants.INTAKE_SIZE / 2;
+      } else if (getBlocked(intakeProxLeft)) {
+        return Constants.ArmConstants.INTAKE_SIZE / 2 - Constants.ArmConstants.INTAKE_SIZE;
+      } else {
+        return 0;
+      }
+    } else if (distanceFromLeft > distanceFromRight) {
       return distanceFromLeft + gamepieceLength / 2 - Constants.ArmConstants.INTAKE_SIZE / 2;
+
     } else {
       return -distanceFromRight - gamepieceLength / 2 + Constants.ArmConstants.INTAKE_SIZE / 2;
     }
