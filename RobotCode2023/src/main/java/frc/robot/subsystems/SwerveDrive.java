@@ -450,9 +450,11 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("roll", navX.getRoll());
     SmartDashboard.putNumber("yaw", navX.getYaw());
     SmartDashboard.putString("Alliance Color", m_Robot.allianceColor.toString());
-    SmartDashboard.putNumber("Vision x", tempRobotPose[0]);
-    SmartDashboard.putNumber("Vision y", tempRobotPose[1]);
-    SmartDashboard.putNumber("Vision r", tempRobotPose[5]);
+    if (tempRobotPose.length >= 7) {
+      SmartDashboard.putNumber("Vision x", tempRobotPose[0]);
+      SmartDashboard.putNumber("Vision y", tempRobotPose[1]);
+      SmartDashboard.putNumber("Vision r", tempRobotPose[5]);
+    }
 
     SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
 

@@ -188,8 +188,8 @@ public class RobotContainer {
                                                 m_Arm));
                 JoystickButtons.opB.whileTrue(// feeder slope
                                 new ArmPositions(
-                                                new JointAngles(Math.toRadians(-2), Math.toRadians(-162.5),
-                                                                Math.toRadians(115.2)),
+                                                new JointAngles(Math.toRadians(-16), Math.toRadians(-165.1),
+                                                                Math.toRadians(137.8)),
                                                 m_Arm));
                 JoystickButtons.opDpadD.whileTrue(// lying cone
                                 new ArmPositions(

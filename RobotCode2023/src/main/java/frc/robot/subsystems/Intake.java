@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
     super();
     rollers = new CANSparkMax(Electrical.ROLLERS, MotorType.kBrushless);
 
-    rollers.setSmartCurrentLimit(30);
+    rollers.setSmartCurrentLimit(20);
     rollers.setIdleMode(IdleMode.kBrake);
     // encoder to determine offset angle
   }

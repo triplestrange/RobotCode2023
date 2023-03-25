@@ -52,8 +52,8 @@ public final class Constants {
     public static final int BL_ENCODER = 2;
     public static final int BR_ENCODER = 3;
 
-    public static final int IL_ENC = 0;
-    public static final int IR_ENC = 0;
+    public static final int IL_ENC = 4;
+    public static final int IR_ENC = 5;
 
     // add offsets for absolute encoders
     public static final int FL_OFFSET = 0;
