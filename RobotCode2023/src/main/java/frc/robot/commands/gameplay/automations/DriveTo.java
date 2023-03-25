@@ -28,6 +28,7 @@ public class DriveTo extends CommandBase {
   private SwerveDrive m_SwerveDrive;
   private Robot m_Robot;
   private Pose2d tagPose;
+  private Pose2d targetPose;
 
   /** Creates a new Approach. */
   /*
@@ -59,8 +60,8 @@ public class DriveTo extends CommandBase {
           tagPose.getRotation().rotateBy(new Rotation2d(Math.PI)));
     }
 
-    tagPose = new Pose2d(tagPose.getX(),
-        tagPose.getY() + finalOffset * offset,
+    targetPose = new Pose2d(tagPose.getX(),
+        tagPose.getY() + (finalOffset * offset) + m_SwerveDrive.getIntakeOffset(),
         tagPose.getRotation());
 
   }
@@ -68,9 +69,9 @@ public class DriveTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    xAutoSpeed = transformX.calculate(m_SwerveDrive.getPose().getX(), tagPose.getX());
-    yAutoSpeed = transformY.calculate(m_SwerveDrive.getPose().getY(), tagPose.getY());
-    rAutoSpeed = rotation.calculate(m_SwerveDrive.getAngle().getRadians(), tagPose.getRotation().getRadians());
+    xAutoSpeed = transformX.calculate(m_SwerveDrive.getPose().getX(), targetPose.getX());
+    yAutoSpeed = transformY.calculate(m_SwerveDrive.getPose().getY(), targetPose.getY());
+    rAutoSpeed = rotation.calculate(m_SwerveDrive.getAngle().getRadians(), targetPose.getRotation().getRadians());
     // Max Speeds
     xAutoSpeed = MathUtil.clamp(xAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond,
         SwerveConstants.autoAlignMaxSpeedMetersPerSecond);

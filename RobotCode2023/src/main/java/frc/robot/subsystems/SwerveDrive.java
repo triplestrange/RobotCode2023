@@ -159,9 +159,9 @@ public class SwerveDrive extends SubsystemBase {
     if (getBlocked(intakeProxLeft) && getBlocked(intakeProxRight)) {
       return 0;
     } else if ((distanceFromLeft + distanceFromRight) >= Constants.ArmConstants.INTAKE_SIZE) {
-      if (getBlocked(intakeProxRight)) {
+      if (getBlocked(intakeProxLeft)) {
         return Constants.ArmConstants.INTAKE_SIZE / 2;
-      } else if (getBlocked(intakeProxLeft)) {
+      } else if (getBlocked(intakeProxRight)) {
         return Constants.ArmConstants.INTAKE_SIZE / 2 - Constants.ArmConstants.INTAKE_SIZE;
       } else {
         return 0;
