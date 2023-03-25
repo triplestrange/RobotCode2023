@@ -23,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,6 +54,9 @@ public class SwerveDrive extends SubsystemBase {
   public double tv = 0;
   Pose2d visionPose = new Pose2d();
   double[] tempRobotPose;
+
+  private AnalogInput intakeLeft;
+  private AnalogInput intakeRight;
 
   // Robot swerve modules
   private final SwerveModule m_frontLeft = new SwerveModule(Electrical.FL_DRIVE,
@@ -114,6 +118,9 @@ public class SwerveDrive extends SubsystemBase {
     m_Robot = m_robot;
     rotation.enableContinuousInput(-Math.PI, Math.PI);
 
+    intakeLeft = new AnalogInput(Constants.SwerveConstants.IL_ENC);
+    intakeRight = new AnalogInput(Constants.SwerveConstants.IR_ENC);
+
   }
 
   /**
@@ -124,6 +131,16 @@ public class SwerveDrive extends SubsystemBase {
   public Rotation2d getAngle() {
     // Negating the angle because WPILib gyros are CW positive.
     return Rotation2d.fromDegrees((navX.getAngle() + 180) * (SwerveConstants.kGyroReversed ? 1.0 : -1.0));
+  }
+
+  // FIXME Use correct math, I forgor
+  public double getDistanceFromSensor(double voltage) {
+    return (1 / (voltage * 1.0 / 1.3) - 0.42);
+  }
+
+  public double getIntakeOffsetFromLeft() {
+    return ((Constants.ArmConstants.INTAKE_SIZE - (getDistanceFromSensor(intakeLeft.getVoltage())
+        + getDistanceFromSensor(intakeRight.getVoltage()))) / 2) + getDistanceFromSensor(intakeLeft.getVoltage());
   }
 
   public boolean getGyroReset() {
