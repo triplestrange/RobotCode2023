@@ -8,7 +8,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -22,13 +25,13 @@ public class DriveTo extends CommandBase {
   public double yAutoSpeed = 0;
   public double rAutoSpeed = 0;
   public double offset;
-  public PIDController transformX = new PIDController(0.05, 0, 0);
-  public PIDController transformY = new PIDController(0.05, 0, 0);
-  public PIDController rotation = new PIDController(0.05, 0, 0);
+  public PIDController transformX = new PIDController(2, 0, 0);
+  public PIDController transformY = new PIDController(2, 0, 0);
+  public PIDController rotation = new PIDController(1.5, 0, 0);
   private SwerveDrive m_SwerveDrive;
   private Robot m_Robot;
   private Pose2d tagPose;
-  private Pose2d targetPose;
+  public Pose2d targetPose;
 
   /** Creates a new Approach. */
   /*
@@ -49,20 +52,26 @@ public class DriveTo extends CommandBase {
   @Override
   public void initialize() {
     int ID = m_SwerveDrive.optimalID();
+    SmartDashboard.putNumber("ID", ID);
     double finalOffset = ID == 5 || ID == 4 ? Constants.VisionConstants.FEEDER_OFFSET_LEFT.getY()
         : Constants.VisionConstants.CONE_OFFSET_LEFT;
     tagPose = Constants.VisionConstants.tagPose[ID - 1];
-
+    SmartDashboard.putNumber("TAGPOSE X", tagPose.getX());
+    SmartDashboard.putNumber("TAGPOSE Y", tagPose.getY());
+    SmartDashboard.putNumber("TAGPOSE R", tagPose.getRotation().getDegrees());
     if (m_Robot.allianceColor == Alliance.Blue) {
       tagPose = new Pose2d(tagPose.getX() + 8.27, tagPose.getY() + 4, tagPose.getRotation());
     } else {
       tagPose = new Pose2d(8.27 - tagPose.getX(), 4 - tagPose.getY(),
           tagPose.getRotation().rotateBy(new Rotation2d(Math.PI)));
     }
+    SmartDashboard.putNumber("TAGPOSE X updated", tagPose.getX());
+    SmartDashboard.putNumber("TAGPOSE Y updated", tagPose.getY());
+    SmartDashboard.putNumber("TAGPOSE R updated", tagPose.getRotation().getDegrees());
 
     targetPose = new Pose2d(tagPose.getX(),
-        tagPose.getY() + (finalOffset * offset) + m_SwerveDrive.getIntakeOffset(),
-        tagPose.getRotation());
+        tagPose.getY() + (finalOffset * offset) - Units.inchesToMeters(1.5) + m_SwerveDrive.getIntakeOffset() / 100,
+        tagPose.getRotation().plus(Rotation2d.fromDegrees(180)));
 
   }
 
@@ -77,8 +86,17 @@ public class DriveTo extends CommandBase {
         SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
     yAutoSpeed = MathUtil.clamp(yAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond,
         SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
-    rAutoSpeed = MathUtil.clamp(yAutoSpeed, -0.5,
-        0.5);
+    rAutoSpeed = MathUtil.clamp(rAutoSpeed, -4,
+        4);
+    SmartDashboard.putNumber("target pose x", targetPose.getX());
+    SmartDashboard.putNumber("target pose y", targetPose.getY());
+    SmartDashboard.putNumber("target Rotation", targetPose.getRotation().getDegrees());
+    if (m_Robot.allianceColor == Alliance.Red) {
+      m_SwerveDrive.m_field.getObject("target").setPose(8.27 * 2 - targetPose.getX(), 8 - targetPose.getY(),
+          targetPose.getRotation().plus(Rotation2d.fromDegrees(180)));
+    } else {
+      m_SwerveDrive.m_field.getObject("target").setPose(targetPose);
+    }
     m_SwerveDrive.drive(xAutoSpeed, yAutoSpeed, rAutoSpeed, true);
   }
 
@@ -90,12 +108,14 @@ public class DriveTo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((Math.abs(m_SwerveDrive.getPose().getX() - tagPose.getX()) >= 0.01) &&
-        (Math.abs(m_SwerveDrive.getPose().getY() - tagPose.getY()) >= 0.01) &&
-        (Math.abs(m_SwerveDrive.getPose().getRotation().getRadians() - tagPose.getRotation().getRadians()) >= 0.01)) {
-      return true;
-    } else {
-      return false;
-    }
+    // if ((Math.abs(m_SwerveDrive.getPose().getX() - targetPose.getX()) <= 0.05) &&
+    // (Math.abs(m_SwerveDrive.getPose().getY() - targetPose.getY()) <= 0.05) &&
+    // (Math
+    // .abs(m_SwerveDrive.getPose().getRotation().getRadians() -
+    // targetPose.getRotation().getRadians()) <= 0.02)) {
+    // return true;
+    // } else {
+    return false;
+    // }
   }
 }

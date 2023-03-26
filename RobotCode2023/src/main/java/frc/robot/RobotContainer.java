@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickButtons;
 import frc.robot.commands.AutoRoutines.AutoMain;
 import frc.robot.commands.gameplay.automations.Balance;
+import frc.robot.commands.gameplay.automations.DriveTo;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.gameplay.automations.ArmPositions;
 import frc.robot.subsystems.Arm;
@@ -130,18 +131,15 @@ public class RobotContainer {
         private void configureButtonBindings() {
 
                 // Driver Controls
-                //
-                // JoystickButtons.dA
-                // .whileTrue(new RunCommand(() -> m_robotDrive.autoAlignCube(0,
-                // m_robotDrive.optimalID()),
-                // m_robotDrive));
-                // JoystickButtons.dX
-                // .whileTrue(new RunCommand(() -> m_robotDrive.autoAlignConeOrFeeder(-1),
-                // m_robotDrive));
-                // JoystickButtons.dB.whileTrue(new RunCommand(() ->
-                // m_robotDrive.autoAlignConeOrFeeder(1), m_robotDrive));
-                // JoystickButtons.dlBump.whileTrue(new DriveNormal(m_robotDrive));
-                JoystickButtons.drBump.whileTrue(new DefaultDrive(m_robotDrive, 0.75));
+                // Auto Align
+                JoystickButtons.dA
+                                .whileTrue(new DriveTo(0, m_robotDrive, m_Robot));
+                JoystickButtons.dX
+                                .whileTrue(new DriveTo(1, m_robotDrive, m_Robot));
+                JoystickButtons.dB.whileTrue(new DriveTo(-1, m_robotDrive, m_Robot));
+                // Drive Commands
+                JoystickButtons.drBump.whileTrue(
+                                new DefaultDrive(m_robotDrive, 0.75));
                 JoystickButtons.dlBump.whileTrue(
                                 new DefaultDrive(m_robotDrive, Constants.SwerveConstants.kMaxSpeedMetersPerSecond));
 

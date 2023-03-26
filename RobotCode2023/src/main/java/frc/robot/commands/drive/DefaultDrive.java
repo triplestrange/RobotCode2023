@@ -52,9 +52,6 @@ public class DefaultDrive extends CommandBase {
 
     if (Math.abs(JoystickButtons.m_driverController.getRightX()) > 0.075) {
       m_swerve.setPresetEnabled(false);
-      if (Math.abs(JoystickButtons.m_driverController.getRightX()) <= deadzone) {
-        speedR = 0;
-      }
     }
 
     double rot = rotation_controller.calculate(m_swerve.getAngle().getDegrees(), m_swerve.getRotationPreset());
@@ -70,12 +67,13 @@ public class DefaultDrive extends CommandBase {
 
       speedR = rot;
     } else {
+      if (Math.abs(JoystickButtons.m_driverController.getRightX()) <= deadzone) {
+        speedR = 0;
+      }
       // rotation was reversed
-      speedR = JoystickButtons.m_driverController.getRightX() * -4;
-    }
-
-    if (speed == Constants.SwerveConstants.kMaxSpeedMetersPerSecond) {
-      deadzone = 0.1;
+      else {
+        speedR = JoystickButtons.m_driverController.getRightX() * -4;
+      }
     }
 
     if (Math.abs(JoystickButtons.m_driverController.getLeftY()) <= deadzone) {
@@ -86,8 +84,8 @@ public class DefaultDrive extends CommandBase {
     }
 
     m_swerve.drive(
-        speedY,
-        speedX,
+        -speedY,
+        -speedX,
         speedR,
         true);
 

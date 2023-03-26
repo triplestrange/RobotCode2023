@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -52,6 +53,7 @@ public class SwerveDrive extends SubsystemBase {
   public double tv = 0;
   Pose2d visionPose = new Pose2d();
   double[] tempRobotPose;
+  public Field2d m_field = new Field2d();
 
   private AnalogInput intakeLeft;
   private AnalogInput intakeRight;
@@ -109,7 +111,10 @@ public class SwerveDrive extends SubsystemBase {
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
-      }, new Pose2d(0, 0, new Rotation2d(0)));
+      },
+      new Pose2d(0, 0, new Rotation2d(0)),
+      Constants.VisionConstants.STATE_STD_DEVS,
+      Constants.VisionConstants.VISION_MEASUREMENT_STD_DEVS);
 
   /**
    * Creates a new DriveSubsystem.
@@ -133,7 +138,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   public Rotation2d getAngle() {
     // Negating the angle because WPILib gyros are CW positive.
-    return Rotation2d.fromDegrees((navX.getAngle() + 180) * (SwerveConstants.kGyroReversed ? 1.0 : -1.0));
+    return Rotation2d.fromDegrees((navX.getAngle()) * (SwerveConstants.kGyroReversed ? 1.0 : -1.0));
   }
 
   public Boolean getBlocked(DigitalInput proxInput) {
@@ -195,6 +200,13 @@ public class SwerveDrive extends SubsystemBase {
             m_rearRight.getPosition()
         });
     updateOdometry();
+    if (m_Robot.allianceColor == Alliance.Red) {
+      m_field.setRobotPose(8.27 * 2 - m_odometry.getEstimatedPosition().getX(),
+          8 - m_odometry.getEstimatedPosition().getY(),
+          m_odometry.getEstimatedPosition().getRotation().plus(Rotation2d.fromDegrees(180)));
+    } else {
+      m_field.setRobotPose(m_odometry.getEstimatedPosition());
+    }
 
     // System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n
     // rSpeed: " + rAutoSpeed);
@@ -286,6 +298,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   public void zeroHeading() {
     navX.reset();
+    resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), Rotation2d.fromDegrees(0)));
     gyroReset = true;
   }
 
@@ -296,7 +309,7 @@ public class SwerveDrive extends SubsystemBase {
       if (robotPose.getX() > 8.27) {
         return 5;
       } else {
-        return robotPose.getY() <= 4 + 2.098 ? 1 : robotPose.getY() <= 4 + 0.422 ? 2 : 3;
+        return robotPose.getY() >= 4 + 2.098 ? 1 : robotPose.getY() >= 4 + 0.422 ? 2 : 3;
       }
     }
 
@@ -321,7 +334,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     if (tv > 0.5 && tempRobotPose.length > 1) {
-      visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], Rotation2d.fromDegrees(tempRobotPose[5]));
+      visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], getPose().getRotation());
       m_odometry.addVisionMeasurement(visionPose,
           Timer.getFPGATimestamp() - tempRobotPose[6] / 1000.0 /*- (tl/1000.0) - (cl/1000.0)*/);
     }
@@ -445,6 +458,8 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putBoolean("Prox Right Sensor", getBlocked(intakeProxRight));
     SmartDashboard.putNumber("Intake Offset", getIntakeOffset());
     SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
+
+    SmartDashboard.putData("Field", m_field);
 
   }
 }

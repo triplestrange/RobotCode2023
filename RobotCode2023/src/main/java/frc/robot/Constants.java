@@ -47,17 +47,17 @@ public final class Constants {
 
   public static final class SwerveConstants {
 
-    public static final int IL_ENC = 4;
-    public static final int IR_ENC = 5;
+    public static final int IL_ENC = 6;
+    public static final int IR_ENC = 4;
 
-    public static final int IL_PROX_ENC = 3;
-    public static final int IR_PROX_ENC = 4;
+    public static final int IL_PROX_ENC = 4;
+    public static final int IR_PROX_ENC = 3;
     // centimeters
     public static final double PROX_DIS = 8.5;
 
     public static final double kMaxSpeedMetersPerSecond = 4.42;
     public static final double climbMaxSpeedMetersPerSecond = 1;
-    public static final double autoAlignMaxSpeedMetersPerSecond = 0.1;
+    public static final double autoAlignMaxSpeedMetersPerSecond = 1;
 
     public static final boolean kGyroReversed = true;
 
@@ -109,13 +109,13 @@ public final class Constants {
   public static final class VisionConstants {
     public final static String TABLE_NAME = "table";
     // Only for the Red Alliance Wall
-    public final static Translation2d SCORING_OFFSET = new Translation2d(-0.762, 0);
+    public final static Translation2d SCORING_OFFSET = new Translation2d(-0.77, 0);
     public final static Translation2d FEEDER_OFFSET_LEFT = new Translation2d(-0.41275, 0.5334);
     public final static double CONE_OFFSET_LEFT = 0.5588;
     // This is for both
     public final static Pose2d[] tagPose = new Pose2d[] {
         new Pose2d(7.24310 + SCORING_OFFSET.getX(), -2.93659, new Rotation2d(0)),
-        new Pose2d(7.24310 + SCORING_OFFSET.getX(), 1.26019, new Rotation2d(0)),
+        new Pose2d(7.24310 + SCORING_OFFSET.getX(), -1.26019, new Rotation2d(0)),
         new Pose2d(7.24310 + SCORING_OFFSET.getX(), 0.41621, new Rotation2d(0)),
         new Pose2d(7.90832 + FEEDER_OFFSET_LEFT.getX(), 2.74161, new Rotation2d(0)),
         new Pose2d(-7.90832 - FEEDER_OFFSET_LEFT.getX(), 2.74161, new Rotation2d(Math.PI)),
@@ -125,8 +125,8 @@ public final class Constants {
 
     };
 
-    public static final Vector<N3> STATE_STD_DEVS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
-    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
+    public static final Vector<N3> STATE_STD_DEVS = VecBuilder.fill(0.05, 0.05, 1);
+    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(5, 5, 1000000000);
 
   }
 
@@ -138,7 +138,7 @@ public final class Constants {
     // FIXME Change the offsets to current encoder values
     public final static double SHOULDER_OFFSET = Units.degreesToRadians(98.6);
     public final static double ELBOW_OFFSET = Units.degreesToRadians(90);
-    public final static double WRIST_OFFSET = Units.degreesToRadians(118.4);
+    public final static double WRIST_OFFSET = Units.degreesToRadians(0);
     // Gear ratios
     public final static double GR_SHOULDER = 75 * (64.0 / 14);
     public final static double GR_ELBOW = 75 * (80.0 / 48);
