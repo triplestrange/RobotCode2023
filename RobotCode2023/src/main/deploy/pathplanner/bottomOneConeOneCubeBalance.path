@@ -27,16 +27,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.743447670334607,
-        "y": 1.002010590709035
+        "x": 6.761961008584595,
+        "y": 0.9269616085244441
       },
       "prevControl": {
-        "x": 6.0682222538527,
-        "y": 1.0373278276570677
+        "x": 6.086735592102688,
+        "y": 0.9622788454724769
       },
       "nextControl": {
-        "x": 6.0682222538527,
-        "y": 1.0373278276570677
+        "x": 6.086735592102688,
+        "y": 0.9622788454724769
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -72,6 +72,7 @@
         "names": [
           "high",
           "outtakeTimed",
+          "intakeOff",
           "default"
         ],
         "executionBehavior": "sequential",
@@ -140,12 +141,11 @@
     {
       "position": 1.2,
       "names": [
-        "intakeOff",
-        "mid"
+        "intakeOff"
       ]
     },
     {
-      "position": 0.01,
+      "position": 0.5454545454545455,
       "names": [
         "pickupCube"
       ]

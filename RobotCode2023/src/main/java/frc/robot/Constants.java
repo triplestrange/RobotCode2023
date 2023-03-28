@@ -180,10 +180,12 @@ public final class Constants {
         Math.toRadians(-139.75),
         Math.toRadians(95.84));
     public final static JointAngles LOW_CUBE_POSITION = new JointAngles(Math.toRadians(-42.7), Math.toRadians(-133.7),
-        Math.toRadians(30.45));
+        Math.toRadians(37.55));
 
-    public final static Pose2d FEEDER_POSITION = new Pose2d(1.240994, 1.362817, Rotation2d.fromDegrees(-38));
-
+    public final static JointAngles SINGLE_FEEDER_STATION = new JointAngles(Math.toRadians(-16), Math.toRadians(-165.1),
+        Math.toRadians(137.8));
+    public final static JointAngles DOUBLE_FEEDER_STATION = new JointAngles(Math.toRadians(12.02), Math.toRadians(61),
+        Math.toRadians(37.5));
     // Trajectory config
     public final static TrajectoryConfig config = new TrajectoryConfig(3, 1);
   }
@@ -208,26 +210,6 @@ public final class Constants {
 
     // HashMap for PathPlanner
     // bottom is limelight side, top is opposite
-    public static HashMap<String, Command> eventMap = new HashMap<>();
-
-    public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
-      // scoring
-      eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm));
-      eventMap.put("mid", new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm));
-      eventMap.put("low", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
-      eventMap.put("default", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
-      // pickup
-      eventMap.put("pickupConeUp", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
-      eventMap.put("pickupConeDown", new ArmPositions(Constants.ArmConstants.LOW_LYING_CONE_POSITION, m_Arm));
-      eventMap.put("pickupCube", new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm));
-      // intake
-      eventMap.put("intake", new InstantCommand(m_Intake::runIntake, m_Intake));
-      eventMap.put("outtakeTimed", new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(0.3));
-      eventMap.put("outtake", new InstantCommand(m_Intake::runOutake, m_Intake));
-      eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
-
-    };
-
   }
 
   public static final class Electrical {

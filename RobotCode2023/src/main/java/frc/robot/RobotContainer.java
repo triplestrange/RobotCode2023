@@ -72,13 +72,20 @@ public class RobotContainer {
                 // Two Game Piece Top
                 choose.addOption("Feeder One Cone One Cube",
                                 m_Autos.topOneConeOneCube());
-                // choose.addOption("Feeder One Cone One Cube Balance",
-                // m_Autos.topOneConeOneCubeBalance());
+                choose.addOption("Feeder One Cone One Cube Balance",
+                                m_Autos.topOneConeOneCubeBalance());
                 // Two Game Piece Bottom
-                // choose.addOption("!Feeder One Cone One Cube",
-                // m_Autos.bottomOneConeOneCube());
-                // choose.addOption("!Feeder One Cone One Cube Balance",
-                // m_Autos.bottomOneConeOneCubeBalance());
+                choose.addOption("!Feeder One Cone One Cube",
+                                m_Autos.bottomOneConeOneCube());
+                choose.addOption("!Feeder One Cone One Cube Balance",
+                                m_Autos.bottomOneConeOneCubeBalance());
+
+                // Three Game Piece Top
+                choose.addOption("Feeder Low Three Cube",
+                                m_Autos.topLowThreeCube());
+                // Three Game Piece Bottom
+                choose.addOption("!Feeder Low Three Cube",
+                                m_Autos.bottomLowThreeCube());
                 // Testing
                 choose.addOption("Simultaneous Movement Test",
                                 m_Autos.testSimultaneousMovement());
@@ -147,21 +154,19 @@ public class RobotContainer {
                 JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
                 JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
 
-                new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getLeftTriggerAxis()) > 0.05)
-                                .onTrue(new InstantCommand(() -> {
-                                        m_robotDrive.setPresetEnabled(true, -180.0);
-                                }));
+                // new Trigger(() ->
+                // Math.abs(JoystickButtons.m_driverController.getLeftTriggerAxis()) > 0.05)
+                // .onTrue(new InstantCommand(() -> {
+                // m_robotDrive.setPresetEnabled(true, -180.0);
+                // }));
 
-                new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getRightTriggerAxis()) > 0.05)
-                                .onTrue(new InstantCommand(() -> {
-                                        m_robotDrive.setPresetEnabled(true, 0);
+                // new Trigger(() ->
+                // Math.abs(JoystickButtons.m_driverController.getRightTriggerAxis()) > 0.05)
+                // .onTrue(new InstantCommand(() -> {
+                // m_robotDrive.setPresetEnabled(true, 0);
 
-                                }));
+                // }));
 
-                // JoystickButtons.dDpadL.onTrue(new DriveDir(m_robotDrive, 180));
-                // JoystickButtons.dDpadD.onTrue(new DriveDir(m_robotDrive, 0));
-
-                // ArmTrajectory(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 // Y | high: 29.25, 29.11, 34
                 // X | mid: -
                 // dR| cube: -42.7,-133.7,43.5
@@ -189,8 +194,7 @@ public class RobotContainer {
                                                 m_Arm));
                 JoystickButtons.opB.whileTrue(// feeder slope
                                 new ArmPositions(
-                                                new JointAngles(Math.toRadians(-16), Math.toRadians(-165.1),
-                                                                Math.toRadians(137.8)),
+                                                Constants.ArmConstants.SINGLE_FEEDER_STATION,
                                                 m_Arm));
                 JoystickButtons.opDpadD.whileTrue(// lying cone
                                 new ArmPositions(
@@ -198,26 +202,23 @@ public class RobotContainer {
                                                 m_Arm));
                 JoystickButtons.opDpadR.whileTrue(// cube
                                 new ArmPositions(
-                                                new JointAngles(Math.toRadians(-42.7), Math.toRadians(-133.7),
-                                                                Math.toRadians(37.55)),
+                                                Constants.ArmConstants.LOW_CUBE_POSITION,
                                                 m_Arm));
                 JoystickButtons.opDpadU.whileTrue(
                                 // coneupright
                                 new ArmPositions(
                                                 Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION,
                                                 m_Arm));
-
+                // FIXME Fix position for feeder slider
                 JoystickButtons.opDpadL.whileTrue(// feeder slider
                                 new ArmPositions(
-                                                new JointAngles(Math.toRadians(12.02), Math.toRadians(61),
-                                                                Math.toRadians(37.5)),
+                                                Constants.ArmConstants.DOUBLE_FEEDER_STATION,
                                                 m_Arm));
 
-                JoystickButtons.oplWing.whileTrue(new InstantCommand(() -> {
-                        m_robotDrive.setPresetEnabled(true, 0);
+                // // JoystickButtons.oplWing.whileTrue(new InstantCommand(() -> {
+                // // m_robotDrive.setPresetEnabled(true, 0);
 
-                }));
-                // JoystickButtons.oprWing.whileTrue(new ConeAlign(m_robotDrive));
+                // }));
         }
         /**
          * 

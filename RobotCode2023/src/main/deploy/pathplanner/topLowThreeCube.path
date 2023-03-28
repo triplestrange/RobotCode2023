@@ -17,10 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "high",
           "outtakeTimed",
-          "intakeOff",
-          "pickupCube"
+          "intakeOff"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -54,16 +52,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.743510910334705,
-        "y": 4.598531160252505
+        "x": 6.761961008584595,
+        "y": 4.58930611112756
       },
       "prevControl": {
-        "x": 6.303667402375892,
-        "y": 4.586413831153384
+        "x": 6.322117500625781,
+        "y": 4.577188782028439
       },
       "nextControl": {
-        "x": 6.303667402375892,
-        "y": 4.586413831153384
+        "x": 6.322117500625781,
+        "y": 4.577188782028439
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -104,28 +102,26 @@
     },
     {
       "anchorPoint": {
-        "x": 1.792665765426318,
-        "y": 4.407041231144074
+        "x": 1.7727641979750715,
+        "y": 4.405420504692954
       },
       "prevControl": {
-        "x": 1.7988845793642507,
-        "y": 4.404805128628663
+        "x": 2.1967807284725875,
+        "y": 4.405420504692954
       },
       "nextControl": {
-        "x": 1.7988845793642507,
-        "y": 4.404805128628663
+        "x": 2.1967807284725875,
+        "y": 4.405420504692954
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "high",
           "outtakeTimed",
-          "intakeOff",
-          "default"
+          "intakeOff"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -134,18 +130,18 @@
     },
     {
       "anchorPoint": {
-        "x": 2.315487330361164,
-        "y": 3.2055487423858278
+        "x": 6.023957078589005,
+        "y": 4.377129981253828
       },
       "prevControl": {
-        "x": 1.8081096284891958,
-        "y": 4.404805128628663
+        "x": 3.8929707307267396,
+        "y": 4.921407879625575
       },
       "nextControl": {
-        "x": 2.319081778417675,
-        "y": 3.197052774252256
+        "x": 6.032895194704034,
+        "y": 4.374847085795876
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": -38.33334010909861,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -159,16 +155,19 @@
     },
     {
       "anchorPoint": {
-        "x": 3.837620435977069,
-        "y": 3.214773791510773
+        "x": 6.642035369960311,
+        "y": 3.731376542507686
       },
       "prevControl": {
-        "x": 3.8560705342269577,
-        "y": 3.1870986441359386
+        "x": 6.660485468210201,
+        "y": 3.7037013951328515
       },
-      "nextControl": null,
-      "holonomicAngle": 0,
-      "isReversal": false,
+      "nextControl": {
+        "x": 6.660485468210201,
+        "y": 3.7037013951328515
+      },
+      "holonomicAngle": -41.18592516570963,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -180,7 +179,61 @@
         "waitBehavior": "none",
         "waitTime": 0
       }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.7343092354896368,
+        "y": 3.8789773285068048
+      },
+      "prevControl": {
+        "x": 3.9575460746013515,
+        "y": 6.139114364118299
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "outakeTimed",
+          "intakeOff"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 1.3363636363636366,
+      "names": [
+        "pickupCube",
+        "intake"
+      ]
+    },
+    {
+      "position": 2.354545454545455,
+      "names": [
+        "intakeOff",
+        "default"
+      ]
+    },
+    {
+      "position": 5.027272727272719,
+      "names": [
+        "pickupCube",
+        "intake"
+      ]
+    },
+    {
+      "position": 6.299999999999985,
+      "names": [
+        "intakeOff",
+        "default"
+      ]
+    }
+  ]
 }
