@@ -1,5 +1,6 @@
 package frc.robot.commands.AutoRoutines;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
@@ -39,13 +40,32 @@ public class AutoMain extends CommandBase {
         // Command scoreLow;
 
         // Command balance;
+        public static HashMap<String, Command> eventMap;
+
+        public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
+                // scoring
+                eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm));
+                eventMap.put("mid", new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm));
+                eventMap.put("low", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+                eventMap.put("default", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
+                // pickup
+                eventMap.put("pickupConeUp", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
+                eventMap.put("pickupConeDown", new ArmPositions(Constants.ArmConstants.LOW_LYING_CONE_POSITION, m_Arm));
+                eventMap.put("pickupCube", new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm));
+                // intake
+                eventMap.put("intake", new InstantCommand(m_Intake::runIntake, m_Intake));
+                eventMap.put("outtakeTimed", new RunCommand(m_Intake::runOutake, m_Intake).withTimeout(0.3));
+                eventMap.put("outtake", new InstantCommand(m_Intake::runOutake, m_Intake));
+                eventMap.put("intakeOff", new InstantCommand(m_Intake::intakeOff));
+
+        };
 
         public AutoMain(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
                 // Class Variables
                 this.m_Drive = m_Drive;
                 this.m_Arm = m_Arm;
                 this.m_Intake = m_Intake;
-
+                eventMap = new HashMap<>();
                 autoBuilder = new SwerveAutoBuilder(
                                 m_Drive::getPose, // Pose2d supplier
                                 m_Drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of
@@ -57,7 +77,7 @@ public class AutoMain extends CommandBase {
                                                                // create the rotation controller)
                                 m_Drive::setModuleStates, // Module states consumer used to output to the drive
                                                           // subsystem
-                                AutoConstants.eventMap,
+                                eventMap,
                                 true, // Should the path be automatically mirrored depending on alliance color.
                                       // Optional, defaults to true
                                 m_Drive // The drive subsystem. Used to properly set the requirements of path following
@@ -116,7 +136,7 @@ public class AutoMain extends CommandBase {
                                 .andThen(new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(topOneConeLeave, true),
                                                 topOneConeLeave.getMarkers(),
-                                                Constants.AutoConstants.eventMap));
+                                                eventMap));
         }
 
         public Command topOneConeBalanceCommand() {
@@ -127,7 +147,7 @@ public class AutoMain extends CommandBase {
                                 .andThen(new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(topOneConeBalance, true),
                                                 topOneConeBalance.getMarkers(),
-                                                Constants.AutoConstants.eventMap))
+                                                eventMap))
                                 .andThen(balance());
         }
 
@@ -140,7 +160,7 @@ public class AutoMain extends CommandBase {
                                 .andThen(new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(middleOneConeLeave, true),
                                                 middleOneConeLeave.getMarkers(),
-                                                Constants.AutoConstants.eventMap))
+                                                eventMap))
                                 .andThen(balance());
         }
 
@@ -153,7 +173,7 @@ public class AutoMain extends CommandBase {
                                 .andThen(new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(middleOneConeLeave, true),
                                                 middleOneConeLeave.getMarkers(),
-                                                Constants.AutoConstants.eventMap))
+                                                eventMap))
                                 .andThen(balance());
         }
 
@@ -166,7 +186,7 @@ public class AutoMain extends CommandBase {
                                 .andThen(new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(middleOneConeBalance, true),
                                                 middleOneConeBalance.getMarkers(),
-                                                Constants.AutoConstants.eventMap))
+                                                eventMap))
                                 .andThen(balance());
 
         }
@@ -179,7 +199,7 @@ public class AutoMain extends CommandBase {
                                 .andThen(new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(bottomOneConeLeave, true),
                                                 bottomOneConeLeave.getMarkers(),
-                                                Constants.AutoConstants.eventMap));
+                                                eventMap));
 
         }
 
@@ -191,79 +211,116 @@ public class AutoMain extends CommandBase {
                                 .andThen(new FollowPathWithEvents(
                                                 m_Drive.followTrajectoryCommand(bottomOneConeBalance, true),
                                                 bottomOneConeBalance.getMarkers(),
-                                                Constants.AutoConstants.eventMap)
+                                                eventMap)
                                                 .andThen(new Balance(m_Drive)));
 
         }
 
-        // Two Cone Autos
+        // Two Gamepiece Autos
+        // OLD CODE
+        /*
+         * 
+         * public Command topOneConeOneCube() {
+         * PathPlannerTrajectory topTwoConeLeave =
+         * PathPlanner.loadPath("topOneConeOneCube",
+         * new PathConstraints(4,
+         * 3));
+         * 
+         * return scoreHighReturnLowCube()
+         * .andThen((new FollowPathWithEvents(
+         * m_Drive.followTrajectoryCommand(topTwoConeLeave, true),
+         * topTwoConeLeave.getMarkers(),
+         * Constants.AutoConstants.eventMap))
+         * .alongWith(runIntakeForTime(4.3)))
+         * .andThen(scoreHigh());
+         * 
+         * }
+         * 
+         * 
+         * public Command bottomOneConeOneCube() {
+         * PathPlannerTrajectory bottomOneConeOneCubeLeave =
+         * PathPlanner.loadPath("bottomOneConeOneCube",
+         * new PathConstraints(4,
+         * 3));
+         * 
+         * return new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
+         * .andThen(runOutakeForTime(0.3))
+         * .andThen((new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
+         * .alongWith(new WaitCommand(1)
+         * .andThen(new FollowPathWithEvents(
+         * m_Drive.followTrajectoryCommand(
+         * bottomOneConeOneCubeLeave,
+         * true),
+         * bottomOneConeOneCubeLeave.getMarkers(),
+         * Constants.AutoConstants.eventMap))
+         * .alongWith(runIntakeForTime(4.3))))
+         * .andThen(scoreHigh());
+         * 
+         * }
+         * 
+         */
 
+        // TODO SPEED UP ARM BEFORE RUNNING THESE
         public Command topOneConeOneCube() {
-                PathPlannerTrajectory topTwoConeLeave = PathPlanner.loadPath("topOneConeOneCube",
-                                new PathConstraints(4,
-                                                3));
+                List<PathPlannerTrajectory> topOneConeOneCubeLeave = PathPlanner.loadPathGroup(
+                                "topOneConeOneCube",
+                                new PathConstraints(1,
+                                                1));
 
-                return scoreHighReturnLowCube()
-                                .andThen((new FollowPathWithEvents(
-                                                m_Drive.followTrajectoryCommand(topTwoConeLeave, true),
-                                                topTwoConeLeave.getMarkers(),
-                                                Constants.AutoConstants.eventMap))
-                                                .alongWith(runIntakeForTime(4.3)))
-                                .andThen(scoreHigh());
+                return autoBuilder.fullAuto(topOneConeOneCubeLeave);
 
         }
 
-        // public Command bottomOneConeOneCube() {
-        // PathPlannerTrajectory bottomOneConeOneCubeLeave =
-        // PathPlanner.loadPath("bottomOneConeOneCube",
-        // new PathConstraints(4,
-        // 3));
+        public Command bottomOneConeOneCube() {
+                List<PathPlannerTrajectory> bottomOneConeOneCubeLeave = PathPlanner.loadPathGroup(
+                                "BottomOneConeOneCube",
+                                new PathConstraints(1, 1));
 
-        // return new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-        // .andThen(runOutakeForTime(0.3))
-        // .andThen((new ArmPositions(Constants.ArmConstants.LOW_CUBE_POSITION, m_Arm))
-        // .alongWith(new WaitCommand(1)
-        // .andThen(new FollowPathWithEvents(
-        // m_Drive.followTrajectoryCommand(
-        // bottomOneConeOneCubeLeave,
-        // true),
-        // bottomOneConeOneCubeLeave.getMarkers(),
-        // Constants.AutoConstants.eventMap))
-        // .alongWith(runIntakeForTime(4.3))))
-        // .andThen(scoreHigh());
+                return autoBuilder.fullAuto(bottomOneConeOneCubeLeave);
 
-        // }
+        }
 
-        // public Command topOneConeOneCubeBalance() {
-        // List<PathPlannerTrajectory> topOneConeOneCubeBalance =
-        // PathPlanner.loadPathGroup(
-        // "topOneConeOneCubeBalance",
-        // new PathConstraints(1, 1));
+        public Command topOneConeOneCubeBalance() {
+                List<PathPlannerTrajectory> topOneConeOneCubeBalance = PathPlanner.loadPathGroup(
+                                "topOneConeOneCubeBalance",
+                                new PathConstraints(1, 1));
 
-        // return autoBuilder.fullAuto(topOneConeOneCubeBalance)
-        // .andThen(new Balance(m_Drive));
+                return autoBuilder.fullAuto(topOneConeOneCubeBalance)
+                                .andThen(new Balance(m_Drive));
 
-        // }
+        }
 
-        // public Command bottomOneConeOneCubeBalance() {
-        // List<PathPlannerTrajectory> bottomOneConeOneCubeBalance =
-        // PathPlanner.loadPathGroup(
-        // "bottomOneConeOneCubeBalance",
-        // new PathConstraints(1, 1));
+        public Command bottomOneConeOneCubeBalance() {
+                List<PathPlannerTrajectory> bottomOneConeOneCubeBalance = PathPlanner.loadPathGroup(
+                                "bottomOneConeOneCubeBalance",
+                                new PathConstraints(1, 1));
 
-        // return autoBuilder.fullAuto(bottomOneConeOneCubeBalance)
-        // .andThen(balance());
-        // }
+                return autoBuilder.fullAuto(bottomOneConeOneCubeBalance)
+                                .andThen(new Balance(m_Drive));
+        }
 
+        // Three Game Piece Autos
+        public Command topLowThreeCube() {
+                List<PathPlannerTrajectory> topLowThreeCube = PathPlanner.loadPathGroup(
+                                "topLowThreeCube",
+                                new PathConstraints(1, 1));
+                return autoBuilder.fullAuto(topLowThreeCube);
+        }
+
+        public Command bottomLowThreeCube() {
+                List<PathPlannerTrajectory> bottomLowThreeCube = PathPlanner.loadPathGroup(
+                                "bottomLowThreeCube",
+                                new PathConstraints(1, 1));
+                return autoBuilder.fullAuto(bottomLowThreeCube);
+        }
+
+        // TESTING
         public Command testSimultaneousMovement() {
-                PathPlannerTrajectory testSimultaneousMovement = PathPlanner.loadPath(
+                List<PathPlannerTrajectory> testSimultaneousMovement = PathPlanner.loadPathGroup(
                                 "testSimultaneousMovement",
                                 new PathConstraints(1, 1));
 
-                return new FollowPathWithEvents(
-                                m_Drive.followTrajectoryCommand(testSimultaneousMovement, true),
-                                testSimultaneousMovement.getMarkers(),
-                                Constants.AutoConstants.eventMap);
+                return autoBuilder.fullAuto(testSimultaneousMovement);
 
         }
 
