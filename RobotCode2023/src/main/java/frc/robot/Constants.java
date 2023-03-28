@@ -158,6 +158,7 @@ public final class Constants {
     public final static double ELBOW_LENGTH = Units.inchesToMeters(24);
     // In Centimeters
     public final static double INTAKE_SIZE = 35.922;
+    public final static double INTAKE_THRESHOLD = 24;
 
     // ACCEPTABLE PERCENT ERROR
     public final static double ERROR_IN_RADIANS = Math.toRadians(5);

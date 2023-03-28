@@ -161,13 +161,11 @@ public class SwerveDrive extends SubsystemBase {
 
     double gamepieceLength = Constants.ArmConstants.INTAKE_SIZE
         - (distanceFromLeft + distanceFromRight);
-    if (getBlocked(intakeProxLeft) && getBlocked(intakeProxRight)) {
-      return 0;
-    } else if ((distanceFromLeft + distanceFromRight) >= Constants.ArmConstants.INTAKE_SIZE) {
+    if ((distanceFromLeft + distanceFromRight) >= Constants.ArmConstants.INTAKE_THRESHOLD) {
       if (getBlocked(intakeProxLeft)) {
-        return Constants.ArmConstants.INTAKE_SIZE / 2;
+        return 5.715;
       } else if (getBlocked(intakeProxRight)) {
-        return Constants.ArmConstants.INTAKE_SIZE / 2 - Constants.ArmConstants.INTAKE_SIZE;
+        return -5.715;
       } else {
         return 0;
       }
