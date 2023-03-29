@@ -66,7 +66,7 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -101,16 +101,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.344892964667446,
-        "y": 2.744902835777235
+        "x": 5.335395030979636,
+        "y": 3.409758193923971
       },
       "prevControl": {
-        "x": 6.750265199554544,
-        "y": 2.7804818796984265
+        "x": 6.740767265866734,
+        "y": 3.4453372378451625
       },
       "nextControl": {
-        "x": 4.594556203330417,
-        "y": 2.7259069684016146
+        "x": 4.585058269642607,
+        "y": 3.3907623265483506
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -126,12 +126,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.9961863809983553,
-        "y": 2.697413167338184
+        "x": 4.015182248373976,
+        "y": 3.4477499286752127
       },
       "prevControl": {
-        "x": 4.048425016281314,
-        "y": 2.6736683331186577
+        "x": 4.0674208836569345,
+        "y": 3.4240050944556866
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -154,8 +154,7 @@
     {
       "position": 0.5454545454546642,
       "names": [
-        "event",
-        "lowerArm",
+        "pickupCube",
         "IntakeOn"
       ]
     },
@@ -166,9 +165,9 @@
       ]
     },
     {
-      "position": 1.1999999999999873,
+      "position": 1.3030303030303063,
       "names": [
-        "retractArm"
+        "default"
       ]
     }
   ]

@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.7451760969872654,
-        "y": 4.995913119788325
+        "x": 1.792665765426318,
+        "y": 5.052900721915188
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7451760969872665,
-        "y": 4.995913119788325
+        "x": 2.792665765426319,
+        "y": 5.052900721915188
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -112,11 +112,11 @@
         "y": 4.404805128628663
       },
       "nextControl": {
-        "x": 1.7988845793642507,
-        "y": 4.404805128628663
+        "x": 1.7864469514883854,
+        "y": 4.409277333659485
       },
       "holonomicAngle": 0,
-      "isReversal": true,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
@@ -134,17 +134,14 @@
     },
     {
       "anchorPoint": {
-        "x": 2.315487330361164,
-        "y": 3.2055487423858278
+        "x": 4.129157452627702,
+        "y": 3.438251994987403
       },
       "prevControl": {
-        "x": 1.8081096284891958,
-        "y": 4.404805128628663
+        "x": 1.6492158731818387,
+        "y": 3.4815395362748167
       },
-      "nextControl": {
-        "x": 2.319081778417675,
-        "y": 3.197052774252256
-      },
+      "nextControl": null,
       "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
@@ -156,31 +153,20 @@
         "waitBehavior": "none",
         "waitTime": 0
       }
-    },
-    {
-      "anchorPoint": {
-        "x": 3.837620435977069,
-        "y": 3.214773791510773
-      },
-      "prevControl": {
-        "x": 3.8560705342269577,
-        "y": 3.1870986441359386
-      },
-      "nextControl": null,
-      "holonomicAngle": 0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [
-          "intakeOff"
-        ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 1.3939393939394897,
+      "names": [
+        "intake"
+      ]
+    },
+    {
+      "position": 2.454545454545486,
+      "names": [
+        "intakeOff"
+      ]
+    }
+  ]
 }

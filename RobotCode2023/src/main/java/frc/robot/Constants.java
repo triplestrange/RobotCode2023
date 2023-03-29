@@ -109,7 +109,7 @@ public final class Constants {
   public static final class VisionConstants {
     public final static String TABLE_NAME = "table";
     // Only for the Red Alliance Wall
-    public final static Translation2d SCORING_OFFSET = new Translation2d(-0.77, 0);
+    public final static Translation2d SCORING_OFFSET = new Translation2d(-0.8, 0);
     public final static Translation2d FEEDER_OFFSET_LEFT = new Translation2d(-0.41275, 0.5334);
     public final static double CONE_OFFSET_LEFT = 0.5588;
     // This is for both
@@ -126,7 +126,7 @@ public final class Constants {
     };
 
     public static final Vector<N3> STATE_STD_DEVS = VecBuilder.fill(0.05, 0.05, 1);
-    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(5, 5, 1000000000);
+    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(1.5, 1.5, 1000000000);
 
   }
 

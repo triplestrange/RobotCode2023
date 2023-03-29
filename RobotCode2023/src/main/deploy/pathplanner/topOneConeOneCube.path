@@ -112,11 +112,11 @@
         "y": 4.407041231144074
       },
       "nextControl": {
-        "x": 2.2166822959238353,
+        "x": 1.3686492349288009,
         "y": 4.407041231144074
       },
       "holonomicAngle": 0,
-      "isReversal": true,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
@@ -125,7 +125,7 @@
           "high",
           "outtakeTimed",
           "intakeOff",
-          "default"
+          "pickupCube"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -134,18 +134,15 @@
     },
     {
       "anchorPoint": {
-        "x": 5.968606783839334,
-        "y": 4.487830570753166
+        "x": 6.779080951526832,
+        "y": 3.5807210003045604
       },
       "prevControl": {
-        "x": 5.4151038363426425,
-        "y": 4.976758174375245
+        "x": 5.202423959350289,
+        "y": 5.442316003115419
       },
-      "nextControl": {
-        "x": 5.975520711035847,
-        "y": 4.481723268396247
-      },
-      "holonomicAngle": -44.99999999999992,
+      "nextControl": null,
+      "holonomicAngle": -33.75645889778699,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -156,30 +153,6 @@
         "waitBehavior": "none",
         "waitTime": 0
       }
-    },
-    {
-      "anchorPoint": {
-        "x": 6.642035369960311,
-        "y": 3.731376542507686
-      },
-      "prevControl": {
-        "x": 6.660485468210201,
-        "y": 3.7037013951328515
-      },
-      "nextControl": null,
-      "holonomicAngle": -41.18592516570963,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [
-          "intakeOff"
-        ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
     }
   ],
   "maxVelocity": 4.41,
@@ -187,13 +160,13 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 1.9,
+      "position": 1.5272727272727642,
       "names": [
         "intake"
       ]
     },
     {
-      "position": 2.1,
+      "position": 1.4909090909090235,
       "names": [
         "intakeOff"
       ]
@@ -205,9 +178,14 @@
       ]
     },
     {
-      "position": 5.0,
+      "position": 4.3272727272726215,
       "names": [
-        "pickupConeUp",
+        "intake"
+      ]
+    },
+    {
+      "position": 4.8484848484848095,
+      "names": [
         "intake"
       ]
     }

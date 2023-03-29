@@ -25,9 +25,9 @@ public class DriveTo extends CommandBase {
   public double yAutoSpeed = 0;
   public double rAutoSpeed = 0;
   public double offset;
-  public PIDController transformX = new PIDController(2, 0, 0);
-  public PIDController transformY = new PIDController(2, 0, 0);
-  public PIDController rotation = new PIDController(1.5, 0, 0);
+  public PIDController transformX = new PIDController(4, 0, 0);
+  public PIDController transformY = new PIDController(4, 0, 0);
+  public PIDController rotation = new PIDController(3.5, 0, 0);
   private SwerveDrive m_SwerveDrive;
   private Robot m_Robot;
   private Pose2d tagPose;
@@ -70,7 +70,7 @@ public class DriveTo extends CommandBase {
     SmartDashboard.putNumber("TAGPOSE R updated", tagPose.getRotation().getDegrees());
 
     targetPose = new Pose2d(tagPose.getX(),
-        tagPose.getY() + (finalOffset * offset) - Units.inchesToMeters(1.5) + m_SwerveDrive.getIntakeOffset() / 100,
+        tagPose.getY() + (finalOffset * offset) - Units.inchesToMeters(1.5) - m_SwerveDrive.getIntakeOffset() / 100,
         tagPose.getRotation().plus(Rotation2d.fromDegrees(180)));
 
   }

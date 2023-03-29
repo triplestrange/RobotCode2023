@@ -44,7 +44,8 @@ public class AutoMain extends CommandBase {
 
         public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
                 // scoring
-                eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm));
+                eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
+                                .andThen(new WaitCommand(0.6)));
                 eventMap.put("mid", new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm));
                 eventMap.put("low", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 eventMap.put("default", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
@@ -66,14 +67,15 @@ public class AutoMain extends CommandBase {
                 this.m_Arm = m_Arm;
                 this.m_Intake = m_Intake;
                 eventMap = new HashMap<>();
+                eventMapEvents(m_Drive, m_Arm, m_Intake);
                 autoBuilder = new SwerveAutoBuilder(
                                 m_Drive::getPose, // Pose2d supplier
                                 m_Drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of
                                                         // auto
                                 SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
-                                new PIDConstants(1, 0.0, 0.0), // PID constants to correct for translation error (used
+                                new PIDConstants(2, 0.0, 0.0), // PID constants to correct for translation error (used
                                                                // to create the X and Y PID controllers)
-                                new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to
+                                new PIDConstants(2, 0.0, 0.0), // PID constants to correct for rotation error (used to
                                                                // create the rotation controller)
                                 m_Drive::setModuleStates, // Module states consumer used to output to the drive
                                                           // subsystem
@@ -88,7 +90,7 @@ public class AutoMain extends CommandBase {
         // Base Commands
         public final Command scoreHigh() {
                 return (new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                                .andThen(new WaitCommand(0.1))
+                                .andThen(new WaitCommand(1.5))
                                 .andThen(runOutakeForTime(0.3))
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
@@ -193,7 +195,7 @@ public class AutoMain extends CommandBase {
 
         public Command bottomOneConeLeaveCommand() {
                 PathPlannerTrajectory bottomOneConeLeave = PathPlanner.loadPath("bottomOneConeLeave",
-                                new PathConstraints(3, 1.5));
+                                new PathConstraints(1, 1));
 
                 return scoreHigh()
                                 .andThen(new FollowPathWithEvents(
@@ -264,8 +266,8 @@ public class AutoMain extends CommandBase {
         public Command topOneConeOneCube() {
                 List<PathPlannerTrajectory> topOneConeOneCubeLeave = PathPlanner.loadPathGroup(
                                 "topOneConeOneCube",
-                                new PathConstraints(1,
-                                                1));
+                                new PathConstraints(3.5,
+                                                2.75));
 
                 return autoBuilder.fullAuto(topOneConeOneCubeLeave);
 
@@ -273,7 +275,7 @@ public class AutoMain extends CommandBase {
 
         public Command bottomOneConeOneCube() {
                 List<PathPlannerTrajectory> bottomOneConeOneCubeLeave = PathPlanner.loadPathGroup(
-                                "BottomOneConeOneCube",
+                                "bottomOneConeOneCube",
                                 new PathConstraints(1, 1));
 
                 return autoBuilder.fullAuto(bottomOneConeOneCubeLeave);
@@ -283,7 +285,7 @@ public class AutoMain extends CommandBase {
         public Command topOneConeOneCubeBalance() {
                 List<PathPlannerTrajectory> topOneConeOneCubeBalance = PathPlanner.loadPathGroup(
                                 "topOneConeOneCubeBalance",
-                                new PathConstraints(1, 1));
+                                new PathConstraints(3, 3));
 
                 return autoBuilder.fullAuto(topOneConeOneCubeBalance)
                                 .andThen(new Balance(m_Drive));
@@ -310,7 +312,7 @@ public class AutoMain extends CommandBase {
         public Command bottomLowThreeCube() {
                 List<PathPlannerTrajectory> bottomLowThreeCube = PathPlanner.loadPathGroup(
                                 "bottomLowThreeCube",
-                                new PathConstraints(1, 1));
+                                new PathConstraints(2, 2));
                 return autoBuilder.fullAuto(bottomLowThreeCube);
         }
 
