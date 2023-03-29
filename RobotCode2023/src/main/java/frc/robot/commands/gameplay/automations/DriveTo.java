@@ -10,11 +10,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveDrive;
 
@@ -108,14 +110,12 @@ public class DriveTo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // if ((Math.abs(m_SwerveDrive.getPose().getX() - targetPose.getX()) <= 0.05) &&
-    // (Math.abs(m_SwerveDrive.getPose().getY() - targetPose.getY()) <= 0.05) &&
-    // (Math
-    // .abs(m_SwerveDrive.getPose().getRotation().getRadians() -
-    // targetPose.getRotation().getRadians()) <= 0.02)) {
-    // return true;
-    // } else {
+    if ((Math.abs(m_SwerveDrive.getPose().getX() - targetPose.getX()) <= 0.05) &&
+        (Math.abs(m_SwerveDrive.getPose().getY() - targetPose.getY()) <= 0.05) &&
+        (Math.abs(m_SwerveDrive.getPose().getRotation().getRadians() -
+            targetPose.getRotation().getRadians()) <= 0.02)) {
+      JoystickButtons.m_driverController.setRumble(RumbleType.kBothRumble, 1);
+    }
     return false;
-    // }
   }
 }
