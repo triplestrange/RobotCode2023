@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.lang.reflect.Field;
+
 import javax.lang.model.util.ElementScanner14;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -54,6 +56,7 @@ public class SwerveDrive extends SubsystemBase {
   Pose2d visionPose = new Pose2d();
   double[] tempRobotPose;
   public Field2d m_field = new Field2d();
+  public Field2d autoPath = new Field2d();
 
   private AnalogInput intakeLeft;
   private AnalogInput intakeRight;
@@ -458,6 +461,7 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
 
     SmartDashboard.putData("Field", m_field);
+    SmartDashboard.putData("Auto Path", autoPath);
 
   }
 }

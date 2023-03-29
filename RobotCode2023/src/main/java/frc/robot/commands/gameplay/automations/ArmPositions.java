@@ -4,8 +4,11 @@
 
 package frc.robot.commands.gameplay.automations;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
+import frc.robot.Constants.JoystickButtons;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.JointAngles;
 
@@ -48,6 +51,7 @@ public class ArmPositions extends CommandBase {
     if ((arm.shoulderPID.getSetpoint().equals(arm.shoulderPID.getGoal()) &&
         arm.elbowPID.getSetpoint().equals(arm.elbowPID.getGoal()) &&
         arm.wristPID.getSetpoint().equals(arm.wristPID.getGoal()))) {
+      JoystickButtons.m_operatorController.setRumble(RumbleType.kBothRumble, 1);
       return true;
     }
     return false;
