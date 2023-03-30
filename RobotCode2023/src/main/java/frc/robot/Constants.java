@@ -184,8 +184,9 @@ public final class Constants {
 
     public final static JointAngles SINGLE_FEEDER_STATION = new JointAngles(Math.toRadians(-16), Math.toRadians(-165.1),
         Math.toRadians(137.8));
-    public final static JointAngles DOUBLE_FEEDER_STATION = new JointAngles(Math.toRadians(12.02), Math.toRadians(61),
-        Math.toRadians(37.5));
+    public final static JointAngles DOUBLE_FEEDER_STATION = new JointAngles(Math.toRadians(-2.78),
+        Math.toRadians(-73.08),
+        Math.toRadians(-57.44));
     // Trajectory config
     public final static TrajectoryConfig config = new TrajectoryConfig(3, 1);
   }

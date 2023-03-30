@@ -142,10 +142,10 @@ public class RobotContainer {
                 // Driver Controls
                 // Auto Align
                 JoystickButtons.dA
-                                .whileTrue(new DriveTo(0, m_robotDrive, m_Robot));
+                                .whileTrue(new DriveTo(0.2, m_robotDrive, m_Robot));
                 JoystickButtons.dX
-                                .whileTrue(new DriveTo(1, m_robotDrive, m_Robot));
-                JoystickButtons.dB.whileTrue(new DriveTo(-1, m_robotDrive, m_Robot));
+                                .whileTrue(new DriveTo(1.2, m_robotDrive, m_Robot));
+                JoystickButtons.dB.whileTrue(new DriveTo(-0.8, m_robotDrive, m_Robot));
                 // Drive Commands
                 JoystickButtons.drBump.whileTrue(
                                 new DefaultDrive(m_robotDrive, 0.75));
@@ -176,7 +176,7 @@ public class RobotContainer {
                 // B | feeder slope: -2, -162.5, 115.2
                 // dD| cone lying: -56.45, -139.75, 95.84
                 // A | default: -0.6, -169.63, 137.6
-                // dL| feed slide
+                // dL| feed slide -2.78, -73.08, -57.43
 
                 // Operator Controls
                 JoystickButtons.oprBump.whileTrue(new RunCommand(m_Intake::runIntake, m_Intake));
