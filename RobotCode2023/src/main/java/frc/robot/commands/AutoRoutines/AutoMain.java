@@ -263,7 +263,7 @@ public class AutoMain extends CommandBase {
         public Command bottomOneConeOneCubeBalance() {
                 List<PathPlannerTrajectory> bottomOneConeOneCubeBalance = PathPlanner.loadPathGroup(
                                 "bottomOneConeOneCubeBalance",
-                                new PathConstraints(1, 1));
+                                new PathConstraints(3, 2));
                 // for (int i = 0; i < bottomOneConeOneCubeBalance.size(); i++) {
                 // m_Drive.autoPath.getObject("traj" +
                 // i).setTrajectory(bottomOneConeOneCubeBalance.get(i - 1));
@@ -276,7 +276,7 @@ public class AutoMain extends CommandBase {
         public Command topLowThreeCube() {
                 List<PathPlannerTrajectory> topLowThreeCube = PathPlanner.loadPathGroup(
                                 "topLowThreeCube",
-                                new PathConstraints(1, 1));
+                                new PathConstraints(1.75, 1.5));
                 // for (int i = 0; i < topLowThreeCube.size(); i++) {
                 // m_Drive.autoPath.getObject("traj" + i).setTrajectory(topLowThreeCube.get(i -
                 // 1));
