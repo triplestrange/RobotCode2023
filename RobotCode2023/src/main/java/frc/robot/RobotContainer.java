@@ -126,8 +126,6 @@ public class RobotContainer {
                                                                                 .getLeftTriggerAxis())),
                                 m_Arm));
                 m_Intake.setDefaultCommand(new RunCommand(m_Intake::intakeOff, m_Intake));
-                JoystickButtons.m_driverController.setRumble(RumbleType.kBothRumble, 0);
-                JoystickButtons.m_operatorController.setRumble(RumbleType.kBothRumble, 0);
         }
 
         /**
