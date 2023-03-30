@@ -35,11 +35,6 @@ public class AutoMain extends CommandBase {
         SwerveAutoBuilder autoBuilder;
 
         // Commands for AutoRoutines
-        // Command scoreHigh;
-        // Command scoreMiddle;
-        // Command scoreLow;
-
-        // Command balance;
         public static HashMap<String, Command> eventMap;
 
         public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
@@ -133,7 +128,7 @@ public class AutoMain extends CommandBase {
         public Command topOneConeLeaveCommand() {
                 PathPlannerTrajectory topOneConeLeave = PathPlanner.loadPath("topOneConeLeave",
                                 new PathConstraints(3, 1.5));
-                m_Drive.autoPath.getObject("traj").setTrajectory(topOneConeLeave);
+                // m_Drive.autoPath.getObject("traj").setTrajectory(topOneConeLeave);
 
                 return scoreHigh()
                                 .andThen(new FollowPathWithEvents(
@@ -145,7 +140,7 @@ public class AutoMain extends CommandBase {
         public Command topOneConeBalanceCommand() {
                 PathPlannerTrajectory topOneConeBalance = PathPlanner.loadPath("topOneConeBalance",
                                 new PathConstraints(3, 1.5));
-                m_Drive.autoPath.getObject("traj").setTrajectory(topOneConeBalance);
+                // m_Drive.autoPath.getObject("traj").setTrajectory(topOneConeBalance);
 
                 return scoreHigh()
                                 .andThen(new FollowPathWithEvents(
@@ -172,7 +167,7 @@ public class AutoMain extends CommandBase {
         public Command middleOneConeLeaveTopCommand() {
                 PathPlannerTrajectory middleOneConeLeave = PathPlanner.loadPath("middleOneConeLeaveTop",
                                 new PathConstraints(3.5, 2));
-                m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeLeave);
+                // m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeLeave);
 
                 // return scoreHigh()
                 return scoreHigh()
@@ -186,7 +181,7 @@ public class AutoMain extends CommandBase {
         public Command middleOneConeBalanceCommand() {
                 PathPlannerTrajectory middleOneConeBalance = PathPlanner.loadPath("middleOneConeBalance",
                                 new PathConstraints(2, 1.5));
-                m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeBalance);
+                // m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeBalance);
 
                 // return scoreHigh()
                 return scoreHigh()
@@ -201,7 +196,7 @@ public class AutoMain extends CommandBase {
         public Command bottomOneConeLeaveCommand() {
                 PathPlannerTrajectory bottomOneConeLeave = PathPlanner.loadPath("bottomOneConeLeave",
                                 new PathConstraints(3, 1.5));
-                m_Drive.autoPath.getObject("traj").setTrajectory(bottomOneConeLeave);
+                // m_Drive.autoPath.getObject("traj").setTrajectory(bottomOneConeLeave);
 
                 return scoreHigh()
                                 .andThen(new FollowPathWithEvents(
@@ -214,7 +209,7 @@ public class AutoMain extends CommandBase {
         public Command bottomOneConeBalanceCommand() {
                 PathPlannerTrajectory bottomOneConeBalance = PathPlanner.loadPath("bottomOneConeBalance",
                                 new PathConstraints(3, 2));
-                m_Drive.autoPath.getObject("traj").setTrajectory(bottomOneConeBalance);
+                // m_Drive.autoPath.getObject("traj").setTrajectory(bottomOneConeBalance);
 
                 return scoreHigh()
                                 .andThen(new FollowPathWithEvents(
@@ -232,9 +227,10 @@ public class AutoMain extends CommandBase {
                                 "topOneConeOneCube",
                                 new PathConstraints(3.5,
                                                 2.75));
-                for (int i = 0; i < topOneConeOneCubeLeave.size(); i++) {
-                        m_Drive.autoPath.getObject("traj" + i).setTrajectory(topOneConeOneCubeLeave.get(i - 1));
-                }
+                // for (int i = 0; i < topOneConeOneCubeLeave.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" +
+                // i).setTrajectory(topOneConeOneCubeLeave.get(i - 1));
+                // }
                 return autoBuilder.fullAuto(topOneConeOneCubeLeave);
 
         }
@@ -243,9 +239,10 @@ public class AutoMain extends CommandBase {
                 List<PathPlannerTrajectory> bottomOneConeOneCubeLeave = PathPlanner.loadPathGroup(
                                 "bottomOneConeOneCube",
                                 new PathConstraints(1, 1));
-                for (int i = 0; i < bottomOneConeOneCubeLeave.size(); i++) {
-                        m_Drive.autoPath.getObject("traj" + i).setTrajectory(bottomOneConeOneCubeLeave.get(i - 1));
-                }
+                // for (int i = 0; i < bottomOneConeOneCubeLeave.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" +
+                // i).setTrajectory(bottomOneConeOneCubeLeave.get(i - 1));
+                // }
                 return autoBuilder.fullAuto(bottomOneConeOneCubeLeave);
 
         }
@@ -254,9 +251,10 @@ public class AutoMain extends CommandBase {
                 List<PathPlannerTrajectory> topOneConeOneCubeBalance = PathPlanner.loadPathGroup(
                                 "topOneConeOneCubeBalance",
                                 new PathConstraints(3, 3));
-                for (int i = 0; i < topOneConeOneCubeBalance.size(); i++) {
-                        m_Drive.autoPath.getObject("traj" + i).setTrajectory(topOneConeOneCubeBalance.get(i - 1));
-                }
+                // for (int i = 0; i < topOneConeOneCubeBalance.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" +
+                // i).setTrajectory(topOneConeOneCubeBalance.get(i - 1));
+                // }
                 return autoBuilder.fullAuto(topOneConeOneCubeBalance)
                                 .andThen(new Balance(m_Drive));
 
@@ -266,9 +264,10 @@ public class AutoMain extends CommandBase {
                 List<PathPlannerTrajectory> bottomOneConeOneCubeBalance = PathPlanner.loadPathGroup(
                                 "bottomOneConeOneCubeBalance",
                                 new PathConstraints(1, 1));
-                for (int i = 0; i < bottomOneConeOneCubeBalance.size(); i++) {
-                        m_Drive.autoPath.getObject("traj" + i).setTrajectory(bottomOneConeOneCubeBalance.get(i - 1));
-                }
+                // for (int i = 0; i < bottomOneConeOneCubeBalance.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" +
+                // i).setTrajectory(bottomOneConeOneCubeBalance.get(i - 1));
+                // }
                 return autoBuilder.fullAuto(bottomOneConeOneCubeBalance)
                                 .andThen(new Balance(m_Drive));
         }
@@ -278,9 +277,10 @@ public class AutoMain extends CommandBase {
                 List<PathPlannerTrajectory> topLowThreeCube = PathPlanner.loadPathGroup(
                                 "topLowThreeCube",
                                 new PathConstraints(1, 1));
-                for (int i = 0; i < topLowThreeCube.size(); i++) {
-                        m_Drive.autoPath.getObject("traj" + i).setTrajectory(topLowThreeCube.get(i - 1));
-                }
+                // for (int i = 0; i < topLowThreeCube.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" + i).setTrajectory(topLowThreeCube.get(i -
+                // 1));
+                // }
                 return autoBuilder.fullAuto(topLowThreeCube);
         }
 
@@ -288,9 +288,10 @@ public class AutoMain extends CommandBase {
                 List<PathPlannerTrajectory> bottomLowThreeCube = PathPlanner.loadPathGroup(
                                 "bottomLowThreeCube",
                                 new PathConstraints(2, 2));
-                for (int i = 0; i < bottomLowThreeCube.size(); i++) {
-                        m_Drive.autoPath.getObject("traj" + i).setTrajectory(bottomLowThreeCube.get(i - 1));
-                }
+                // for (int i = 0; i < bottomLowThreeCube.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" + i).setTrajectory(bottomLowThreeCube.get(i
+                // - 1));
+                // }
                 return autoBuilder.fullAuto(bottomLowThreeCube);
         }
 
@@ -299,9 +300,10 @@ public class AutoMain extends CommandBase {
                 List<PathPlannerTrajectory> testSimultaneousMovement = PathPlanner.loadPathGroup(
                                 "testSimultaneousMovement",
                                 new PathConstraints(1, 1));
-                for (int i = 0; i < testSimultaneousMovement.size(); i++) {
-                        m_Drive.autoPath.getObject("traj" + i).setTrajectory(testSimultaneousMovement.get(i - 1));
-                }
+                // for (int i = 0; i < testSimultaneousMovement.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" +
+                // i).setTrajectory(testSimultaneousMovement.get(i - 1));
+                // }
                 return autoBuilder.fullAuto(testSimultaneousMovement);
 
         }

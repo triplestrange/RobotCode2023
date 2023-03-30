@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -14,9 +15,10 @@ import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickButtons;
-import frc.robot.commands.AutoRoutines.AutoMain;
+// import frc.robot.commands.AutoRoutines.AutoMain;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.DriveTo;
+import frc.robot.commands.AutoRoutines.AutoMain;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.gameplay.automations.ArmPositions;
 import frc.robot.subsystems.Arm;
@@ -89,7 +91,7 @@ public class RobotContainer {
                 // Testing
                 choose.addOption("Simultaneous Movement Test",
                                 m_Autos.testSimultaneousMovement());
-                // Configure the button bindings
+                // // Configure the button bindings
                 configureButtonBindings();
 
                 // Configure default commands
@@ -124,6 +126,8 @@ public class RobotContainer {
                                                                                 .getLeftTriggerAxis())),
                                 m_Arm));
                 m_Intake.setDefaultCommand(new RunCommand(m_Intake::intakeOff, m_Intake));
+                JoystickButtons.m_driverController.setRumble(RumbleType.kBothRumble, 0);
+                JoystickButtons.m_operatorController.setRumble(RumbleType.kBothRumble, 0);
         }
 
         /**
@@ -220,6 +224,7 @@ public class RobotContainer {
 
                 // }));
         }
+
         /**
          * 
          * Use this to pass the autonomous command to the main {@link Robot} class.

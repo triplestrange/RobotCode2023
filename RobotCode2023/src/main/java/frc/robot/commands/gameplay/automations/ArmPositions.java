@@ -51,7 +51,6 @@ public class ArmPositions extends CommandBase {
     if ((arm.shoulderPID.getSetpoint().equals(arm.shoulderPID.getGoal()) &&
         arm.elbowPID.getSetpoint().equals(arm.elbowPID.getGoal()) &&
         arm.wristPID.getSetpoint().equals(arm.wristPID.getGoal()))) {
-      JoystickButtons.m_operatorController.setRumble(RumbleType.kBothRumble, 1);
       return true;
     }
     return false;

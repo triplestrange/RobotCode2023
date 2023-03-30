@@ -114,7 +114,6 @@ public class DriveTo extends CommandBase {
         (Math.abs(m_SwerveDrive.getPose().getY() - targetPose.getY()) <= 0.05) &&
         (Math.abs(m_SwerveDrive.getPose().getRotation().getRadians() -
             targetPose.getRotation().getRadians()) <= 0.02)) {
-      JoystickButtons.m_driverController.setRumble(RumbleType.kBothRumble, 1);
     }
     return false;
   }
