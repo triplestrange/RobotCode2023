@@ -178,17 +178,29 @@ public class AutoMain extends CommandBase {
                                 .andThen(balance());
         }
 
+        // public Command middleOneConeBalanceCommand() {
+        // PathPlannerTrajectory middleOneConeBalance =
+        // PathPlanner.loadPath("middleOneConeBalance",
+        // new PathConstraints(2, 1.5));
+        // // m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeBalance);
+
+        // // return scoreHigh()
+        // return scoreHigh()
+        // .andThen(new FollowPathWithEvents(
+        // m_Drive.followTrajectoryCommand(middleOneConeBalance, true),
+        // middleOneConeBalance.getMarkers(),
+        // eventMap))
+        // .andThen(balance());
+
+        // }
+
         public Command middleOneConeBalanceCommand() {
-                PathPlannerTrajectory middleOneConeBalance = PathPlanner.loadPath("middleOneConeBalance",
-                                new PathConstraints(2, 1.5));
+                List<PathPlannerTrajectory> middleOneConeBalance = PathPlanner.loadPathGroup("middleOneConeBalance",
+                                new PathConstraints(3, 2.5));
                 // m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeBalance);
 
                 // return scoreHigh()
-                return scoreHigh()
-                                .andThen(new FollowPathWithEvents(
-                                                m_Drive.followTrajectoryCommand(middleOneConeBalance, true),
-                                                middleOneConeBalance.getMarkers(),
-                                                eventMap))
+                return autoBuilder.fullAuto(middleOneConeBalance)
                                 .andThen(balance());
 
         }
