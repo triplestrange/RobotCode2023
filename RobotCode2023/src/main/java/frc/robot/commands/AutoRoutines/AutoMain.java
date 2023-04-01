@@ -40,7 +40,7 @@ public class AutoMain extends CommandBase {
         public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
                 // scoring
                 eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                                .andThen(new WaitCommand(0.6)));
+                                .andThen(new WaitCommand(0.9)));
                 eventMap.put("mid", new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm));
                 eventMap.put("low", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 eventMap.put("default", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
@@ -196,7 +196,7 @@ public class AutoMain extends CommandBase {
 
         public Command middleOneConeBalanceCommand() {
                 List<PathPlannerTrajectory> middleOneConeBalance = PathPlanner.loadPathGroup("middleOneConeBalance",
-                                new PathConstraints(3, 2.5));
+                                new PathConstraints(2, 1.5));
                 // m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeBalance);
 
                 // return scoreHigh()

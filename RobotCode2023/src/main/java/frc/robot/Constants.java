@@ -56,7 +56,7 @@ public final class Constants {
     public static final double PROX_DIS = 8.5;
 
     public static final double kMaxSpeedMetersPerSecond = 4.42;
-    public static final double climbMaxSpeedMetersPerSecond = 1;
+    public static final double climbMaxSpeedMetersPerSecond = 1.33; // 1.33
     public static final double autoAlignMaxSpeedMetersPerSecond = 1;
 
     public static final boolean kGyroReversed = true;
@@ -125,8 +125,8 @@ public final class Constants {
 
     };
 
-    public static final Vector<N3> STATE_STD_DEVS = VecBuilder.fill(0.05, 0.05, 1);
-    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(1.5, 1.5, 1000000000);
+    public static final Vector<N3> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 1);
+    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1000000000);
 
   }
 

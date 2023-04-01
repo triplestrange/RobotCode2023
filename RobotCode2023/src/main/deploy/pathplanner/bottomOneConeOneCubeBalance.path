@@ -18,7 +18,9 @@
       "stopEvent": {
         "names": [
           "high",
-          "outtakeTimed"
+          "outtakeTimed",
+          "intakeOff",
+          "default"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -107,12 +109,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.7348206220070637,
-        "y": 2.12727981600031
+        "x": 4.148153320003323,
+        "y": 2.137035079757364
       },
       "prevControl": {
-        "x": 3.149941625624777,
-        "y": 2.146398578637553
+        "x": 3.5632743236210365,
+        "y": 2.1561538423946067
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -133,21 +135,17 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.8,
-      "names": [
-        "intake"
-      ]
-    },
-    {
       "position": 1.2,
       "names": [
-        "intakeOff"
+        "intakeOff",
+        "default"
       ]
     },
     {
       "position": 0.5454545454545455,
       "names": [
-        "pickupCube"
+        "pickupCube",
+        "intake"
       ]
     }
   ]

@@ -142,10 +142,10 @@ public class RobotContainer {
                 // Driver Controls
                 // Auto Align
                 JoystickButtons.dA
-                                .whileTrue(new DriveTo(0.2, m_robotDrive, m_Robot));
+                                .whileTrue(new DriveTo(0, m_robotDrive, m_Robot));
                 JoystickButtons.dX
-                                .whileTrue(new DriveTo(1.2, m_robotDrive, m_Robot));
-                JoystickButtons.dB.whileTrue(new DriveTo(-0.8, m_robotDrive, m_Robot));
+                                .whileTrue(new DriveTo(1, m_robotDrive, m_Robot));
+                JoystickButtons.dB.whileTrue(new DriveTo(-1, m_robotDrive, m_Robot));
                 // Drive Commands
                 JoystickButtons.drBump.whileTrue(
                                 new DefaultDrive(m_robotDrive, 0.75));

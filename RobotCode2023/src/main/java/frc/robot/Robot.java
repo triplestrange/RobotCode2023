@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -33,6 +34,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   private SendableChooser<Command> choose;
   private int i;
+  // private int w;
 
   public Alliance allianceColor;
 
@@ -91,6 +93,13 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
 
     m_robotContainer.m_Arm.resetPIDs();
+    // if (DriverStation.isFMSAttached() && DriverStation.getMatchType() ==
+    // MatchType.Elimination) {
+    // w++;
+    // if (w % 100 == 0) {
+    // SmartDashboard.putBoolean("Will Win?", true);
+    // }
+    // }
 
     allianceColor = DriverStation.getAlliance();
 

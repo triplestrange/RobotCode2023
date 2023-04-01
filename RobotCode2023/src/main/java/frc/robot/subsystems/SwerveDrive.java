@@ -173,10 +173,10 @@ public class SwerveDrive extends SubsystemBase {
         return 0;
       }
     } else if (distanceFromLeft > distanceFromRight) {
-      return distanceFromLeft + gamepieceLength / 2 - Constants.ArmConstants.INTAKE_SIZE / 2;
+      return -distanceFromLeft - gamepieceLength / 2 + Constants.ArmConstants.INTAKE_SIZE / 2;
 
     } else {
-      return -distanceFromRight - gamepieceLength / 2 + Constants.ArmConstants.INTAKE_SIZE / 2;
+      return distanceFromRight + gamepieceLength / 2 - Constants.ArmConstants.INTAKE_SIZE / 2;
     }
   }
 
