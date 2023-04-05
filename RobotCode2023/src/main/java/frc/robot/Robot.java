@@ -52,7 +52,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData(choose);
     m_robotContainer = new RobotContainer(this, choose);
     m_robotContainer.m_robotDrive.zeroHeading();
-    m_robotContainer.m_robotDrive.resetOdometry(new Pose2d(2.63, 7.27, Rotation2d.fromDegrees(-175)));
   }
 
   /**
@@ -87,6 +86,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.m_robotDrive.autoPath = new Field2d();
+    m_robotContainer.m_robotDrive.zeroHeading();
+
   }
 
   @Override

@@ -19,7 +19,7 @@ public class Balance extends CommandBase {
    * Balances on endgame piece
    */
   private final SwerveDrive m_SwerveDrive;
-  PIDController robotGyro = new PIDController(0.04, 0, 0.015);
+  PIDController robotGyro = new PIDController(0.04, 0, 0.015); // 0.04, 0, 0.015
   Pose2d balancePos = new Pose2d();
   private Timer lastUnbalancedTime = new Timer();
 
@@ -39,7 +39,7 @@ public class Balance extends CommandBase {
   @Override
   public void execute() {
     double tilt = m_SwerveDrive.navXRoll();
-
+    // 5
     if (Math.abs(tilt) < 5) {
       tilt = 0;
     }

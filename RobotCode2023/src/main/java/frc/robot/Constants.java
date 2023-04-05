@@ -56,7 +56,7 @@ public final class Constants {
     public static final double PROX_DIS = 8.5;
 
     public static final double kMaxSpeedMetersPerSecond = 4.42;
-    public static final double climbMaxSpeedMetersPerSecond = 1.33; // 1.33
+    public static final double climbMaxSpeedMetersPerSecond = 1; // 1.33
     public static final double autoAlignMaxSpeedMetersPerSecond = 1;
 
     public static final boolean kGyroReversed = true;
@@ -184,9 +184,9 @@ public final class Constants {
 
     public final static JointAngles SINGLE_FEEDER_STATION = new JointAngles(Math.toRadians(-16), Math.toRadians(-165.1),
         Math.toRadians(137.8));
-    public final static JointAngles DOUBLE_FEEDER_STATION = new JointAngles(Math.toRadians(-2.78),
-        Math.toRadians(-73.08),
-        Math.toRadians(-57.44));
+    public final static JointAngles DOUBLE_FEEDER_STATION = new JointAngles(Math.toRadians(-1),
+        Math.toRadians(-52),
+        Math.toRadians(-60));
     // Trajectory config
     public final static TrajectoryConfig config = new TrajectoryConfig(3, 1);
   }

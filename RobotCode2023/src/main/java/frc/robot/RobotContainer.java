@@ -88,9 +88,11 @@ public class RobotContainer {
                 // Three Game Piece Bottom
                 choose.addOption("!Feeder Low Three Cube",
                                 m_Autos.bottomLowThreeCube());
+                choose.addOption("score high", m_Autos.scoreHigh());
                 // Testing
                 choose.addOption("Simultaneous Movement Test",
                                 m_Autos.testSimultaneousMovement());
+                choose.setDefaultOption("score High", m_Autos.scoreHigh());
                 // // Configure the button bindings
                 configureButtonBindings();
 
@@ -98,7 +100,7 @@ public class RobotContainer {
                 m_robotDrive.setDefaultCommand(
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                new DefaultDrive(m_robotDrive, 2.5));
+                                new DefaultDrive(m_robotDrive, 2.5, 1));
                 // m_robotDrive.setDefaultCommand(new FilteredDrive(m_robotDrive,
                 // XBOX
                 // () -> JoystickButtons.m_driverController.getLeftY() * 5,
@@ -119,9 +121,9 @@ public class RobotContainer {
                                 // ));
 
                                 () -> m_Arm.moveArm(
-                                                0.1 * JoystickButtons.m_operatorController.getLeftY(),
-                                                -0.1 * JoystickButtons.m_operatorController.getRightY(),
-                                                0.1 * (JoystickButtons.m_operatorController.getRightTriggerAxis()
+                                                0.6 * JoystickButtons.m_operatorController.getLeftY(),
+                                                -0.8 * JoystickButtons.m_operatorController.getRightY(),
+                                                0.2 * (JoystickButtons.m_operatorController.getRightTriggerAxis()
                                                                 - JoystickButtons.m_operatorController
                                                                                 .getLeftTriggerAxis())),
                                 m_Arm));
@@ -148,9 +150,9 @@ public class RobotContainer {
                 JoystickButtons.dB.whileTrue(new DriveTo(-1, m_robotDrive, m_Robot));
                 // Drive Commands
                 JoystickButtons.drBump.whileTrue(
-                                new DefaultDrive(m_robotDrive, 0.75));
+                                new DefaultDrive(m_robotDrive, 0.75, 1));
                 JoystickButtons.dlBump.whileTrue(
-                                new DefaultDrive(m_robotDrive, Constants.SwerveConstants.kMaxSpeedMetersPerSecond));
+                                new DefaultDrive(m_robotDrive, Constants.SwerveConstants.kMaxSpeedMetersPerSecond, 2));
 
                 JoystickButtons.dlWing.onTrue(new InstantCommand(m_robotDrive::zeroHeading, m_robotDrive));
                 JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));

@@ -40,7 +40,7 @@ public class AutoMain extends CommandBase {
         public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
                 // scoring
                 eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                                .andThen(new WaitCommand(0.9)));
+                                .andThen(new WaitCommand(0.95)));
                 eventMap.put("mid", new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm));
                 eventMap.put("low", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 eventMap.put("default", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
@@ -85,7 +85,7 @@ public class AutoMain extends CommandBase {
         // Base Commands
         public final Command scoreHigh() {
                 return (new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                                .andThen(new WaitCommand(1.5))
+                                .andThen(new WaitCommand(0.95))
                                 .andThen(runOutakeForTime(0.3))
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
@@ -250,7 +250,8 @@ public class AutoMain extends CommandBase {
         public Command bottomOneConeOneCube() {
                 List<PathPlannerTrajectory> bottomOneConeOneCubeLeave = PathPlanner.loadPathGroup(
                                 "bottomOneConeOneCube",
-                                new PathConstraints(1, 1));
+                                new PathConstraints(3.5,
+                                                2.75));
                 // for (int i = 0; i < bottomOneConeOneCubeLeave.size(); i++) {
                 // m_Drive.autoPath.getObject("traj" +
                 // i).setTrajectory(bottomOneConeOneCubeLeave.get(i - 1));
@@ -275,7 +276,7 @@ public class AutoMain extends CommandBase {
         public Command bottomOneConeOneCubeBalance() {
                 List<PathPlannerTrajectory> bottomOneConeOneCubeBalance = PathPlanner.loadPathGroup(
                                 "bottomOneConeOneCubeBalance",
-                                new PathConstraints(3, 2));
+                                new PathConstraints(3, 3));
                 // for (int i = 0; i < bottomOneConeOneCubeBalance.size(); i++) {
                 // m_Drive.autoPath.getObject("traj" +
                 // i).setTrajectory(bottomOneConeOneCubeBalance.get(i - 1));

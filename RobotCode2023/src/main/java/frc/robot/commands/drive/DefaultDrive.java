@@ -16,6 +16,7 @@ import frc.robot.subsystems.SwerveDrive;
 public class DefaultDrive extends CommandBase {
   private SwerveDrive m_swerve;
   private double speed;
+  private double rotationSpeed;
   private Timer timer = new Timer();
   private double time;
   private double deadzone;
@@ -27,11 +28,11 @@ public class DefaultDrive extends CommandBase {
    * normal = 2.5
    * slow = 0.75
    */
-  public DefaultDrive(SwerveDrive m_swerve, double speed) {
+  public DefaultDrive(SwerveDrive m_swerve, double speed, double rotationSpeed) {
     addRequirements(m_swerve);
     this.m_swerve = m_swerve;
     this.speed = speed;
-
+    this.rotationSpeed = rotationSpeed;
     speed = MathUtil.clamp(speed, -Constants.SwerveConstants.kMaxSpeedMetersPerSecond,
         Constants.SwerveConstants.kMaxSpeedMetersPerSecond);
     deadzone = 0.05;
@@ -72,7 +73,7 @@ public class DefaultDrive extends CommandBase {
       }
       // rotation was reversed
       else {
-        speedR = JoystickButtons.m_driverController.getRightX() * -4;
+        speedR = JoystickButtons.m_driverController.getRightX() * -4 * rotationSpeed;
       }
     }
 

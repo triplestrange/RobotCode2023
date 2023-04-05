@@ -207,6 +207,8 @@ public class SwerveDrive extends SubsystemBase {
           m_odometry.getEstimatedPosition().getRotation().plus(Rotation2d.fromDegrees(180)));
     } else {
       m_field.setRobotPose(m_odometry.getEstimatedPosition());
+      m_field.getObject("vision pose").setPose(visionPose);
+
     }
 
     // System.out.print("xSpeed: " + xAutoSpeed + ";\n ySpeed: " + yAutoSpeed + ";\n
@@ -300,6 +302,8 @@ public class SwerveDrive extends SubsystemBase {
   public void zeroHeading() {
     navX.reset();
     resetOdometry(new Pose2d(getPose().getX(), getPose().getY(), Rotation2d.fromDegrees(0)));
+    m_field.setRobotPose(m_odometry.getEstimatedPosition());
+
     gyroReset = true;
   }
 
