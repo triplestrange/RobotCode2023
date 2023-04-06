@@ -20,7 +20,7 @@
           "high",
           "outtakeTimed",
           "intakeOff",
-          "pickupCube"
+          "default"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -125,7 +125,7 @@
           "high",
           "outtakeTimed",
           "intakeOff",
-          "pickupCube"
+          "default"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -180,13 +180,20 @@
     {
       "position": 4.3272727272726215,
       "names": [
-        "intake"
+        "intake",
+        "pickupCube"
       ]
     },
     {
       "position": 4.8484848484848095,
       "names": [
         "intake"
+      ]
+    },
+    {
+      "position": 0.1628196022727273,
+      "names": [
+        "pickupCube"
       ]
     }
   ]
