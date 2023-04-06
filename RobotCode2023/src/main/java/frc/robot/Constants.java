@@ -126,7 +126,7 @@ public final class Constants {
     };
 
     public static final Vector<N3> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 1);
-    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1000000000);
+    public static final Vector<N3> VISION_MEASUREMENT_STD_DEVS = VecBuilder.fill(0.01, 0.01, 1000000000);
 
   }
 
@@ -158,7 +158,7 @@ public final class Constants {
     public final static double ELBOW_LENGTH = Units.inchesToMeters(24);
     // In Centimeters
     public final static double INTAKE_SIZE = 35.922;
-    public final static double INTAKE_THRESHOLD = 24;
+    public final static double INTAKE_THRESHOLD = 20;
 
     // ACCEPTABLE PERCENT ERROR
     public final static double ERROR_IN_RADIANS = Math.toRadians(5);
@@ -167,7 +167,7 @@ public final class Constants {
     public final static double CONE_SCORING_OFFSET = 205 / 16;
 
     public final static JointAngles DEFAULT_POSITION = new JointAngles(Math.toRadians(-0.6), Math.toRadians(-162.5),
-        Math.toRadians(137.6));
+        Math.toRadians(137.6)); // shoulder -0.6, -162.5, 137.6
     public final static JointAngles HIGH_POSITION = new JointAngles(Math.toRadians(38), Math.toRadians(5.56),
         Math.toRadians(58.28));
     public final static JointAngles MID_POSITION = new JointAngles(Math.toRadians(16.2), Math.toRadians(59.6),

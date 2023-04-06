@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 
 import javax.lang.model.util.ElementScanner14;
@@ -56,7 +57,6 @@ public class SwerveDrive extends SubsystemBase {
   Pose2d visionPose = new Pose2d();
   double[] tempRobotPose;
   public Field2d m_field = new Field2d();
-  public Field2d autoPath = new Field2d();
 
   private AnalogInput intakeLeft;
   private AnalogInput intakeRight;
@@ -166,9 +166,9 @@ public class SwerveDrive extends SubsystemBase {
         - (distanceFromLeft + distanceFromRight);
     if ((distanceFromLeft + distanceFromRight) >= Constants.ArmConstants.INTAKE_THRESHOLD) {
       if (getBlocked(intakeProxLeft)) {
-        return 5.715;
+        return 8;
       } else if (getBlocked(intakeProxRight)) {
-        return -5.715;
+        return -8;
       } else {
         return 0;
       }
@@ -207,7 +207,7 @@ public class SwerveDrive extends SubsystemBase {
           m_odometry.getEstimatedPosition().getRotation().plus(Rotation2d.fromDegrees(180)));
     } else {
       m_field.setRobotPose(m_odometry.getEstimatedPosition());
-      m_field.getObject("vision pose").setPose(visionPose);
+      // m_field.getObject("vision pose").setPose(visionPose);
 
     }
 
@@ -466,7 +466,5 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
 
     SmartDashboard.putData("Field", m_field);
-    SmartDashboard.putData("Auto Path", autoPath);
-
   }
 }

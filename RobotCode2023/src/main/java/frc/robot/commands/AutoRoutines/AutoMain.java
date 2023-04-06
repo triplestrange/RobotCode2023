@@ -40,7 +40,7 @@ public class AutoMain extends CommandBase {
         public void eventMapEvents(SwerveDrive m_Drive, Arm m_Arm, Intake m_Intake) {
                 // scoring
                 eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                                .andThen(new WaitCommand(0.95)));
+                                .andThen(new WaitCommand(1.1)));
                 eventMap.put("mid", new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm));
                 eventMap.put("low", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 eventMap.put("default", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
@@ -85,7 +85,7 @@ public class AutoMain extends CommandBase {
         // Base Commands
         public final Command scoreHigh() {
                 return (new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
-                                .andThen(new WaitCommand(0.95))
+                                .andThen(new WaitCommand(1.1))
                                 .andThen(runOutakeForTime(0.3))
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
@@ -153,7 +153,7 @@ public class AutoMain extends CommandBase {
         public Command middleOneConeLeaveBottomCommand() {
                 PathPlannerTrajectory middleOneConeLeave = PathPlanner.loadPath("middleOneConeLeaveBottom",
                                 new PathConstraints(3.5, 2));
-                m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeLeave);
+                // m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeLeave);
 
                 // return scoreHigh()
                 return scoreHigh()
