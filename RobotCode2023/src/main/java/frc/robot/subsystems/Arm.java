@@ -277,7 +277,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("shoulderDeg", Math.toDegrees(getShoulder()));
     SmartDashboard.putNumber("elbowDeg", Math.toDegrees(getElbow()));
     SmartDashboard.putNumber("wristDeg", Math.toDegrees(getWrist()));
-
+    SmartDashboard.putNumber("elbowVoltage", elbowPower);
     SmartDashboard.putNumber("lastShoulderAngle", Math.toDegrees(shoulderSetpoint));
     SmartDashboard.putNumber("lastElbowAngle", Math.toDegrees(elbowSetpoint));
     SmartDashboard.putNumber("lastWristAngle", Math.toDegrees(wristSetpoint));
@@ -305,6 +305,7 @@ public class Arm extends SubsystemBase {
     }
     if (elbowPIDEnabled) {
       elbowPower = elbowPID.calculate(getElbow(), elbowSetpoint);
+      // + 0.06 * Math.cos(getShoulder() + getElbow() + Math.PI / 2);
       if (!elbowEncoder.isConnected()) {
         elbowPower = 0;
       }
