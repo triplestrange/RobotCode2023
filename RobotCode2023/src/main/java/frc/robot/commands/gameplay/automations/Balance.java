@@ -49,8 +49,6 @@ public class Balance extends CommandBase {
     }
     double ySpeed = -robotGyro.calculate(tilt, 0);
 
-    // FIXME fix the speed param for field orient
-    // FIXME Change the logic to work with field orient
     ySpeed = MathUtil.clamp(ySpeed, -SwerveConstants.climbMaxSpeedMetersPerSecond,
         SwerveConstants.climbMaxSpeedMetersPerSecond);
     balancePos = new Pose2d(balancePos.getX() + ySpeed / 25, balancePos.getY(),

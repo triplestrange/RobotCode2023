@@ -135,7 +135,7 @@ public final class Constants {
     public final static int SHOULDER_ENC = 0;
     public final static int ELBOW_ENC = 1;
     public final static int WRIST_ENC = 2;
-    // FIXME Change the offsets to current encoder values
+
     public final static double SHOULDER_OFFSET = Units.degreesToRadians(97.6);
     public final static double ELBOW_OFFSET = Units.degreesToRadians(27);
     public final static double WRIST_OFFSET = Units.degreesToRadians(0);

@@ -213,7 +213,7 @@ public class RobotContainer {
                                 new ArmPositions(
                                                 Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION,
                                                 m_Arm));
-                // FIXME Fix position for feeder slider
+
                 JoystickButtons.opDpadL.whileTrue(// feeder slider
                                 new ArmPositions(
                                                 Constants.ArmConstants.DOUBLE_FEEDER_STATION,
