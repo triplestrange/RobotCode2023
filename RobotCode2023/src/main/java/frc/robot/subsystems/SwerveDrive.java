@@ -444,9 +444,7 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
         .getTable("limelight").getEntry("getpipe").getDouble(0));
     SmartDashboard.putNumber("Has Target?", tv);
-    // SmartDashboard.putNumber("xSpeed", xAutoSpeed);
-    // SmartDashboard.putNumber("ySpeed", yAutoSpeed);
-    // SmartDashboard.putNumber("rSpeed", rAutoSpeed);
+
     SmartDashboard.putNumber("pitch", navX.getPitch());
     SmartDashboard.putNumber("roll", navX.getRoll());
     SmartDashboard.putNumber("yaw", navX.getYaw());
@@ -466,5 +464,11 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
 
     SmartDashboard.putData("Field", m_field);
+
+    if (getBlocked(intakeProxLeft) || getBlocked(intakeProxRight)) {
+      SmartDashboard.putBoolean("Has Peice?", true);
+    } else {
+      SmartDashboard.putBoolean("Has Peice?", false);
+    }
   }
 }
