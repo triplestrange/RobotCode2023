@@ -462,7 +462,8 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putBoolean("Prox Right Sensor", getBlocked(intakeProxRight));
     SmartDashboard.putNumber("Intake Offset", getIntakeOffset());
     SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
-
+    SmartDashboard.putString("target",
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("tclass").getString("None"));
     SmartDashboard.putData("Field", m_field);
 
     if (getBlocked(intakeProxLeft) || getBlocked(intakeProxRight)) {
