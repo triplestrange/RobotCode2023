@@ -5,12 +5,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
@@ -20,7 +16,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -80,9 +75,12 @@ public class Arm extends SubsystemBase {
     elbowJoint.setSmartCurrentLimit(40);
     wristJoint.setSmartCurrentLimit(20);
 
-    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(2, 18)); // 2, 18 // Max Accel 18
-    elbowPID = new ProfiledPIDController(0.4, 0, 0.075, new Constraints(5.5, 7)); // 3.8, 20 // Max Accel 35
-    wristPID = new ProfiledPIDController(0.5, 0, 0, new Constraints(3.8, 15)); // 3.8, 15
+    shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(2, 3.75)); // 2, 18 // Max Accel 18
+    elbowPID = new ProfiledPIDController(0.4, 0, 0.05, new Constraints(5.5, 7)); // 3.8, 20 // Max Accel 35
+    // 0.4,0.4, 0.075
+    wristPID = new ProfiledPIDController(0.5, 0, 0, new Constraints(3.8, 30)); // 3.8, 15
+
+    elbowPID.setIntegratorRange(-0.2, 0.2);
 
     shoulderJoint.setIdleMode(IdleMode.kBrake);
     elbowJoint.setIdleMode(IdleMode.kBrake);
@@ -208,6 +206,18 @@ public class Arm extends SubsystemBase {
 
     }
 
+    public double getShoulderAngle() {
+      return shoulderAngle;
+    }
+
+    public double getElbowAngle() {
+      return elbowAngle;
+    }
+
+    public double getWristAngle() {
+      return wristAngle;
+    }
+
     public static JointAngles anglesFrom2D(double width, double height, double wristAngle) {
       // math checked with CAD
       // Proof: https://imgur.com/3QSfHY5
@@ -304,8 +314,12 @@ public class Arm extends SubsystemBase {
       // shoulderJoint.set(0);
     }
     if (elbowPIDEnabled) {
-      elbowPower = elbowPID.calculate(getElbow(), elbowSetpoint);
-      // + 0.06 * Math.cos(getShoulder() + getElbow() + Math.PI / 2);
+      elbowPower = elbowPID.calculate(getElbow(), elbowSetpoint)
+          + 0.06 * Math.cos(getShoulder() + getElbow() + Math.PI / 2);
+      SmartDashboard.putNumber("elbowSetpoint", elbowSetpoint);
+      SmartDashboard.putNumber("elbowPID no gravity", elbowPID.calculate(getElbow(), elbowSetpoint));
+      SmartDashboard.putNumber("gravity", 0.05 * Math.cos(getShoulder() + getElbow() + Math.PI / 2));
+
       if (!elbowEncoder.isConnected()) {
         elbowPower = 0;
       }

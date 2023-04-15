@@ -6,7 +6,6 @@ import java.util.List;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.StopEvent.WaitBehavior;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
@@ -17,15 +16,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.gameplay.automations.Balance;
 import frc.robot.commands.gameplay.automations.ArmPositions;
-import frc.robot.commands.gameplay.automations.ArmTrajectory;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Arm.JointAngles;
 
 public class AutoMain extends CommandBase {
 
@@ -41,9 +38,19 @@ public class AutoMain extends CommandBase {
                 // scoring
                 eventMap.put("high", new ArmPositions(Constants.ArmConstants.HIGH_POSITION, m_Arm)
                                 .andThen(new WaitCommand(1.05)));
+                eventMap.put("feeder",
+                                new ArmPositions(new JointAngles(
+                                                Constants.ArmConstants.DOUBLE_FEEDER_STATION.getShoulderAngle(),
+                                                Constants.ArmConstants.DOUBLE_FEEDER_MIDPOINT.getElbowAngle(), 0),
+                                                m_Arm));
                 eventMap.put("mid", new ArmPositions(Constants.ArmConstants.MID_POSITION, m_Arm));
                 eventMap.put("low", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 eventMap.put("default", new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm));
+                eventMap.putIfAbsent("scoreLow",
+                                new ArmPositions(new JointAngles(
+                                                Constants.ArmConstants.SINGLE_FEEDER_STATION.getShoulderAngle(),
+                                                Math.toRadians(-142),
+                                                Constants.ArmConstants.LOW_CUBE_POSITION.getWristAngle()), m_Arm));
                 // pickup
                 eventMap.put("pickupConeUp", new ArmPositions(Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION, m_Arm));
                 eventMap.put("pickupConeDown", new ArmPositions(Constants.ArmConstants.LOW_LYING_CONE_POSITION, m_Arm));
@@ -68,8 +75,8 @@ public class AutoMain extends CommandBase {
                                 m_Drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of
                                                         // auto
                                 SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
-                                new PIDConstants(2, 0.0, 0.0), // PID constants to correct for translation error (used
-                                                               // to create the X and Y PID controllers)
+                                new PIDConstants(2, 0, 0.05), // PID constants to correct for translation error (used
+                                                              // to create the X and Y PID controllers)
                                 new PIDConstants(2, 0.0, 0.0), // PID constants to correct for rotation error (used to
                                                                // create the rotation controller)
                                 m_Drive::setModuleStates, // Module states consumer used to output to the drive
@@ -89,6 +96,13 @@ public class AutoMain extends CommandBase {
                                 .andThen(runOutakeForTime(0.3))
                                 .andThen(new ArmPositions(Constants.ArmConstants.DEFAULT_POSITION, m_Arm)));
 
+        }
+
+        public final Command pidTuner() {
+                return (new ArmPositions(new JointAngles(0, Math.toRadians(90), 0), m_Arm)
+                                .andThen(new WaitCommand(4))
+                                .andThen(new ArmPositions(new JointAngles(0, Math.toRadians(-90), 0), m_Arm))
+                                .andThen(new WaitCommand(4)));
         }
 
         public final Command scoreHighReturnLowCube() {
@@ -286,6 +300,32 @@ public class AutoMain extends CommandBase {
         }
 
         // Three Game Piece Autos
+        public Command topOneConeTwoCubeLow() {
+                List<PathPlannerTrajectory> topOneConeTwoCubeLeave = PathPlanner.loadPathGroup(
+                                "topOneConeTwoCubeLow",
+                                new PathConstraints(4,
+                                                3));
+                // for (int i = 0; i < topOneConeOneCubeLeave.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" +
+                // i).setTrajectory(topOneConeOneCubeLeave.get(i - 1));
+                // }
+                return autoBuilder.fullAuto(topOneConeTwoCubeLeave);
+
+        }
+
+        public Command topOneConeTwoCubeMid() {
+                List<PathPlannerTrajectory> topOneConeTwoCubeLeave = PathPlanner.loadPathGroup(
+                                "topOneConeTwoCubeMid",
+                                new PathConstraints(4,
+                                                3));
+                // for (int i = 0; i < topOneConeOneCubeLeave.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" +
+                // i).setTrajectory(topOneConeOneCubeLeave.get(i - 1));
+                // }
+                return autoBuilder.fullAuto(topOneConeTwoCubeLeave);
+
+        }
+
         public Command topLowThreeCube() {
                 List<PathPlannerTrajectory> topLowThreeCube = PathPlanner.loadPathGroup(
                                 "topLowThreeCube",

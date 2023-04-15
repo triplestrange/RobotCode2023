@@ -5,13 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickButtons;
@@ -24,7 +21,6 @@ import frc.robot.commands.gameplay.automations.ArmPositions;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.Arm.JointAngles;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -85,6 +81,9 @@ public class RobotContainer {
                 // Three Game Piece Top
                 choose.addOption("Feeder Low Three Cube",
                                 m_Autos.topLowThreeCube());
+                choose.addOption("Feeder One Cone Two Cube Low", m_Autos.topOneConeTwoCubeLow());
+                choose.addOption("Feeder One Cone Two Cube Mid", m_Autos.topOneConeTwoCubeMid());
+
                 // Three Game Piece Bottom
                 choose.addOption("!Feeder Low Three Cube",
                                 m_Autos.bottomLowThreeCube());
@@ -93,6 +92,8 @@ public class RobotContainer {
                 choose.addOption("Simultaneous Movement Test",
                                 m_Autos.testSimultaneousMovement());
                 choose.setDefaultOption("score High", m_Autos.scoreHigh());
+
+                choose.addOption("test PID", m_Autos.pidTuner());
                 // // Configure the button bindings
                 configureButtonBindings();
 
@@ -150,7 +151,7 @@ public class RobotContainer {
                 JoystickButtons.dB.whileTrue(new DriveTo(-1, m_robotDrive, m_Robot));
                 // Drive Commands
                 JoystickButtons.drBump.whileTrue(
-                                new DefaultDrive(m_robotDrive, 0.75, 1));
+                                new DefaultDrive(m_robotDrive, 0.85, 1));
                 JoystickButtons.dlBump.whileTrue(
                                 new DefaultDrive(m_robotDrive, Constants.SwerveConstants.kMaxSpeedMetersPerSecond, 2));
 
@@ -158,18 +159,18 @@ public class RobotContainer {
                 JoystickButtons.dY.whileTrue(new Balance(m_robotDrive));
                 JoystickButtons.drWing.onTrue(new InstantCommand(m_robotDrive::setXWheels, m_robotDrive));
 
-                // new Trigger(() ->
-                // Math.abs(JoystickButtons.m_driverController.getLeftTriggerAxis()) > 0.05)
-                // .onTrue(new InstantCommand(() -> {
-                // m_robotDrive.setPresetEnabled(true, -180.0);
-                // }));
+                new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getLeftTriggerAxis()) > 0.05)
+                                .onTrue(new InstantCommand(() -> {
+                                        m_robotDrive.setPresetEnabled(true, -180.0);
+                                }));
 
-                // new Trigger(() ->
-                // Math.abs(JoystickButtons.m_driverController.getRightTriggerAxis()) > 0.05)
-                // .onTrue(new InstantCommand(() -> {
-                // m_robotDrive.setPresetEnabled(true, 0);
+                new Trigger(() -> Math.abs(JoystickButtons.m_driverController.getRightTriggerAxis()) > 0.05)
+                                .onTrue(new InstantCommand(() -> {
+                                        m_robotDrive.setPresetEnabled(true, 0);
 
-                // }));
+                                }));
+                JoystickButtons.dDpadL.onTrue(new InstantCommand(() -> m_robotDrive.setPresetEnabled(true, 90)));
+                JoystickButtons.dDpadR.onTrue(new InstantCommand(() -> m_robotDrive.setPresetEnabled(true, -90)));
 
                 // Y | high: 29.25, 29.11, 34
                 // X | mid: -
@@ -213,11 +214,13 @@ public class RobotContainer {
                                 new ArmPositions(
                                                 Constants.ArmConstants.LOW_UPRIGHT_CONE_POSITION,
                                                 m_Arm));
-
                 JoystickButtons.opDpadL.whileTrue(// feeder slider
+                                // new SequentialCommandGroup(
+                                // new ArmPositions(Constants.ArmConstants.DOUBLE_FEEDER_MIDPOINT,
+                                // m_Arm),
                                 new ArmPositions(
                                                 Constants.ArmConstants.DOUBLE_FEEDER_STATION,
-                                                m_Arm));
+                                                m_Arm));// );
 
                 // // JoystickButtons.oplWing.whileTrue(new InstantCommand(() -> {
                 // // m_robotDrive.setPresetEnabled(true, 0);

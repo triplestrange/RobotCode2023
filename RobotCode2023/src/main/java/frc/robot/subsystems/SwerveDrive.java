@@ -7,17 +7,11 @@
 
 package frc.robot.subsystems;
 
-import java.lang.annotation.Target;
-import java.lang.reflect.Field;
-
-import javax.lang.model.util.ElementScanner14;
-
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -30,7 +24,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -46,16 +39,18 @@ import frc.robot.Robot;
 // import frc.robot.Constants.ModuleConstants;
 // import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.VisionConstants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class SwerveDrive extends SubsystemBase {
   private final Robot m_Robot;
   public double rotationPreset = 0;
   public boolean presetEnabled = false;
-  public double tv = 0;
-  Pose2d visionPose = new Pose2d();
-  double[] tempRobotPose;
+  public double tvLeft = 0;
+  public double tvRight = 0;
+  Pose2d visionPoseLeft = new Pose2d();
+  Pose2d visionPoseRight = new Pose2d();
+  double[] tempRobotPoseLeft;
+  double[] tempRobotPoseRight;
   public Field2d m_field = new Field2d();
 
   private AnalogInput intakeLeft;
@@ -173,10 +168,12 @@ public class SwerveDrive extends SubsystemBase {
         return 0;
       }
     } else if (distanceFromLeft > distanceFromRight) {
-      return -distanceFromLeft - gamepieceLength / 2 + Constants.ArmConstants.INTAKE_SIZE / 2;
+      return -distanceFromLeft - gamepieceLength / 2 +
+          Constants.ArmConstants.INTAKE_SIZE / 2;
 
     } else {
-      return distanceFromRight + gamepieceLength / 2 - Constants.ArmConstants.INTAKE_SIZE / 2;
+      return distanceFromRight + gamepieceLength / 2 -
+          Constants.ArmConstants.INTAKE_SIZE / 2;
     }
   }
 
@@ -191,7 +188,8 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    tvLeft = NetworkTableInstance.getDefault().getTable("limelight-left").getEntry("tv").getDouble(0);
+    tvRight = NetworkTableInstance.getDefault().getTable("limelight-right").getEntry("tv").getDouble(0);
     m_odometry.update(
         getAngle(),
         new SwerveModulePosition[] {
@@ -331,17 +329,30 @@ public class SwerveDrive extends SubsystemBase {
   public void updateOdometry() {
 
     if (m_Robot.allianceColor == Alliance.Blue) {
-      tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose.wpiblue")
+      tempRobotPoseLeft = NetworkTableInstance.getDefault().getTable("limelight-left").getEntry("botpose_wpiblue")
+          .getDoubleArray(new double[1]);
+      tempRobotPoseRight = NetworkTableInstance.getDefault().getTable("limelight-right").getEntry("botpose_wpiblue")
           .getDoubleArray(new double[1]);
     } else {
-      tempRobotPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_wpired")
+      tempRobotPoseLeft = NetworkTableInstance.getDefault().getTable("limelight-left").getEntry("botpose_wpired")
+          .getDoubleArray(new double[1]);
+      tempRobotPoseRight = NetworkTableInstance.getDefault().getTable("limelight-right").getEntry("botpose_wpired")
           .getDoubleArray(new double[1]);
     }
 
-    if (tv > 0.5 && tempRobotPose.length > 1) {
-      visionPose = new Pose2d(tempRobotPose[0], tempRobotPose[1], getPose().getRotation());
-      m_odometry.addVisionMeasurement(visionPose,
-          Timer.getFPGATimestamp() - tempRobotPose[6] / 1000.0 /*- (tl/1000.0) - (cl/1000.0)*/);
+    if (tvLeft > 0.5 && tempRobotPoseLeft.length > 1)
+
+    {
+      visionPoseLeft = new Pose2d(tempRobotPoseLeft[0], tempRobotPoseLeft[1], getPose().getRotation());
+      m_odometry.addVisionMeasurement(visionPoseLeft,
+          Timer.getFPGATimestamp() - tempRobotPoseLeft[6] / 1000.0 /*- (tl/1000.0) - (cl/1000.0)*/);
+    }
+    if (tvRight > 0.5 && tempRobotPoseRight.length > 1)
+
+    {
+      visionPoseRight = new Pose2d(tempRobotPoseRight[0], tempRobotPoseRight[1], getPose().getRotation());
+      m_odometry.addVisionMeasurement(visionPoseRight,
+          Timer.getFPGATimestamp() - tempRobotPoseRight[6] / 1000.0 /*- (tl/1000.0) - (cl/1000.0)*/);
     }
     // System.out.println(robotPose[0] + robotPose[1] + robotPose[5]);
   }
@@ -443,17 +454,19 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("TurnRate", getTurnRate());
     SmartDashboard.putNumber("Limelight Pipeline", NetworkTableInstance.getDefault()
         .getTable("limelight").getEntry("getpipe").getDouble(0));
-    SmartDashboard.putNumber("Has Target?", tv);
-
+    // SmartDashboard.putNumber("Has Target?", tv);
+    // SmartDashboard.putNumber("xSpeed", xAutoSpeed);
+    // SmartDashboard.putNumber("ySpeed", yAutoSpeed);
+    // SmartDashboard.putNumber("rSpeed", rAutoSpeed);
     SmartDashboard.putNumber("pitch", navX.getPitch());
     SmartDashboard.putNumber("roll", navX.getRoll());
     SmartDashboard.putNumber("yaw", navX.getYaw());
     SmartDashboard.putString("Alliance Color", m_Robot.allianceColor.toString());
-    if (tempRobotPose.length >= 7) {
-      SmartDashboard.putNumber("Vision x", tempRobotPose[0]);
-      SmartDashboard.putNumber("Vision y", tempRobotPose[1]);
-      SmartDashboard.putNumber("Vision r", tempRobotPose[5]);
-    }
+    // if (tempRobotPose.length >= 7) {
+    // SmartDashboard.putNumber("Vision x", tempRobotPose[0]);
+    // SmartDashboard.putNumber("Vision y", tempRobotPose[1]);
+    // SmartDashboard.putNumber("Vision r", tempRobotPose[5]);
+    // }
     SmartDashboard.putNumber("Intake Left Voltage", intakeLeft.getVoltage());
     SmartDashboard.putNumber("Intake Left Reading", getDistanceFromSensor(intakeLeft));
     SmartDashboard.putNumber("Intake Right Voltage", intakeRight.getVoltage());
@@ -461,9 +474,8 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putBoolean("Prox Left Sensor", getBlocked(intakeProxLeft));
     SmartDashboard.putBoolean("Prox Right Sensor", getBlocked(intakeProxRight));
     SmartDashboard.putNumber("Intake Offset", getIntakeOffset());
-    SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
-    SmartDashboard.putString("target",
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("tclass").getString("None"));
+    // SmartDashboard.putNumber("tempRobotPose length", tempRobotPose.length);
+
     SmartDashboard.putData("Field", m_field);
 
     if (getBlocked(intakeProxLeft) || getBlocked(intakeProxRight)) {

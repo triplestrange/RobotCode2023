@@ -10,26 +10,22 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Constants.JoystickButtons;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveDrive;
 
 public class DriveTo extends CommandBase {
 
-  private Pose2d pose2d;
   public double xAutoSpeed = 0;
   public double yAutoSpeed = 0;
   public double rAutoSpeed = 0;
   public double offset;
-  public PIDController transformX = new PIDController(4, 0.001, 0);
-  public PIDController transformY = new PIDController(4, 0.001, 0);
-  public PIDController rotation = new PIDController(3.5, 0.001, 0);
+  public PIDController transformX = new PIDController(5, 0.01, 0);
+  public PIDController transformY = new PIDController(3, 0.01, 0);
+  public PIDController rotation = new PIDController(7, 0.01, 0);
   private SwerveDrive m_SwerveDrive;
   private Robot m_Robot;
   private Pose2d tagPose;
@@ -86,8 +82,8 @@ public class DriveTo extends CommandBase {
     // Max Speeds
     xAutoSpeed = MathUtil.clamp(xAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond,
         SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
-    yAutoSpeed = MathUtil.clamp(yAutoSpeed, -SwerveConstants.autoAlignMaxSpeedMetersPerSecond,
-        SwerveConstants.autoAlignMaxSpeedMetersPerSecond);
+    yAutoSpeed = MathUtil.clamp(yAutoSpeed, -3,
+        3);
     rAutoSpeed = MathUtil.clamp(rAutoSpeed, -4,
         4);
     if (m_Robot.allianceColor == Alliance.Red) {

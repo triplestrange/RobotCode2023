@@ -4,11 +4,7 @@
 
 package frc.robot.commands.gameplay.automations;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants;
-import frc.robot.Constants.JoystickButtons;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.JointAngles;
 

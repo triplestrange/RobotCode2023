@@ -4,7 +4,6 @@
 
 package frc.robot.commands.drive;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.JoystickButtons;
@@ -34,8 +33,8 @@ public class DriveDir extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double diff = m_swerve.getHeading() - desired_heading;
-    
+    double diff = m_swerve.m_odometry.getEstimatedPosition().getRotation().getDegrees() - desired_heading;
+
     double rot = rotation_controller.calculate(diff, 0);
     if (Math.abs(rot) < .05) {
       rot = 0;

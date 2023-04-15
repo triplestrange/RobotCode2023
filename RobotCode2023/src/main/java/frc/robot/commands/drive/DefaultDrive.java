@@ -18,7 +18,6 @@ public class DefaultDrive extends CommandBase {
   private double speed;
   private double rotationSpeed;
   private Timer timer = new Timer();
-  private double time;
   private double deadzone;
   private PIDController rotation_controller;
 
@@ -35,7 +34,7 @@ public class DefaultDrive extends CommandBase {
     this.rotationSpeed = rotationSpeed;
     speed = MathUtil.clamp(speed, -Constants.SwerveConstants.kMaxSpeedMetersPerSecond,
         Constants.SwerveConstants.kMaxSpeedMetersPerSecond);
-    deadzone = 0.05;
+    deadzone = 0.2;
     rotation_controller = new PIDController(0.075, 0, 0.0);
     rotation_controller.enableContinuousInput(0, 360);
   }

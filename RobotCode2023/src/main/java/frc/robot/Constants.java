@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.HashMap;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,19 +14,10 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Arm.JointAngles;
-import frc.robot.commands.gameplay.automations.ArmPositions;
-import frc.robot.subsystems.Arm;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -56,7 +45,7 @@ public final class Constants {
     public static final double PROX_DIS = 8.5;
 
     public static final double kMaxSpeedMetersPerSecond = 4.42;
-    public static final double climbMaxSpeedMetersPerSecond = 1; // 1.33
+    public static final double climbMaxSpeedMetersPerSecond = 1.5; // 1.33
     public static final double autoAlignMaxSpeedMetersPerSecond = 1;
 
     public static final boolean kGyroReversed = true;
@@ -142,7 +131,7 @@ public final class Constants {
     // Gear ratios
     public final static double GR_SHOULDER = 75 * (64.0 / 14);
     public final static double GR_ELBOW = 75 * (80.0 / 48);
-    public final static double GR_WRIST = 160;
+    public final static double GR_WRIST = 81;
 
     public final static double ENC_GR_SHOULDER = (14.0 / 64);
     public final static double ENC_GR_ELBOW = (48.0 / 80);
@@ -169,9 +158,9 @@ public final class Constants {
     public final static JointAngles DEFAULT_POSITION = new JointAngles(Math.toRadians(-0.6), Math.toRadians(-162.5),
         Math.toRadians(137.6)); // shoulder -0.6, -162.5, 137.6
     public final static JointAngles HIGH_POSITION = new JointAngles(Math.toRadians(38), Math.toRadians(5.56),
-        Math.toRadians(58.28));
+        Math.toRadians(60));
     public final static JointAngles MID_POSITION = new JointAngles(Math.toRadians(16.2), Math.toRadians(59.6),
-        Math.toRadians(104.2));
+        Math.toRadians(104.2)); // 16.2 59.6 104.2
 
     public final static JointAngles LOW_UPRIGHT_CONE_POSITION = new JointAngles(Math.toRadians(-34.69),
         Math.toRadians(-139.75),
@@ -184,9 +173,14 @@ public final class Constants {
 
     public final static JointAngles SINGLE_FEEDER_STATION = new JointAngles(Math.toRadians(-16), Math.toRadians(-165.1),
         Math.toRadians(137.8));
+
+    // overcorrected. previous val for elbow was -72
     public final static JointAngles DOUBLE_FEEDER_STATION = new JointAngles(Math.toRadians(-1),
-        Math.toRadians(-52),
+        Math.toRadians(-60),
         Math.toRadians(-60));
+    public final static JointAngles DOUBLE_FEEDER_MIDPOINT = new JointAngles(Math.toRadians(-1),
+        Math.toRadians(-30), Math.toRadians(-60));
+
     // Trajectory config
     public final static TrajectoryConfig config = new TrajectoryConfig(3, 1);
   }
