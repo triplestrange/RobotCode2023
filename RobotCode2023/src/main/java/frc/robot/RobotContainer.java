@@ -77,6 +77,9 @@ public class RobotContainer {
                                 m_Autos.bottomOneConeOneCube());
                 choose.addOption("!Feeder One Cone One Cube Balance",
                                 m_Autos.bottomOneConeOneCubeBalance());
+                // Two Game Piece Middle
+                choose.addOption("Middle One Cone One Cube Balance !Feeder",
+                                m_Autos.middleOneConeOneCubeBalanceBottom());
 
                 // Three Game Piece Top
                 choose.addOption("Feeder Low Three Cube",

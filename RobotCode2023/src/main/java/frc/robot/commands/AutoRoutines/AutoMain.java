@@ -299,6 +299,18 @@ public class AutoMain extends CommandBase {
                                 .andThen(new Balance(m_Drive));
         }
 
+        public Command middleOneConeOneCubeBalanceBottom() {
+                List<PathPlannerTrajectory> middleOneConeOneCubeBalanceBottom = PathPlanner.loadPathGroup(
+                                "middleOneConeOneCubeBalanceBottom",
+                                new PathConstraints(3, 3));
+                // for (int i = 0; i < bottomOneConeOneCubeBalance.size(); i++) {
+                // m_Drive.autoPath.getObject("traj" +
+                // i).setTrajectory(bottomOneConeOneCubeBalance.get(i - 1));
+                // }
+                return autoBuilder.fullAuto(middleOneConeOneCubeBalanceBottom)
+                                .andThen(new Balance(m_Drive));
+        }
+
         // Three Game Piece Autos
         public Command topOneConeTwoCubeLow() {
                 List<PathPlannerTrajectory> topOneConeTwoCubeLeave = PathPlanner.loadPathGroup(
