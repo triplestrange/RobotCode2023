@@ -71,8 +71,13 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "high",
+          "outtakeTimed",
+          "intakeOff",
+          "default"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -100,5 +105,19 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.4,
+      "names": [
+        "pickupCube",
+        "intake"
+      ]
+    },
+    {
+      "position": 1.85,
+      "names": [
+        "high"
+      ]
+    }
+  ]
 }
