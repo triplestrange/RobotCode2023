@@ -40,7 +40,7 @@ public class Balance extends CommandBase {
   public void execute() {
     double tilt = m_SwerveDrive.navXRoll();
     // 5
-    if (Math.abs(tilt) < 9) {
+    if (Math.abs(tilt) < 7.5) {
       tilt = 0;
     }
 
