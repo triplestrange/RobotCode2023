@@ -208,6 +208,18 @@ public class AutoMain extends CommandBase {
 
         // }
 
+        public Command middleOneHalfConeBalanceCommand() {
+                List<PathPlannerTrajectory> middleOneHalfConeBalance = PathPlanner.loadPathGroup(
+                                "middleOneHalfConeBalance",
+                                new PathConstraints(2, 1.5));
+                // m_Drive.autoPath.getObject("traj").setTrajectory(middleOneConeBalance);
+
+                // return scoreHigh()
+                return autoBuilder.fullAuto(middleOneHalfConeBalance)
+                                .andThen(balance());
+
+        }
+
         public Command middleOneConeBalanceCommand() {
                 List<PathPlannerTrajectory> middleOneConeBalance = PathPlanner.loadPathGroup("middleOneConeBalance",
                                 new PathConstraints(2, 1.5));

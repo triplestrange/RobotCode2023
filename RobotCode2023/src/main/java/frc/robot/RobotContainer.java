@@ -60,6 +60,8 @@ public class RobotContainer {
                                 m_Autos.middleOneConeLeaveTopCommand());
                 choose.addOption("Middle One Cone Balance",
                                 m_Autos.middleOneConeBalanceCommand());
+                choose.addOption("Middle One Half Cone Leave Balance",
+                                m_Autos.middleOneHalfConeBalanceCommand());
                 // One Cone Bottom
                 choose.addOption("!Feeder One Cone Leave",
                                 m_Autos.bottomOneConeLeaveCommand());
