@@ -76,7 +76,7 @@ public class Arm extends SubsystemBase {
     wristJoint.setSmartCurrentLimit(20);
 
     shoulderPID = new ProfiledPIDController(1, 0, 0, new Constraints(2, 3.75)); // 2, 18 // Max Accel 18
-    elbowPID = new ProfiledPIDController(0.4, 0, 0.05, new Constraints(5.5, 7)); // 3.8, 20 // Max Accel 35
+    elbowPID = new ProfiledPIDController(0.35, 0, 0.05, new Constraints(5.5, 7)); // 3.8, 20 // Max Accel 35
     // 0.4,0.4, 0.075
     wristPID = new ProfiledPIDController(0.5, 0, 0, new Constraints(3.8, 30)); // 3.8, 15
 

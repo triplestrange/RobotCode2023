@@ -159,8 +159,8 @@ public final class Constants {
         Math.toRadians(137.6)); // shoulder -0.6, -162.5, 137.6
     public final static JointAngles HIGH_POSITION = new JointAngles(Math.toRadians(38), Math.toRadians(5.56),
         Math.toRadians(60));
-    public final static JointAngles MID_POSITION = new JointAngles(Math.toRadians(16.2), Math.toRadians(59.6),
-        Math.toRadians(104.2)); // 16.2 59.6 104.2
+    public final static JointAngles MID_POSITION = new JointAngles(Math.toRadians(-12.2), Math.toRadians(110),
+        Math.toRadians(12)); // 16.2 59.6 104.2
 
     public final static JointAngles LOW_UPRIGHT_CONE_POSITION = new JointAngles(Math.toRadians(-34.69),
         Math.toRadians(-139.75),
@@ -176,7 +176,7 @@ public final class Constants {
 
     // overcorrected. previous val for elbow was -72
     public final static JointAngles DOUBLE_FEEDER_STATION = new JointAngles(Math.toRadians(-1),
-        Math.toRadians(-60),
+        Math.toRadians(-50),
         Math.toRadians(-60));
     public final static JointAngles DOUBLE_FEEDER_MIDPOINT = new JointAngles(Math.toRadians(-1),
         Math.toRadians(-30), Math.toRadians(-60));
