@@ -44,7 +44,7 @@ public final class Constants {
     // centimeters
     public static final double PROX_DIS = 8.5;
 
-    public static final double kMaxSpeedMetersPerSecond = 4.42;
+    public static final double kMaxSpeedMetersPerSecond = 4.42; 
     public static final double climbMaxSpeedMetersPerSecond = 1.5; // 1.33
     public static final double autoAlignMaxSpeedMetersPerSecond = 1;
 

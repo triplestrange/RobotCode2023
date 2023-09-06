@@ -48,55 +48,8 @@ public class RobotContainer {
 
                 this.choose = choose;
                 // Working Consistently
-                // One Cone Top
-                choose.addOption("Feeder One Cone Leave",
-                                m_Autos.topOneConeLeaveCommand());
-                choose.addOption("Feeder One Cone Balance",
-                                m_Autos.topOneConeBalanceCommand());
-                // One Cone Mid
-                choose.addOption("Middle One Cone Leave Bottom",
-                                m_Autos.middleOneConeLeaveBottomCommand());
-                choose.addOption("Middle One Cone Leave Top",
-                                m_Autos.middleOneConeLeaveTopCommand());
-                choose.addOption("Middle One Cone Balance",
-                                m_Autos.middleOneConeBalanceCommand());
-                choose.addOption("Middle One Half Cone Leave Balance",
-                                m_Autos.middleOneHalfConeBalanceCommand());
-                // One Cone Bottom
-                choose.addOption("!Feeder One Cone Leave",
-                                m_Autos.bottomOneConeLeaveCommand());
-                choose.addOption("!Feeder One Cone Balance",
-                                m_Autos.bottomOneConeBalanceCommand());
-
-                // Not Working Consistently
-                // Two Game Piece Top
-                choose.addOption("Feeder One Cone One Cube",
-                                m_Autos.topOneConeOneCube());
-                choose.addOption("Feeder One Cone One Cube Balance",
-                                m_Autos.topOneConeOneCubeBalance());
-                // Two Game Piece Bottom
-                choose.addOption("!Feeder One Cone One Cube",
-                                m_Autos.bottomOneConeOneCube());
-                choose.addOption("!Feeder One Cone One Cube Balance",
-                                m_Autos.bottomOneConeOneCubeBalance());
-                // Two Game Piece Middle
-                choose.addOption("Middle One Cone One Cube Balance !Feeder",
-                                m_Autos.middleOneConeOneCubeBalanceBottom());
-
-                // Three Game Piece Top
-                choose.addOption("Feeder Low Three Cube",
-                                m_Autos.topLowThreeCube());
-                choose.addOption("Feeder One Cone Two Cube Low", m_Autos.topOneConeTwoCubeLow());
-                choose.addOption("Feeder One Cone Two Cube Mid", m_Autos.topOneConeTwoCubeMid());
-
-                // Three Game Piece Bottom
-                choose.addOption("!Feeder Low Three Cube",
-                                m_Autos.bottomLowThreeCube());
-                choose.addOption("score high", m_Autos.scoreHigh());
-                // Testing
-                choose.addOption("Simultaneous Movement Test",
-                                m_Autos.testSimultaneousMovement());
-                choose.setDefaultOption("score High", m_Autos.scoreHigh());
+                choose.setDefaultOption("IF U DONT RUN THIS AUTO WYATT. JUST WAIT TILL I GET U",
+                                m_Autos.wyattAutoCommand());
 
                 choose.addOption("test PID", m_Autos.pidTuner());
                 // // Configure the button bindings
@@ -106,7 +59,7 @@ public class RobotContainer {
                 m_robotDrive.setDefaultCommand(
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                new DefaultDrive(m_robotDrive, 2.5, 1));
+                                new DefaultDrive(m_robotDrive, 1.5, 1));
                 // m_robotDrive.setDefaultCommand(new FilteredDrive(m_robotDrive,
                 // XBOX
                 // () -> JoystickButtons.m_driverController.getLeftY() * 5,
