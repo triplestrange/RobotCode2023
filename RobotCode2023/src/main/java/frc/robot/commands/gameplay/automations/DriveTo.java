@@ -68,7 +68,8 @@ public class DriveTo extends CommandBase {
     SmartDashboard.putNumber("TAGPOSE R updated", tagPose.getRotation().getDegrees());
 
     targetPose = new Pose2d(tagPose.getX(),
-        tagPose.getY() + (finalOffset * offset) + Units.inchesToMeters(1.5) - m_SwerveDrive.getIntakeOffset() / 100,
+        tagPose.getY() + (finalOffset * offset) + Units.inchesToMeters(1.5),
+        // - m_SwerveDrive.getIntakeOffset() / 100,
         tagPose.getRotation().plus(Rotation2d.fromDegrees(180)));
 
   }

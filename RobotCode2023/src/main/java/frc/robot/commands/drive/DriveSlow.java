@@ -37,7 +37,7 @@ public class DriveSlow extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = .75;
+    double speed = 0;
     double speedY = JoystickButtons.m_driverController.getLeftY() * speed;
     double speedX = JoystickButtons.m_driverController.getLeftX() * speed;
     double speedR = JoystickButtons.m_driverController.getRightX() * -4;

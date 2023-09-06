@@ -27,12 +27,12 @@ public class Balance extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrive);
     this.m_SwerveDrive = swerveDrive;
-
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    lastUnbalancedTime.restart();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -44,7 +44,7 @@ public class Balance extends CommandBase {
       tilt = 0;
     }
 
-    if (Math.abs(tilt) > 2.5) {
+    if (Math.abs(tilt) > 7.5) {
       lastUnbalancedTime.reset();
     }
     double ySpeed = -robotGyro.calculate(tilt, 0);

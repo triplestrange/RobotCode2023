@@ -80,7 +80,6 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.m_robotDrive.zeroHeading();
 
   }
 
@@ -109,6 +108,7 @@ public class Robot extends TimedRobot {
     if (DriverStation.isFMSAttached()) {
       Shuffleboard.startRecording();
     }
+    m_robotContainer.m_robotDrive.zeroHeading();
     m_robotContainer.m_robotDrive.m_odometry
         .setVisionMeasurementStdDevs(VecBuilder.fill(1000000000, 1000000000, 1000000000));
     m_autonomousCommand = choose.getSelected();

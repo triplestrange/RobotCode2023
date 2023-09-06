@@ -36,15 +36,15 @@ public final class Constants {
 
   public static final class SwerveConstants {
 
-    public static final int IL_ENC = 6;
-    public static final int IR_ENC = 4;
+    public static final int IL_ENC = 4;
+    public static final int IR_ENC = 5;
 
     public static final int IL_PROX_ENC = 4;
     public static final int IR_PROX_ENC = 3;
     // centimeters
     public static final double PROX_DIS = 8.5;
 
-    public static final double kMaxSpeedMetersPerSecond = 4.42;
+    public static final double kMaxSpeedMetersPerSecond = 4.41;
     public static final double climbMaxSpeedMetersPerSecond = 1.5; // 1.33
     public static final double autoAlignMaxSpeedMetersPerSecond = 1;
 
@@ -159,8 +159,8 @@ public final class Constants {
         Math.toRadians(137.6)); // shoulder -0.6, -162.5, 137.6
     public final static JointAngles HIGH_POSITION = new JointAngles(Math.toRadians(38), Math.toRadians(5.56),
         Math.toRadians(60));
-    public final static JointAngles MID_POSITION = new JointAngles(Math.toRadians(-12.2), Math.toRadians(110),
-        Math.toRadians(12)); // 16.2 59.6 104.2
+    public final static JointAngles MID_POSITION = new JointAngles(Math.toRadians(6), Math.toRadians(88.8),
+        Math.toRadians(53)); // 16.2 59.6 104.2
 
     public final static JointAngles LOW_UPRIGHT_CONE_POSITION = new JointAngles(Math.toRadians(-34.69),
         Math.toRadians(-139.75),
@@ -186,7 +186,7 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 1.5;
+    public static final double kMaxSpeedMetersPerSecond = 1;
     public static final double kMaxAccelerationMetersPerSecondSquared = 2;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;

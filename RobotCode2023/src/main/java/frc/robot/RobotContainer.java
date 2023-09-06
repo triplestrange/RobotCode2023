@@ -98,6 +98,8 @@ public class RobotContainer {
                                 m_Autos.testSimultaneousMovement());
                 choose.setDefaultOption("score High", m_Autos.scoreHigh());
 
+                choose.addOption("test two", m_Autos.testTwoCommand());
+
                 choose.addOption("test PID", m_Autos.pidTuner());
                 // // Configure the button bindings
                 configureButtonBindings();
